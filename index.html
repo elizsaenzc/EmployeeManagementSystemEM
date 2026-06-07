@@ -1,15 +1,1734 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ESC Media &amp; Tech — RRHH</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="/EmployeeManagementSystemEM/assets/index-C5XKKppb.js"></script>
-    <link rel="stylesheet" crossorigin href="/EmployeeManagementSystemEM/assets/index-DGUxyNnh.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>HR Portal — ESC Media & Tech</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════════════ */
+:root{
+  --brand:#1E3A5F;
+  --brand2:#2563EB;
+  --brand-light:#EFF6FF;
+  --accent:#10B981;
+  --accent2:#F59E0B;
+  --danger:#EF4444;
+  --warn:#F97316;
+  --surface:#F8FAFC;
+  --surface2:#F1F5F9;
+  --border:#E2E8F0;
+  --border2:#CBD5E1;
+  --text:#0F172A;
+  --text2:#475569;
+  --text3:#94A3B8;
+  --white:#FFFFFF;
+  --sidebar-w:260px;
+  --topbar-h:60px;
+  --radius:10px;
+  --radius-lg:16px;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06);
+  --shadow-md:0 4px 6px -1px rgba(0,0,0,.08),0 2px 4px -1px rgba(0,0,0,.05);
+  --shadow-lg:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -2px rgba(0,0,0,.05);
+  --font:'Plus Jakarta Sans',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+
+/* ═══════════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px}
+body{font-family:var(--font);background:var(--surface);color:var(--text);min-height:100vh;overflow-x:hidden}
+button{cursor:pointer;font-family:var(--font);border:none;outline:none}
+input,select,textarea{font-family:var(--font);outline:none}
+a{text-decoration:none;color:inherit}
+ul{list-style:none}
+img{max-width:100%}
+
+/* ═══════════════════════════════════════════════
+   LOGIN PAGE
+═══════════════════════════════════════════════ */
+#login-page{
+  display:flex;align-items:center;justify-content:center;
+  min-height:100vh;
+  background:linear-gradient(135deg,#0F172A 0%,#1E3A5F 50%,#1e4080 100%);
+  position:relative;overflow:hidden;
+}
+#login-page::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 20% 50%,rgba(37,99,235,.15) 0%,transparent 60%),
+             radial-gradient(ellipse at 80% 20%,rgba(16,185,129,.08) 0%,transparent 50%);
+}
+.login-card{
+  background:var(--white);border-radius:20px;
+  padding:40px;width:420px;max-width:95vw;
+  box-shadow:0 25px 50px rgba(0,0,0,.4);
+  position:relative;z-index:1;
+}
+.login-logo{
+  display:flex;align-items:center;gap:12px;margin-bottom:32px;
+}
+.login-logo-icon{
+  width:44px;height:44px;border-radius:12px;
+  background:linear-gradient(135deg,var(--brand),var(--brand2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;
+}
+.login-logo-text{font-size:18px;font-weight:800;color:var(--brand)}
+.login-logo-sub{font-size:11px;color:var(--text3);font-weight:500;letter-spacing:.5px}
+.login-title{font-size:22px;font-weight:700;margin-bottom:4px}
+.login-sub{font-size:13px;color:var(--text2);margin-bottom:28px}
+.form-group{margin-bottom:16px}
+.form-label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bottom:6px;letter-spacing:.3px}
+.form-input{
+  width:100%;border:1.5px solid var(--border);border-radius:var(--radius);
+  padding:10px 14px;font-size:14px;color:var(--text);
+  transition:border-color .2s,box-shadow .2s;background:var(--surface);
+}
+.form-input:focus{border-color:var(--brand2);box-shadow:0 0 0 3px rgba(37,99,235,.12);background:var(--white)}
+.btn-login{
+  width:100%;padding:12px;border-radius:var(--radius);
+  background:linear-gradient(135deg,var(--brand),var(--brand2));
+  color:var(--white);font-weight:700;font-size:14px;
+  letter-spacing:.3px;transition:opacity .2s,transform .1s;
+  margin-top:8px;
+}
+.btn-login:hover{opacity:.92}
+.btn-login:active{transform:scale(.99)}
+.login-error{
+  background:#FEF2F2;border:1px solid #FECACA;color:var(--danger);
+  border-radius:8px;padding:10px 14px;font-size:13px;margin-top:12px;display:none;
+}
+.demo-accounts{margin-top:28px;border-top:1px solid var(--border);padding-top:20px}
+.demo-title{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px}
+.demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.demo-btn{
+  background:var(--surface);border:1.5px solid var(--border);border-radius:8px;
+  padding:10px 12px;text-align:left;transition:all .2s;
+}
+.demo-btn:hover{border-color:var(--brand2);background:var(--brand-light)}
+.demo-btn-role{font-size:10px;font-weight:700;color:var(--brand2);letter-spacing:.5px;text-transform:uppercase}
+.demo-btn-name{font-size:12px;font-weight:600;color:var(--text);margin-top:1px}
+
+/* ═══════════════════════════════════════════════
+   APP SHELL
+═══════════════════════════════════════════════ */
+#app{display:none;height:100vh;overflow:hidden}
+.app-layout{display:flex;height:100%}
+
+/* SIDEBAR */
+.sidebar{
+  width:var(--sidebar-w);flex-shrink:0;
+  background:var(--brand);
+  display:flex;flex-direction:column;
+  height:100vh;overflow-y:auto;position:relative;
+}
+.sidebar-logo{
+  padding:20px 20px 16px;
+  display:flex;align-items:center;gap:10px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.sidebar-logo-icon{
+  width:36px;height:36px;border-radius:10px;
+  background:rgba(255,255,255,.15);
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+}
+.sidebar-logo-text{font-size:15px;font-weight:800;color:var(--white)}
+.sidebar-logo-sub{font-size:10px;color:rgba(255,255,255,.5);font-weight:500}
+
+.sidebar-user{
+  padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.08);
+  display:flex;align-items:center;gap:12px;
+}
+.sidebar-avatar{
+  width:38px;height:38px;border-radius:50%;
+  background:linear-gradient(135deg,var(--brand2),#60A5FA);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;color:var(--white);flex-shrink:0;
+}
+.sidebar-user-name{font-size:13px;font-weight:700;color:var(--white);line-height:1.2}
+.sidebar-user-role{font-size:11px;color:rgba(255,255,255,.5);font-weight:500;margin-top:1px}
+
+.sidebar-nav{padding:12px 0;flex:1}
+.nav-section{margin-bottom:4px}
+.nav-section-label{
+  font-size:10px;font-weight:700;color:rgba(255,255,255,.35);
+  letter-spacing:.8px;text-transform:uppercase;
+  padding:8px 20px 4px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 20px;cursor:pointer;
+  transition:background .15s,color .15s;
+  color:rgba(255,255,255,.65);font-size:13px;font-weight:500;
+  border-left:3px solid transparent;
+  position:relative;
+}
+.nav-item:hover{background:rgba(255,255,255,.06);color:var(--white)}
+.nav-item.active{
+  background:rgba(255,255,255,.12);color:var(--white);font-weight:600;
+  border-left-color:var(--brand2);
+}
+.nav-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.nav-badge{
+  margin-left:auto;background:var(--danger);color:var(--white);
+  font-size:10px;font-weight:700;border-radius:100px;
+  padding:1px 6px;min-width:18px;text-align:center;
+}
+
+.sidebar-footer{
+  padding:16px 20px;border-top:1px solid rgba(255,255,255,.08);
+}
+.btn-logout{
+  width:100%;padding:9px;border-radius:8px;
+  background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);
+  font-size:13px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:background .2s,color .2s;
+}
+.btn-logout:hover{background:rgba(239,68,68,.2);color:#FCA5A5}
+
+/* MAIN AREA */
+.main-area{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{
+  height:var(--topbar-h);background:var(--white);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 28px;
+  gap:16px;flex-shrink:0;
+}
+.topbar-title{font-size:17px;font-weight:700;color:var(--text)}
+.topbar-sub{font-size:12px;color:var(--text3);font-weight:500;margin-left:auto}
+.topbar-badge{
+  background:var(--brand-light);color:var(--brand2);
+  font-size:11px;font-weight:700;border-radius:100px;
+  padding:3px 10px;border:1px solid rgba(37,99,235,.2);
+}
+
+.page-content{flex:1;overflow-y:auto;padding:28px}
+
+/* ═══════════════════════════════════════════════
+   COMPONENTS — CARDS, BUTTONS, BADGES, TABLES
+═══════════════════════════════════════════════ */
+.card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:24px;box-shadow:var(--shadow)}
+.card-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px}
+.card-sub{font-size:12px;color:var(--text3)}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin-bottom:24px}
+.kpi{
+  background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);
+  padding:20px;box-shadow:var(--shadow);position:relative;overflow:hidden;
+}
+.kpi::after{
+  content:'';position:absolute;top:0;right:0;bottom:0;width:4px;
+  border-radius:0 var(--radius-lg) var(--radius-lg) 0;
+}
+.kpi.blue::after{background:var(--brand2)}
+.kpi.green::after{background:var(--accent)}
+.kpi.amber::after{background:var(--accent2)}
+.kpi.red::after{background:var(--danger)}
+.kpi-label{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px}
+.kpi-value{font-size:28px;font-weight:800;color:var(--text);line-height:1;font-family:var(--mono)}
+.kpi-desc{font-size:11px;color:var(--text3);margin-top:6px}
+.kpi-icon{font-size:28px;position:absolute;right:20px;top:50%;transform:translateY(-50%);opacity:.12}
+
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;
+  transition:all .15s;cursor:pointer;
+}
+.btn-primary{background:var(--brand2);color:var(--white)}
+.btn-primary:hover{background:#1D4ED8}
+.btn-secondary{background:var(--surface2);color:var(--text2);border:1px solid var(--border)}
+.btn-secondary:hover{background:var(--border);color:var(--text)}
+.btn-success{background:var(--accent);color:var(--white)}
+.btn-success:hover{opacity:.88}
+.btn-danger{background:var(--danger);color:var(--white)}
+.btn-danger:hover{opacity:.88}
+.btn-warn{background:var(--accent2);color:var(--white)}
+.btn-warn:hover{opacity:.88}
+.btn-ghost{background:transparent;color:var(--text2);border:1.5px solid var(--border2)}
+.btn-ghost:hover{background:var(--surface2)}
+.btn-sm{padding:5px 10px;font-size:12px;gap:4px}
+.btn-xs{padding:3px 8px;font-size:11px;gap:3px;border-radius:6px}
+
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:700}
+.badge-blue{background:#DBEAFE;color:#1D4ED8}
+.badge-green{background:#D1FAE5;color:#065F46}
+.badge-red{background:#FEE2E2;color:#991B1B}
+.badge-amber{background:#FEF3C7;color:#92400E}
+.badge-gray{background:var(--surface2);color:var(--text2)}
+.badge-purple{background:#EDE9FE;color:#5B21B6}
+.badge-indigo{background:#E0E7FF;color:#3730A3}
+
+table{width:100%;border-collapse:collapse}
+th{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.5px;text-transform:uppercase;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);background:var(--surface)}
+td{padding:12px 14px;font-size:13px;color:var(--text);border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--surface)}
+
+.table-wrap{border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;background:var(--white);box-shadow:var(--shadow)}
+
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:12px}
+.section-title{font-size:15px;font-weight:700;color:var(--text)}
+
+.page-grid{display:grid;gap:20px}
+.col-2{grid-template-columns:1fr 1fr}
+.col-3{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:900px){.col-2,.col-3{grid-template-columns:1fr}}
+
+/* Progress bars */
+.progress-bar{height:6px;background:var(--surface2);border-radius:100px;overflow:hidden}
+.progress-fill{height:100%;border-radius:100px;transition:width .6s ease}
+.progress-blue{background:var(--brand2)}
+.progress-green{background:var(--accent)}
+.progress-amber{background:var(--accent2)}
+.progress-red{background:var(--danger)}
+
+/* Avatar */
+.avatar{
+  display:inline-flex;align-items:center;justify-content:center;
+  border-radius:50%;font-weight:700;color:var(--white);flex-shrink:0;
+}
+.avatar-sm{width:32px;height:32px;font-size:12px}
+.avatar-md{width:40px;height:40px;font-size:14px}
+.avatar-lg{width:48px;height:48px;font-size:16px}
+.av-blue{background:linear-gradient(135deg,#2563EB,#60A5FA)}
+.av-green{background:linear-gradient(135deg,#059669,#34D399)}
+.av-purple{background:linear-gradient(135deg,#7C3AED,#A78BFA)}
+.av-amber{background:linear-gradient(135deg,#D97706,#FCD34D)}
+.av-red{background:linear-gradient(135deg,#DC2626,#F87171)}
+.av-indigo{background:linear-gradient(135deg,#4338CA,#818CF8)}
+.av-teal{background:linear-gradient(135deg,#0D9488,#2DD4BF)}
+
+/* Tabs */
+.tabs{display:flex;gap:2px;border-bottom:2px solid var(--border);margin-bottom:20px}
+.tab{padding:8px 16px;font-size:13px;font-weight:600;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
+.tab:hover{color:var(--text2)}
+.tab.active{color:var(--brand2);border-bottom-color:var(--brand2)}
+
+/* Form in modal */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);
+  display:none;align-items:center;justify-content:center;z-index:1000;
+  backdrop-filter:blur(4px);
+}
+.modal-overlay.open{display:flex}
+.modal-box{
+  background:var(--white);border-radius:var(--radius-lg);
+  padding:28px;width:480px;max-width:95vw;max-height:90vh;overflow-y:auto;
+  box-shadow:var(--shadow-lg);animation:modal-in .2s ease;
+}
+@keyframes modal-in{from{opacity:0;transform:scale(.96) translateY(8px)}to{opacity:1;transform:none}}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between}
+.modal-close{font-size:20px;color:var(--text3);cursor:pointer;line-height:1;padding:4px}
+.modal-close:hover{color:var(--text)}
+.modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:24px;border-top:1px solid var(--border);padding-top:16px}
+
+.field{margin-bottom:16px}
+.field-label{font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bottom:6px}
+.field-input{
+  width:100%;border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 12px;font-size:13px;color:var(--text);background:var(--surface);
+  transition:border-color .2s;
+}
+.field-input:focus{border-color:var(--brand2);background:var(--white)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* Toast */
+.toast-wrap{position:fixed;bottom:24px;right:24px;z-index:2000;display:flex;flex-direction:column;gap:8px}
+.toast{
+  background:var(--text);color:var(--white);border-radius:10px;
+  padding:12px 18px;font-size:13px;font-weight:600;
+  box-shadow:var(--shadow-lg);min-width:240px;
+  display:flex;align-items:center;gap:10px;
+  animation:toast-in .25s ease;
+}
+@keyframes toast-in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.toast.success{background:#065F46;color:#D1FAE5}
+.toast.error{background:#991B1B;color:#FEE2E2}
+.toast.warn{background:#92400E;color:#FEF3C7}
+
+/* Empty state */
+.empty{text-align:center;padding:48px 20px;color:var(--text3)}
+.empty-icon{font-size:40px;margin-bottom:12px;opacity:.5}
+.empty-text{font-size:14px;font-weight:500}
+
+/* CHAT */
+.chat-layout{display:grid;grid-template-columns:260px 1fr;height:calc(100vh - var(--topbar-h) - 56px);border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;background:var(--white);box-shadow:var(--shadow)}
+.chat-list{border-right:1px solid var(--border);overflow-y:auto}
+.chat-list-header{padding:16px;border-bottom:1px solid var(--border);font-size:13px;font-weight:700}
+.chat-item{padding:12px 16px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .15s;display:flex;gap:10px}
+.chat-item:hover,.chat-item.active{background:var(--brand-light)}
+.chat-item-name{font-size:13px;font-weight:600;color:var(--text)}
+.chat-item-preview{font-size:11px;color:var(--text3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-item-time{font-size:10px;color:var(--text3);flex-shrink:0;margin-left:auto;padding-top:2px}
+.chat-main{display:flex;flex-direction:column}
+.chat-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.chat-messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px}
+.msg{max-width:68%;display:flex;flex-direction:column;gap:3px}
+.msg.mine{align-self:flex-end;align-items:flex-end}
+.msg.other{align-self:flex-start}
+.msg-bubble{padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.5}
+.msg.mine .msg-bubble{background:var(--brand2);color:var(--white);border-bottom-right-radius:4px}
+.msg.other .msg-bubble{background:var(--surface2);color:var(--text);border-bottom-left-radius:4px}
+.msg-meta{font-size:10px;color:var(--text3)}
+.chat-input-area{padding:16px 20px;border-top:1px solid var(--border);display:flex;gap:10px}
+.chat-input{flex:1;border:1.5px solid var(--border);border-radius:8px;padding:9px 14px;font-size:13px;resize:none}
+.chat-input:focus{border-color:var(--brand2)}
+
+/* EMAIL */
+.email-layout{display:grid;grid-template-columns:220px 1fr;height:calc(100vh - var(--topbar-h) - 56px);border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;background:var(--white);box-shadow:var(--shadow)}
+.email-sidebar{border-right:1px solid var(--border);padding:16px 12px}
+.email-folder{padding:8px 12px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--text2);transition:all .15s}
+.email-folder:hover,.email-folder.active{background:var(--brand-light);color:var(--brand2);font-weight:600}
+.email-list{border-right:1px solid var(--border);overflow-y:auto}
+.email-item{padding:14px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
+.email-item:hover,.email-item.active{background:var(--brand-light)}
+.email-item-from{font-size:13px;font-weight:700;color:var(--text)}
+.email-item-subject{font-size:12px;color:var(--text2);margin-top:2px}
+.email-item-preview{font-size:11px;color:var(--text3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}
+.email-detail{display:flex;flex-direction:column}
+.email-detail-header{padding:20px 24px;border-bottom:1px solid var(--border)}
+.email-detail-subject{font-size:17px;font-weight:700;margin-bottom:8px}
+.email-detail-meta{font-size:12px;color:var(--text3);display:flex;gap:16px;flex-wrap:wrap}
+.email-detail-body{padding:24px;font-size:14px;line-height:1.7;color:var(--text2);flex:1}
+
+/* SCHEDULE */
+.schedule-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:16px}
+.sched-day{background:var(--surface);border-radius:10px;padding:12px;border:1px solid var(--border);text-align:center;min-height:90px}
+.sched-day.today{border-color:var(--brand2);background:var(--brand-light)}
+.sched-day-name{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
+.sched-day-num{font-size:20px;font-weight:800;margin:4px 0;color:var(--text)}
+.sched-day.today .sched-day-num{color:var(--brand2)}
+.sched-shift{font-size:10px;background:var(--brand2);color:var(--white);border-radius:4px;padding:2px 6px;margin-top:4px;display:inline-block;font-weight:600}
+
+/* PERFORMANCE SCORE */
+.score-circle{
+  width:80px;height:80px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;font-weight:800;font-family:var(--mono);
+  border:4px solid;flex-shrink:0;
+}
+.score-excellent{color:#059669;border-color:#D1FAE5;background:#F0FDF4}
+.score-good{color:var(--brand2);border-color:#DBEAFE;background:#EFF6FF}
+.score-average{color:var(--accent2);border-color:#FEF3C7;background:#FFFBEB}
+
+/* PAYROLL */
+.payslip-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.payslip-row:last-child{border-bottom:none}
+.payslip-label{color:var(--text2)}
+.payslip-val{font-weight:600;font-family:var(--mono)}
+.payslip-total{font-size:15px;font-weight:800;color:var(--accent)}
+
+/* STATUS INDICATORS */
+.status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px}
+.dot-green{background:var(--accent)}
+.dot-amber{background:var(--accent2)}
+.dot-red{background:var(--danger)}
+.dot-blue{background:var(--brand2)}
+.dot-gray{background:var(--text3)}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ LOGIN PAGE ═══════════════════════════════ -->
+<div id="login-page">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-icon">🏢</div>
+      <div>
+        <div class="login-logo-text">HR Portal</div>
+        <div class="login-logo-sub">ESC MEDIA & TECH</div>
+      </div>
+    </div>
+    <div class="login-title">Bienvenido</div>
+    <div class="login-sub">Accede con tus credenciales corporativas</div>
+    <div class="form-group">
+      <label class="form-label">USUARIO</label>
+      <input class="form-input" id="inp-user" type="text" placeholder="nombre.usuario" autocomplete="off"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">CONTRASEÑA</label>
+      <input class="form-input" id="inp-pass" type="password" placeholder="••••••••"/>
+    </div>
+    <button class="btn-login" onclick="doLogin()">Iniciar sesión</button>
+    <div class="login-error" id="login-error">Usuario o contraseña incorrectos</div>
+    <div class="demo-accounts">
+      <div class="demo-title">Accesos Demo</div>
+      <div class="demo-grid">
+        <button class="demo-btn" onclick="quickLogin('ceo','Admin2025!')">
+          <div class="demo-btn-role">Admin</div>
+          <div class="demo-btn-name">Arturo Valverde</div>
+        </button>
+        <button class="demo-btn" onclick="quickLogin('rrhh.dir','RRHH2025!')">
+          <div class="demo-btn-role">HR</div>
+          <div class="demo-btn-name">Carmen Ruiz</div>
+        </button>
+        <button class="demo-btn" onclick="quickLogin('tech.coord','Coord2025!')">
+          <div class="demo-btn-role">Coordinador</div>
+          <div class="demo-btn-name">Miguel Torres</div>
+        </button>
+        <button class="demo-btn" onclick="quickLogin('carlos.r','Emp2025!')">
+          <div class="demo-btn-role">Empleado</div>
+          <div class="demo-btn-name">Carlos Rodríguez</div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ APP SHELL ═══════════════════════════════ -->
+<div id="app">
+  <div class="app-layout">
+    <!-- SIDEBAR -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-icon">🏢</div>
+        <div>
+          <div class="sidebar-logo-text">HR Portal</div>
+          <div class="sidebar-logo-sub">ESC Media & Tech</div>
+        </div>
+      </div>
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sb-avatar"></div>
+        <div>
+          <div class="sidebar-user-name" id="sb-name"></div>
+          <div class="sidebar-user-role" id="sb-role"></div>
+        </div>
+      </div>
+      <div class="sidebar-nav" id="sidebar-nav"></div>
+      <div class="sidebar-footer">
+        <button class="btn-logout" onclick="doLogout()">🚪 Cerrar sesión</button>
+      </div>
+    </nav>
+
+    <!-- MAIN -->
+    <div class="main-area">
+      <div class="topbar">
+        <div class="topbar-title" id="topbar-title">Dashboard</div>
+        <span class="topbar-badge" id="topbar-role-badge"></span>
+        <span class="topbar-sub" id="topbar-date"></span>
+      </div>
+      <div class="page-content" id="page-content"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal-box" id="modal-box"></div>
+</div>
+
+<!-- TOASTS -->
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   MOCK DATA
+═══════════════════════════════════════════════════════════════ */
+const MOCK = {
+employees:[
+  {id:1,username:'ceo',nombre:'Arturo',apellidos:'Valverde Moreno',nombreCompleto:'Arturo Valverde Moreno',email:'arturo.valverde@escmedia.es',telefono:'+34 91 234 5600',departamento:'Dirección',cargo:'CEO',rol:'Admin',salario:8500,fechaIngreso:'2018-01-15',estado:'Activo',av:'AV',avc:'av-blue'},
+  {id:2,username:'rrhh.dir',nombre:'Carmen',apellidos:'Ruiz Alonso',nombreCompleto:'Carmen Ruiz Alonso',email:'carmen.ruiz@escmedia.es',telefono:'+34 91 234 5601',departamento:'RRHH',cargo:'Directora RRHH',rol:'HR',salario:5200,fechaIngreso:'2019-03-10',estado:'Activo',av:'CR',avc:'av-purple'},
+  {id:3,username:'tech.coord',nombre:'Miguel',apellidos:'Torres Sanz',nombreCompleto:'Miguel Torres Sanz',email:'miguel.torres@escmedia.es',telefono:'+34 91 234 5602',departamento:'Tecnología',cargo:'Coordinador Tecnología',rol:'Coordinator',salario:4400,fechaIngreso:'2020-06-01',estado:'Activo',av:'MT',avc:'av-indigo'},
+  {id:4,username:'carlos.r',nombre:'Carlos',apellidos:'Rodríguez García',nombreCompleto:'Carlos Rodríguez García',email:'carlos.rodriguez@escmedia.es',telefono:'+34 91 234 5603',departamento:'Tecnología',cargo:'Desarrollador Senior',rol:'Employee',salario:3800,fechaIngreso:'2021-09-15',estado:'Activo',av:'CR',avc:'av-green'},
+  {id:5,username:'laura.m',nombre:'Laura',apellidos:'Martínez López',nombreCompleto:'Laura Martínez López',email:'laura.martinez@escmedia.es',telefono:'+34 91 234 5604',departamento:'Marketing',cargo:'Marketing Manager',rol:'Employee',salario:3500,fechaIngreso:'2020-11-20',estado:'Activo',av:'LM',avc:'av-amber'},
+  {id:6,username:'elena.p',nombre:'Elena',apellidos:'Pascual Vera',nombreCompleto:'Elena Pascual Vera',email:'elena.pascual@escmedia.es',telefono:'+34 91 234 5605',departamento:'Ventas',cargo:'Account Executive',rol:'Employee',salario:3200,fechaIngreso:'2022-02-01',estado:'Activo',av:'EP',avc:'av-red'},
+  {id:7,username:'pedro.s',nombre:'Pedro',apellidos:'Sánchez Iglesias',nombreCompleto:'Pedro Sánchez Iglesias',email:'pedro.sanchez@escmedia.es',telefono:'+34 91 234 5606',departamento:'Tecnología',cargo:'DevOps Engineer',rol:'Employee',salario:4100,fechaIngreso:'2021-04-12',estado:'Activo',av:'PS',avc:'av-teal'},
+  {id:8,username:'ana.g',nombre:'Ana',apellidos:'González Fuentes',nombreCompleto:'Ana González Fuentes',email:'ana.gonzalez@escmedia.es',telefono:'+34 91 234 5607',departamento:'Finanzas',cargo:'Contable Senior',rol:'Employee',salario:3700,fechaIngreso:'2019-08-25',estado:'Activo',av:'AG',avc:'av-green'},
+  {id:9,username:'javier.r',nombre:'Javier',apellidos:'Romero Castro',nombreCompleto:'Javier Romero Castro',email:'javier.romero@escmedia.es',telefono:'+34 91 234 5608',departamento:'Operaciones',cargo:'Jefe Operaciones',rol:'Coordinator',salario:4600,fechaIngreso:'2018-11-05',estado:'Activo',av:'JR',avc:'av-blue'},
+  {id:10,username:'sofia.l',nombre:'Sofía',apellidos:'Llorente Pérez',nombreCompleto:'Sofía Llorente Pérez',email:'sofia.llorente@escmedia.es',telefono:'+34 91 234 5609',departamento:'Marketing',cargo:'Diseñadora UX',rol:'Employee',salario:3300,fechaIngreso:'2022-07-18',estado:'Activo',av:'SL',avc:'av-purple'},
+  {id:11,username:'david.m',nombre:'David',apellidos:'Morales Vidal',nombreCompleto:'David Morales Vidal',email:'david.morales@escmedia.es',telefono:'+34 91 234 5610',departamento:'Ventas',cargo:'Sales Manager',rol:'Coordinator',salario:4200,fechaIngreso:'2020-03-30',estado:'Activo',av:'DM',avc:'av-amber'},
+  {id:12,username:'isabel.c',nombre:'Isabel',apellidos:'Campos Noriega',nombreCompleto:'Isabel Campos Noriega',email:'isabel.campos@escmedia.es',telefono:'+34 91 234 5611',departamento:'RRHH',cargo:'Técnica RRHH',rol:'Employee',salario:2900,fechaIngreso:'2023-01-09',estado:'Activo',av:'IC',avc:'av-teal'},
+],
+
+attendance:[
+  {id:1,empId:4,fecha:'2025-06-07',entrada:'08:52',salida:null,tipo:'Presencial',estado:'En curso',horas:null},
+  {id:2,empId:4,fecha:'2025-06-06',entrada:'08:45',salida:'17:30',tipo:'Presencial',estado:'Completado',horas:8.75},
+  {id:3,empId:4,fecha:'2025-06-05',entrada:'09:01',salida:'18:05',tipo:'Teletrabajo',estado:'Completado',horas:9.07},
+  {id:4,empId:4,fecha:'2025-06-04',entrada:'08:30',salida:'17:00',tipo:'Presencial',estado:'Completado',horas:8.5},
+  {id:5,empId:4,fecha:'2025-06-03',entrada:'08:55',salida:'17:45',tipo:'Teletrabajo',estado:'Completado',horas:8.83},
+  {id:6,empId:3,fecha:'2025-06-07',entrada:'09:00',salida:null,tipo:'Presencial',estado:'En curso',horas:null},
+  {id:7,empId:5,fecha:'2025-06-07',entrada:'08:30',salida:'17:00',tipo:'Presencial',estado:'Completado',horas:8.5},
+  {id:8,empId:7,fecha:'2025-06-07',entrada:'08:15',salida:null,tipo:'Teletrabajo',estado:'En curso',horas:null},
+  {id:9,empId:9,fecha:'2025-06-07',entrada:'09:20',salida:'18:30',tipo:'Presencial',estado:'Completado',horas:9.17},
+],
+
+leaves:[
+  {id:1,empId:4,tipo:'Vacaciones',inicio:'2025-07-14',fin:'2025-07-25',dias:10,motivo:'Vacaciones de verano familiares',estado:'Aprobada',solicitada:'2025-06-01'},
+  {id:2,empId:4,tipo:'Asuntos propios',inicio:'2025-06-20',fin:'2025-06-20',dias:1,motivo:'Gestión administrativa personal',estado:'Pendiente',solicitada:'2025-06-05'},
+  {id:3,empId:5,tipo:'Baja médica',inicio:'2025-05-28',fin:'2025-05-30',dias:3,motivo:'Proceso gripal',estado:'Aprobada',solicitada:'2025-05-27'},
+  {id:4,empId:7,tipo:'Vacaciones',inicio:'2025-08-04',fin:'2025-08-15',dias:10,motivo:'Viaje planificado',estado:'Pendiente',solicitada:'2025-06-03'},
+  {id:5,empId:10,tipo:'Maternidad/Paternidad',inicio:'2025-06-01',fin:'2025-08-31',dias:91,motivo:'Baja por maternidad',estado:'Aprobada',solicitada:'2025-05-15'},
+  {id:6,empId:6,tipo:'Asuntos propios',inicio:'2025-06-12',fin:'2025-06-12',dias:1,motivo:'Cita médica especialista',estado:'Pendiente',solicitada:'2025-06-04'},
+],
+
+overtime:[
+  {id:1,empId:4,fecha:'2025-05-30',horas:2,motivo:'Lanzamiento release v2.1',compensacion:'Económica',estado:'Aprobada'},
+  {id:2,empId:4,fecha:'2025-06-06',horas:1.5,motivo:'Resolución incidencia producción crítica',compensacion:'Descanso',estado:'Pendiente'},
+  {id:3,empId:7,fecha:'2025-06-05',horas:3,motivo:'Migración servidores noche',compensacion:'Económica',estado:'Aprobada'},
+  {id:4,empId:3,fecha:'2025-06-06',horas:2,motivo:'Reunión cliente estratégica',compensacion:'Descanso',estado:'Aprobada'},
+],
+
+performance:[
+  {id:1,empId:4,periodo:'Q1 2025',puntuacion:88,calificacion:'Muy Bueno',objetivos:'Refactorizar módulo de facturación, mejorar cobertura de tests al 80%, onboarding de 2 nuevos compañeros.',logros:'Refactorización completada a tiempo. Cobertura de tests alcanzada al 83%. Onboarding realizado con éxito.',areasMejora:'Documentación técnica mejorable. Comunicación proactiva en bloqueos.',evaluador:'Miguel Torres Sanz',fecha:'2025-03-31'},
+  {id:2,empId:4,periodo:'Q2 2025',puntuacion:91,calificacion:'Excelente',objetivos:'Implementar microservicio de notificaciones, liderar sprint planning, reducir deuda técnica 20%.',logros:'Microservicio implementado y en producción. Sprint planning liderado correctamente. Deuda técnica reducida 25%.',areasMejora:'Delegación de tareas en momentos de alta carga.',evaluador:'Miguel Torres Sanz',fecha:'2025-06-01'},
+  {id:3,empId:5,periodo:'Q1 2025',puntuacion:85,calificacion:'Bueno',objetivos:'Campaña de marca Q1, gestión de redes sociales, coordinación con agencia externa.',logros:'Campaña ejecutada con 15% sobre KPI. Redes sociales con crecimiento del 22%.',areasMejora:'Gestión del presupuesto publicitario.',evaluador:'Arturo Valverde Moreno',fecha:'2025-03-31'},
+  {id:4,empId:7,periodo:'Q1 2025',puntuacion:94,calificacion:'Excelente',objetivos:'Migración a Kubernetes, reducir tiempos de despliegue, certificación AWS.',logros:'Migración completada. Tiempos de despliegue reducidos 40%. Certificación AWS obtenida.',areasMejora:'Documentación de runbooks.',evaluador:'Miguel Torres Sanz',fecha:'2025-03-31'},
+  {id:5,empId:3,periodo:'Q1 2025',puntuacion:90,calificacion:'Muy Bueno',objetivos:'Liderar equipo tecnología, definir hoja de ruta técnica 2025, implementar metodología Scrum.',logros:'Equipo cohesionado. Roadmap técnico aprobado por dirección. Scrum implementado en todos los proyectos.',areasMejora:'Formación continua del equipo.',evaluador:'Arturo Valverde Moreno',fecha:'2025-03-31'},
+],
+
+payroll:[
+  {id:1,empId:4,periodo:'Mayo 2025',bruto:3800,ss:270.8,irpf:760,neto:2769.2,estado:'Pagado',fecha:'2025-05-31'},
+  {id:2,empId:4,periodo:'Abril 2025',bruto:3800,ss:270.8,irpf:760,neto:2769.2,estado:'Pagado',fecha:'2025-04-30'},
+  {id:3,empId:4,periodo:'Marzo 2025',bruto:3800,ss:270.8,irpf:760,neto:2769.2,estado:'Pagado',fecha:'2025-03-31'},
+  {id:4,empId:5,periodo:'Mayo 2025',bruto:3500,ss:249.5,irpf:700,neto:2550.5,estado:'Pagado',fecha:'2025-05-31'},
+  {id:5,empId:3,periodo:'Mayo 2025',bruto:4400,ss:313.6,irpf:880,neto:3206.4,estado:'Pagado',fecha:'2025-05-31'},
+  {id:6,empId:7,periodo:'Mayo 2025',bruto:4100,ss:292.3,irpf:820,neto:2987.7,estado:'Pagado',fecha:'2025-05-31'},
+  {id:7,empId:2,periodo:'Mayo 2025',bruto:5200,ss:370.8,irpf:1040,neto:3789.2,estado:'Pagado',fecha:'2025-05-31'},
+  {id:8,empId:1,periodo:'Mayo 2025',bruto:8500,ss:606.3,irpf:1700,neto:6193.7,estado:'Pagado',fecha:'2025-05-31'},
+  {id:9,empId:4,periodo:'Junio 2025',bruto:3800,ss:270.8,irpf:760,neto:2769.2,estado:'Pendiente',fecha:'2025-06-30'},
+  {id:10,empId:5,periodo:'Junio 2025',bruto:3500,ss:249.5,irpf:700,neto:2550.5,estado:'Pendiente',fecha:'2025-06-30'},
+  {id:11,empId:3,periodo:'Junio 2025',bruto:4400,ss:313.6,irpf:880,neto:3206.4,estado:'Pendiente',fecha:'2025-06-30'},
+  {id:12,empId:7,periodo:'Junio 2025',bruto:4100,ss:292.3,irpf:820,neto:2987.7,estado:'Pendiente',fecha:'2025-06-30'},
+],
+
+emails:[
+  {id:1,de:'Carmen Ruiz <carmen.ruiz@escmedia.es>',asunto:'Revisión objetivos Q2',cuerpo:'Hola Carlos,\n\nTe escribo para coordinar la revisión de objetivos del segundo trimestre. Tu evaluación de rendimiento de Q2 ha sido excelente (91 puntos), lo que es un gran logro.\n\nMe gustaría que agendáramos una reunión esta semana para comentar los objetivos de Q3 y posibles planes de carrera.\n\n¿Tienes disponibilidad el jueves a las 11:00?\n\nUn saludo,\nCarmen Ruiz\nDirectora de RRHH',fecha:'2025-06-06',leido:true,estrella:true,folder:'inbox'},
+  {id:2,de:'Miguel Torres <miguel.torres@escmedia.es>',asunto:'Sprint Planning — Semana 24',cuerpo:'Equipo,\n\nRecordatorio del Sprint Planning para la semana 24 que tendrá lugar el lunes 09 de junio a las 09:30 en la sala Ágora.\n\nPor favor, revisad el backlog antes de la reunión y traed vuestras estimaciones para los ítems priorizados.\n\nEl sprint goal de esta iteración será completar el módulo de reporting avanzado.\n\nNos vemos el lunes.\nMiguel',fecha:'2025-06-05',leido:false,estrella:false,folder:'inbox'},
+  {id:3,de:'Sistema HR <noreply@escmedia.es>',asunto:'Nómina Mayo 2025 disponible',cuerpo:'Estimado Carlos,\n\nTu nómina del mes de Mayo 2025 está disponible en el portal de empleados.\n\n• Salario bruto: 3.800,00 €\n• Seguridad Social: -270,80 €\n• IRPF (20%): -760,00 €\n• Salario neto: 2.769,20 €\n\nPuedes descargar el documento completo desde la sección "Mis Documentos".\n\nSaludos,\nDpto. Recursos Humanos',fecha:'2025-06-01',leido:true,estrella:false,folder:'inbox'},
+  {id:4,de:'Yo',para:'miguel.torres@escmedia.es',asunto:'Re: Incidencia prod — módulo pagos',cuerpo:'Hola Miguel,\n\nTe confirmo que la incidencia del módulo de pagos ha sido resuelta. El problema era una race condition en el servicio de webhooks que se activaba bajo carga alta.\n\nHe implementado un sistema de retry con backoff exponencial y añadido los tests correspondientes.\n\nLa incidencia está cerrada y el sistema está estable.\n\nSaludos,\nCarlos',fecha:'2025-06-06',leido:true,estrella:false,folder:'sent'},
+],
+
+chat:[
+  {contactId:3,msgs:[
+    {de:'other',texto:'Buenos días Carlos. ¿Cómo va el microservicio de notificaciones?',hora:'09:15'},
+    {de:'me',texto:'¡Buenos días Miguel! Va bien, estoy terminando los tests de integración. Debería estar listo para revisión esta tarde.',hora:'09:22'},
+    {de:'other',texto:'Perfecto. Cuando lo tengas listo abre el PR y me asignas como reviewer.',hora:'09:24'},
+    {de:'me',texto:'Claro, lo hago en cuanto tenga el pipeline verde. ¿Para la reunión de hoy a las 16h hay algo más que preparar?',hora:'09:26'},
+    {de:'other',texto:'Trae las métricas de rendimiento del sprint anterior si puedes.',hora:'09:30'},
+  ]},
+  {contactId:2,msgs:[
+    {de:'other',texto:'Hola Carlos, ¿tienes un momento para revisar tu disponibilidad para la evaluación de Q2?',hora:'11:05'},
+    {de:'me',texto:'¡Hola Carmen! Sí, claro. Estoy disponible jueves o viernes por la tarde.',hora:'11:20'},
+  ]},
+  {contactId:5,msgs:[
+    {de:'other',texto:'Carlos, ¿puedes revisar el banner que hemos preparado para la campaña de Q3? Quiero tu opinión técnica antes de enviarlo.',hora:'14:30'},
+    {de:'me',texto:'Claro Laura, mándamelo cuando quieras.',hora:'14:45'},
+  ]},
+]
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   AUTH
+═══════════════════════════════════════════════════════════════ */
+const ACCOUNTS={
+  'ceo':{pass:'Admin2025!',empId:1},
+  'rrhh.dir':{pass:'RRHH2025!',empId:2},
+  'tech.coord':{pass:'Coord2025!',empId:3},
+  'carlos.r':{pass:'Emp2025!',empId:4},
+};
+
+let SESSION={user:null,emp:null,role:null};
+let STATE={page:'dashboard',tab:0,selEmail:null,selChat:null,empDetail:null,chatContact:null};
+let todayCheckedIn=false, todayCheckedOut=false;
+
+function doLogin(){
+  const u=document.getElementById('inp-user').value.trim();
+  const p=document.getElementById('inp-pass').value;
+  doAuth(u,p);
+}
+function quickLogin(u,p){
+  document.getElementById('inp-user').value=u;
+  document.getElementById('inp-pass').value=p;
+  doAuth(u,p);
+}
+function doAuth(u,p){
+  const acc=ACCOUNTS[u];
+  const err=document.getElementById('login-error');
+  if(!acc||acc.pass!==p){err.style.display='block';return;}
+  err.style.display='none';
+  const emp=MOCK.employees.find(e=>e.id===acc.empId);
+  SESSION={user:u,emp,role:emp.rol};
+  // check today attendance
+  const todayRec=MOCK.attendance.find(a=>a.empId===emp.id&&a.fecha===today());
+  if(todayRec){todayCheckedIn=true;todayCheckedOut=!!todayRec.salida;}
+  document.getElementById('login-page').style.display='none';
+  document.getElementById('app').style.display='block';
+  setupShell();
+  navigate('dashboard');
+}
+function doLogout(){
+  SESSION={user:null,emp:null,role:null};
+  document.getElementById('app').style.display='none';
+  document.getElementById('login-page').style.display='flex';
+  document.getElementById('inp-user').value='';
+  document.getElementById('inp-pass').value='';
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SHELL SETUP
+═══════════════════════════════════════════════════════════════ */
+const ROLE_COLORS={Admin:'av-blue',HR:'av-purple',Coordinator:'av-indigo',Employee:'av-green'};
+const ROLE_LABELS={Admin:'Administrador',HR:'Recursos Humanos',Coordinator:'Coordinador',Employee:'Empleado'};
+
+function setupShell(){
+  const e=SESSION.emp,r=SESSION.role;
+  document.getElementById('sb-avatar').textContent=e.av;
+  document.getElementById('sb-avatar').className='sidebar-avatar '+ROLE_COLORS[r];
+  document.getElementById('sb-name').textContent=e.nombreCompleto;
+  document.getElementById('sb-role').textContent=ROLE_LABELS[r];
+  document.getElementById('topbar-role-badge').textContent=ROLE_LABELS[r];
+  document.getElementById('topbar-date').textContent=fmtDate(today());
+  renderSidebar();
+}
+
+function renderSidebar(){
+  const r=SESSION.role;
+  const isEmp=true;
+  const isMgr=['Coordinator','HR','Admin'].includes(r);
+  const isHR=['HR','Admin'].includes(r);
+  const pendL=MOCK.leaves.filter(l=>l.estado==='Pendiente').length;
+
+  const nav=[
+    {section:'Mi Jornada',items:[
+      {icon:'📊',label:'Dashboard',page:'dashboard'},
+      {icon:'🕐',label:'Mi Jornada',page:'attendance'},
+      {icon:'📅',label:'Horario',page:'schedule'},
+    ]},
+    {section:'Solicitudes',items:[
+      {icon:'🏖️',label:'Ausencias',page:'leaves'},
+      {icon:'⏱️',label:'Horas Extra',page:'overtime'},
+      {icon:'📄',label:'Mis Documentos',page:'docs'},
+      {icon:'📈',label:'Mi Rendimiento',page:'performance'},
+    ]},
+    {section:'Comunicación',items:[
+      {icon:'📧',label:'Email',page:'email'},
+      {icon:'💬',label:'Chat',page:'chat'},
+    ]},
+  ];
+  if(isMgr){
+    nav.push({section:'Gestión',items:[
+      {icon:'👥',label:'Mi Equipo',page:'team'},
+      ...(isHR?[{icon:'👤',label:'Empleados',page:'employees',badge:0}]:[]),
+      ...(isHR?[{icon:'💰',label:'Nóminas',page:'payroll',badge:pendL}]:[]),
+      ...(isHR?[{icon:'📋',label:'Informes',page:'reports'}]:[]),
+      {icon:'⭐',label:'Evaluaciones',page:'evals'},
+    ]});
+  }
+
+  let html='';
+  nav.forEach(sec=>{
+    html+=`<div class="nav-section"><div class="nav-section-label">${sec.section}</div>`;
+    sec.items.forEach(it=>{
+      const badge=it.badge?`<span class="nav-badge">${it.badge}</span>`:'';
+      html+=`<div class="nav-item" id="nav-${it.page}" onclick="navigate('${it.page}')">${badge}<span class="nav-icon">${it.icon}</span>${it.label}</div>`;
+    });
+    html+='</div>';
+  });
+  document.getElementById('sidebar-nav').innerHTML=html;
+}
+
+function setActive(page){
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const el=document.getElementById('nav-'+page);
+  if(el)el.classList.add('active');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ROUTER
+═══════════════════════════════════════════════════════════════ */
+const PAGE_TITLES={
+  dashboard:'Dashboard',attendance:'Mi Jornada',schedule:'Horario Semanal',
+  leaves:'Ausencias y Vacaciones',overtime:'Horas Extra',docs:'Mis Documentos',
+  performance:'Mi Rendimiento',email:'Bandeja de Entrada',chat:'Mensajes',
+  employees:'Gestión de Empleados',payroll:'Nóminas',reports:'Informes',
+  team:'Mi Equipo',evals:'Evaluaciones'
+};
+
+function navigate(page){
+  STATE.page=page;
+  setActive(page);
+  document.getElementById('topbar-title').textContent=PAGE_TITLES[page]||page;
+  const c=document.getElementById('page-content');
+  const fns={
+    dashboard:rDash,attendance:rAtt,schedule:rSched,
+    leaves:rLeaves,overtime:rOT,docs:rDocs,performance:rPerf,
+    email:rEmail,chat:rChat,
+    employees:rEmps,payroll:rPayroll,reports:rReports,team:rTeam,evals:rEvals
+  };
+  const fn=fns[page];
+  if(fn)c.innerHTML=fn();
+  else c.innerHTML=`<div class="empty"><div class="empty-icon">🚧</div><div class="empty-text">Página en desarrollo</div></div>`;
+  // bind events post-render
+  if(page==='chat')bindChat();
+  if(page==='email')bindEmail();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════════════════════════════ */
+function today(){return '2025-06-07';}
+function fmtDate(d){if(!d)return'—';const[y,m,day]=d.split('-');const ms=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];return `${day} ${ms[+m-1]} ${y}`;}
+function fmtMoney(n){return n.toLocaleString('es-ES',{style:'currency',currency:'EUR'});}
+function getEmp(id){return MOCK.employees.find(e=>e.id===id)||{};}
+function avatar(emp,size='sm'){return `<div class="avatar avatar-${size} ${emp.avc}">${emp.av}</div>`;}
+function roleBadge(r){const m={Admin:'badge-blue',HR:'badge-purple',Coordinator:'badge-indigo',Employee:'badge-green'};return `<span class="badge ${m[r]||'badge-gray'}">${ROLE_LABELS[r]||r}</span>`;}
+function statusBadge(s){const m={Activo:'badge-green',Aprobada:'badge-green',Pagado:'badge-green',Completado:'badge-green',Pendiente:'badge-amber','En curso':'badge-blue',Rechazada:'badge-red',Denegada:'badge-red'};return `<span class="badge ${m[s]||'badge-gray'}">${s}</span>`;}
+function deptColor(d){const m={Dirección:'av-blue',Tecnología:'av-indigo',Marketing:'av-amber',Ventas:'av-red',Finanzas:'av-green',RRHH:'av-purple',Operaciones:'av-teal'};return m[d]||'av-blue';}
+
+/* ═══════════════════════════════════════════════════════════════
+   DASHBOARD
+═══════════════════════════════════════════════════════════════ */
+function rDash(){
+  const r=SESSION.role,emp=SESSION.emp;
+  const isHR=['HR','Admin'].includes(r);
+  const isMgr=['Coordinator','HR','Admin'].includes(r);
+  const total=MOCK.employees.length;
+  const activos=MOCK.employees.filter(e=>e.estado==='Activo').length;
+  const pendLeaves=MOCK.leaves.filter(l=>l.estado==='Pendiente').length;
+  const hoy=MOCK.attendance.filter(a=>a.fecha===today());
+  const presentes=hoy.filter(a=>!a.salida).length;
+  const todayRec=MOCK.attendance.find(a=>a.empId===emp.id&&a.fecha===today());
+  const myLeaves=MOCK.leaves.filter(l=>l.empId===emp.id&&l.estado==='Aprobada');
+
+  // Dept breakdown
+  const depts={};
+  MOCK.employees.forEach(e=>{depts[e.departamento]=(depts[e.departamento]||0)+1;});
+  const deptEntries=Object.entries(depts).sort((a,b)=>b[1]-a[1]);
+  const maxD=Math.max(...deptEntries.map(d=>d[1]));
+
+  let kpis='';
+  if(isHR){
+    kpis=`
+    <div class="kpi blue"><div class="kpi-label">Plantilla total</div><div class="kpi-value">${total}</div><div class="kpi-desc">${activos} activos</div><div class="kpi-icon">👥</div></div>
+    <div class="kpi green"><div class="kpi-label">Presentes hoy</div><div class="kpi-value">${presentes}</div><div class="kpi-desc">Registros de entrada</div><div class="kpi-icon">✅</div></div>
+    <div class="kpi amber"><div class="kpi-label">Ausencias pend.</div><div class="kpi-value">${pendLeaves}</div><div class="kpi-desc">Pendientes de aprobar</div><div class="kpi-icon">⏳</div></div>
+    <div class="kpi blue"><div class="kpi-label">Nóminas pend.</div><div class="kpi-value">${MOCK.payroll.filter(p=>p.estado==='Pendiente').length}</div><div class="kpi-desc">Mes de Junio 2025</div><div class="kpi-icon">💰</div></div>`;
+  } else if(isMgr){
+    const myTeam=MOCK.employees.filter(e=>e.departamento===emp.departamento);
+    const teamPresent=hoy.filter(a=>myTeam.find(t=>t.id===a.empId)).length;
+    kpis=`
+    <div class="kpi blue"><div class="kpi-label">Mi equipo</div><div class="kpi-value">${myTeam.length}</div><div class="kpi-desc">Dept. ${emp.departamento}</div><div class="kpi-icon">👥</div></div>
+    <div class="kpi green"><div class="kpi-label">Presentes hoy</div><div class="kpi-value">${teamPresent}</div><div class="kpi-desc">Con registro de entrada</div><div class="kpi-icon">✅</div></div>
+    <div class="kpi amber"><div class="kpi-label">Ausencias equipo</div><div class="kpi-value">${MOCK.leaves.filter(l=>myTeam.find(t=>t.id===l.empId)&&l.estado==='Pendiente').length}</div><div class="kpi-desc">Pendientes de gestionar</div><div class="kpi-icon">📋</div></div>
+    <div class="kpi blue"><div class="kpi-label">Evaluaciones</div><div class="kpi-value">${MOCK.performance.filter(p=>myTeam.find(t=>t.id===p.empId)).length}</div><div class="kpi-desc">Registradas este año</div><div class="kpi-icon">⭐</div></div>`;
+  } else {
+    const myPerf=MOCK.performance.filter(p=>p.empId===emp.id);
+    const lastPerf=myPerf.sort((a,b)=>b.id-a.id)[0];
+    kpis=`
+    <div class="kpi blue"><div class="kpi-label">Jornada hoy</div><div class="kpi-value">${todayRec?todayRec.entrada:'—'}</div><div class="kpi-desc">${todayRec?'Entrada registrada':'Sin registro hoy'}</div><div class="kpi-icon">🕐</div></div>
+    <div class="kpi green"><div class="kpi-label">Vacaciones aprob.</div><div class="kpi-value">${myLeaves.reduce((s,l)=>s+l.dias,0)}</div><div class="kpi-desc">Días aprobados</div><div class="kpi-icon">🏖️</div></div>
+    <div class="kpi ${lastPerf&&lastPerf.puntuacion>=90?'green':lastPerf&&lastPerf.puntuacion>=75?'blue':'amber'}"><div class="kpi-label">Rendimiento</div><div class="kpi-value">${lastPerf?lastPerf.puntuacion:'—'}</div><div class="kpi-desc">${lastPerf?lastPerf.periodo:'Sin evaluación'}</div><div class="kpi-icon">📈</div></div>
+    <div class="kpi amber"><div class="kpi-label">Horas extra</div><div class="kpi-value">${MOCK.overtime.filter(o=>o.empId===emp.id).reduce((s,o)=>s+o.horas,0)}h</div><div class="kpi-desc">Acumuladas</div><div class="kpi-icon">⏱️</div></div>`;
+  }
+
+  let deptChart=`<div class="card"><div class="section-header"><div><div class="card-title">Distribución por Departamento</div><div class="card-sub">${total} empleados en ${deptEntries.length} departamentos</div></div></div>`;
+  deptEntries.forEach(([dep,cnt])=>{
+    deptChart+=`<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:13px;font-weight:600">${dep}</span><span style="font-size:12px;font-family:var(--mono);color:var(--text2)">${cnt}</span></div><div class="progress-bar"><div class="progress-fill progress-blue" style="width:${(cnt/maxD)*100}%"></div></div></div>`;
+  });
+  deptChart+='</div>';
+
+  const recentLvs=MOCK.leaves.filter(l=>isHR||l.empId===emp.id).slice(0,4);
+  let lvTable=`<div class="card"><div class="section-header"><div class="card-title">${isHR?'Ausencias Recientes':'Mis Ausencias'}</div><button class="btn btn-secondary btn-sm" onclick="navigate('leaves')">Ver todas</button></div><div class="table-wrap">`;
+  if(recentLvs.length){
+    lvTable+=`<table><thead><tr>${isHR?'<th>Empleado</th>':''}<th>Tipo</th><th>Fechas</th><th>Estado</th></tr></thead><tbody>`;
+    recentLvs.forEach(l=>{
+      const e=getEmp(l.empId);
+      lvTable+=`<tr>${isHR?`<td><div style="display:flex;align-items:center;gap:8px">${avatar(e,'sm')}<span>${e.nombreCompleto}</span></div></td>`:''}<td>${l.tipo}</td><td>${fmtDate(l.inicio)}</td><td>${statusBadge(l.estado)}</td></tr>`;
+    });
+    lvTable+='</tbody></table>';
+  }else lvTable+='<div class="empty"><div class="empty-icon">✅</div><div class="empty-text">Sin ausencias</div></div>';
+  lvTable+='</div></div>';
+
+  const quickLinks=[
+    {icon:'🕐',label:'Registrar entrada',action:"navigate('attendance')"},
+    {icon:'🏖️',label:'Solicitar ausencia',action:"navigate('leaves')"},
+    {icon:'📄',label:'Ver mi nómina',action:"navigate('docs')"},
+    {icon:'💬',label:'Mensajes',action:"navigate('chat')"},
+  ];
+  const ql=`<div class="card"><div class="card-title" style="margin-bottom:14px">Acceso Rápido</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">${quickLinks.map(q=>`<button onclick="${q.action}" style="border:1.5px solid var(--border);border-radius:10px;padding:14px;background:var(--surface);text-align:left;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--brand2)';this.style.background='var(--brand-light)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface)'"><div style="font-size:22px;margin-bottom:6px">${q.icon}</div><div style="font-size:12px;font-weight:600;color:var(--text)">${q.label}</div></button>`).join('')}</div></div>`;
+
+  return `<div class="kpi-grid">${kpis}</div>
+  <div style="display:grid;grid-template-columns:1fr 320px;gap:20px">
+    <div style="display:grid;gap:20px">${deptChart}${lvTable}</div>
+    <div style="display:grid;gap:20px;align-content:start">${ql}
+      <div class="card"><div class="card-title" style="margin-bottom:14px">Jornada de hoy</div>
+        ${todayRec?`<div style="text-align:center;padding:12px 0">
+          <div style="font-size:32px;font-weight:800;font-family:var(--mono);color:var(--brand2)">${todayRec.entrada}</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:4px">Entrada registrada</div>
+          ${todayRec.salida?`<div style="font-size:20px;font-weight:700;font-family:var(--mono);color:var(--accent);margin-top:12px">${todayRec.salida}</div><div style="font-size:12px;color:var(--text3);margin-top:4px">Salida registrada</div>`:`<div style="margin-top:16px">${statusBadge('En curso')}</div>`}
+        </div>`:`<div class="empty"><div class="empty-icon">🕐</div><div class="empty-text">Sin entrada registrada</div></div>`}
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ATTENDANCE
+═══════════════════════════════════════════════════════════════ */
+function rAtt(){
+  const emp=SESSION.emp,r=SESSION.role;
+  const isMgr=['Coordinator','HR','Admin'].includes(r);
+  const todayRec=MOCK.attendance.find(a=>a.empId===emp.id&&a.fecha===today());
+  const history=MOCK.attendance.filter(a=>a.empId===emp.id&&a.fecha!==today()).sort((a,b)=>b.fecha.localeCompare(a.fecha));
+
+  const now=new Date();
+  const timeStr=now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
+
+  let todayCard=`<div class="card" style="margin-bottom:20px">
+    <div class="section-header"><div><div class="card-title">Registro de Hoy — ${fmtDate(today())}</div></div></div>
+    <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+      <div style="text-align:center;min-width:110px">
+        <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Entrada</div>
+        <div style="font-size:28px;font-weight:800;font-family:var(--mono);color:${todayRec?'var(--brand2)':'var(--text3)'}">${todayRec?todayRec.entrada:'—'}</div>
+      </div>
+      <div style="text-align:center;min-width:110px">
+        <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Salida</div>
+        <div style="font-size:28px;font-weight:800;font-family:var(--mono);color:${todayRec&&todayRec.salida?'var(--accent)':'var(--text3)'}">${todayRec&&todayRec.salida?todayRec.salida:'—'}</div>
+      </div>
+      <div style="text-align:center;min-width:110px">
+        <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Horas</div>
+        <div style="font-size:28px;font-weight:800;font-family:var(--mono);color:var(--text)">${todayRec&&todayRec.horas?todayRec.horas+'h':'—'}</div>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:10px;flex-wrap:wrap">
+        ${!todayCheckedIn?`<button class="btn btn-success" onclick="chkIn()">✅ Registrar Entrada</button>`:''}
+        ${todayCheckedIn&&!todayCheckedOut?`<button class="btn btn-warn" onclick="chkOut()">🚪 Registrar Salida</button>`:''}
+        ${todayCheckedOut?`<span class="badge badge-green" style="padding:8px 16px;font-size:13px">Jornada completa ✓</span>`:''}
+      </div>
+    </div>
+  </div>`;
+
+  let histHtml=`<div class="card"><div class="section-header"><div class="card-title">Historial de Jornada</div><span style="font-size:12px;color:var(--text3)">Últimos registros</span></div>
+    <div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Entrada</th><th>Salida</th><th>Tipo</th><th>Horas</th><th>Estado</th></tr></thead><tbody>`;
+  history.forEach(a=>{
+    histHtml+=`<tr><td>${fmtDate(a.fecha)}</td><td><span style="font-family:var(--mono)">${a.entrada}</span></td><td><span style="font-family:var(--mono)">${a.salida||'—'}</span></td><td>${a.tipo}</td><td><span style="font-family:var(--mono)">${a.horas?a.horas+'h':'—'}</span></td><td>${statusBadge(a.estado)}</td></tr>`;
+  });
+  histHtml+='</tbody></table></div></div>';
+
+  let teamHtml='';
+  if(isMgr){
+    const todayAll=MOCK.attendance.filter(a=>a.fecha===today());
+    teamHtml=`<div class="card" style="margin-top:20px"><div class="section-header"><div class="card-title">Asistencia del equipo hoy</div></div>
+      <div class="table-wrap"><table><thead><tr><th>Empleado</th><th>Entrada</th><th>Salida</th><th>Estado</th></tr></thead><tbody>`;
+    todayAll.forEach(a=>{
+      const e=getEmp(a.empId);
+      if(e.id)teamHtml+=`<tr><td><div style="display:flex;align-items:center;gap:8px">${avatar(e,'sm')}<span>${e.nombreCompleto}</span></div></td><td><span style="font-family:var(--mono)">${a.entrada}</span></td><td><span style="font-family:var(--mono)">${a.salida||'—'}</span></td><td>${statusBadge(a.estado)}</td></tr>`;
+    });
+    teamHtml+='</tbody></table></div></div>';
+  }
+
+  return todayCard+histHtml+teamHtml;
+}
+
+function chkIn(){
+  if(todayCheckedIn){toast('Ya tienes entrada registrada hoy','warn');return;}
+  const now=new Date();
+  const t=now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
+  MOCK.attendance.unshift({id:99,empId:SESSION.emp.id,fecha:today(),entrada:t,salida:null,tipo:'Presencial',estado:'En curso',horas:null});
+  todayCheckedIn=true;
+  toast('Entrada registrada a las '+t,'success');
+  navigate('attendance');
+}
+function chkOut(){
+  if(!todayCheckedIn){toast('Primero debes registrar la entrada','warn');return;}
+  if(todayCheckedOut){toast('Ya tienes salida registrada hoy','warn');return;}
+  const now=new Date();
+  const t=now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
+  const rec=MOCK.attendance.find(a=>a.empId===SESSION.emp.id&&a.fecha===today());
+  if(rec){rec.salida=t;rec.estado='Completado';rec.horas=8.5;}
+  todayCheckedOut=true;
+  toast('Salida registrada a las '+t,'success');
+  navigate('attendance');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SCHEDULE
+═══════════════════════════════════════════════════════════════ */
+function rSched(){
+  const days=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+  const dates=['2025-06-02','2025-06-03','2025-06-04','2025-06-05','2025-06-06','2025-06-07','2025-06-08'];
+  const schedule=['08:00-17:00','09:00-18:00','08:30-17:30','09:00-18:00','08:00-17:00',null,null];
+  let cols='';
+  days.forEach((d,i)=>{
+    const isToday=dates[i]===today();
+    cols+=`<div class="sched-day${isToday?' today':''}">
+      <div class="sched-day-name">${d.substring(0,3).toUpperCase()}</div>
+      <div class="sched-day-num">${dates[i].split('-')[2]}</div>
+      ${schedule[i]?`<div class="sched-shift">${schedule[i]}</div>`:'<div style="font-size:11px;color:var(--text3);margin-top:8px">Libre</div>'}
+    </div>`;
+  });
+
+  return `<div class="card" style="margin-bottom:20px">
+    <div class="section-header"><div><div class="card-title">Semana del 2 al 8 de Junio 2025</div><div class="card-sub">Horario estándar — Jornada completa</div></div></div>
+    <div class="schedule-grid">${cols}</div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+    <div class="card"><div class="card-title" style="margin-bottom:14px">Resumen Semanal</div>
+      <div class="payslip-row"><span class="payslip-label">Días laborables</span><span class="payslip-val">5</span></div>
+      <div class="payslip-row"><span class="payslip-label">Horas previstas</span><span class="payslip-val">40h</span></div>
+      <div class="payslip-row"><span class="payslip-label">Horas registradas</span><span class="payslip-val">${MOCK.attendance.filter(a=>a.empId===SESSION.emp.id&&a.fecha>='2025-06-02'&&a.horas).reduce((s,a)=>s+a.horas,0).toFixed(1)}h</span></div>
+      <div class="payslip-row"><span class="payslip-label">Tipo de jornada</span><span class="payslip-val">Flexible</span></div>
+    </div>
+    <div class="card"><div class="card-title" style="margin-bottom:14px">Modalidad de trabajo</div>
+      <div class="payslip-row"><span class="payslip-label">Presencial</span><span class="payslip-val">3 días</span></div>
+      <div class="payslip-row"><span class="payslip-label">Teletrabajo</span><span class="payslip-val">2 días</span></div>
+      <div class="payslip-row"><span class="payslip-label">% Teletrabajo</span><span class="payslip-val">40%</span></div>
+      <div class="payslip-row"><span class="payslip-label">Límite permitido</span><span class="payslip-val">50%</span></div>
+    </div>
+  </div>`;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LEAVES
+═══════════════════════════════════════════════════════════════ */
+function rLeaves(){
+  const emp=SESSION.emp,r=SESSION.role;
+  const isHR=['HR','Admin'].includes(r);
+  const isMgr=['Coordinator','HR','Admin'].includes(r);
+  const myLeaves=isHR?MOCK.leaves:MOCK.leaves.filter(l=>l.empId===emp.id);
+  const pendLeaves=myLeaves.filter(l=>l.estado==='Pendiente');
+
+  let rows='';
+  myLeaves.sort((a,b)=>b.id-a.id).forEach(l=>{
+    const e=getEmp(l.empId);
+    rows+=`<tr>
+      ${isHR?`<td><div style="display:flex;align-items:center;gap:8px">${avatar(e,'sm')}<div><div style="font-weight:600">${e.nombreCompleto}</div><div style="font-size:11px;color:var(--text3)">${e.departamento}</div></div></div></td>`:''}
+      <td>${l.tipo}</td><td>${fmtDate(l.inicio)}</td><td>${fmtDate(l.fin)}</td>
+      <td><span style="font-family:var(--mono);font-weight:600">${l.dias}</span></td>
+      <td>${statusBadge(l.estado)}</td>
+      <td>
+        ${isHR&&l.estado==='Pendiente'?`<button class="btn btn-success btn-xs" onclick="approveLeave(${l.id})">✓ Aprobar</button> <button class="btn btn-danger btn-xs" onclick="rejectLeave(${l.id})">✗ Denegar</button>`:''}
+        ${!isHR&&l.estado==='Pendiente'?`<button class="btn btn-danger btn-xs" onclick="cancelLeave(${l.id})">Cancelar</button>`:''}
+        ${l.estado!=='Pendiente'?`<span style="font-size:12px;color:var(--text3)">${l.estado}</span>`:''}
+      </td>
+    </tr>`;
+  });
+
+  return `
+  <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap">
+    <button class="btn btn-primary" onclick="openLeaveModal()">+ Nueva solicitud de ausencia</button>
+    ${pendLeaves.length?`<span class="badge badge-amber" style="padding:6px 12px;font-size:12px">⏳ ${pendLeaves.length} pendiente${pendLeaves.length>1?'s':''} de resolución</span>`:''}
+  </div>
+  <div class="table-wrap">
+    <table><thead><tr>
+      ${isHR?'<th>Empleado</th>':''}
+      <th>Tipo</th><th>Inicio</th><th>Fin</th><th>Días</th><th>Estado</th><th>Acciones</th>
+    </tr></thead><tbody>${rows||`<tr><td colspan="7"><div class="empty"><div class="empty-icon">🏖️</div><div class="empty-text">Sin solicitudes</div></div></td></tr>`}</tbody></table>
+  </div>`;
+}
+
+function openLeaveModal(){
+  const tipos=['Vacaciones','Asuntos propios','Baja médica','Maternidad/Paternidad','Permiso familiar'];
+  showModal(`<div class="modal-title">Nueva Solicitud de Ausencia <span class="modal-close" onclick="closeModal()">✕</span></div>
+    <div class="field"><label class="field-label">Tipo de ausencia</label><select class="field-input" id="lv-tipo">${tipos.map(t=>`<option>${t}</option>`).join('')}</select></div>
+    <div class="field-row">
+      <div class="field"><label class="field-label">Fecha inicio</label><input type="date" class="field-input" id="lv-ini" value="${today()}"/></div>
+      <div class="field"><label class="field-label">Fecha fin</label><input type="date" class="field-input" id="lv-fin" value="${today()}"/></div>
+    </div>
+    <div class="field"><label class="field-label">Motivo</label><textarea class="field-input" id="lv-mot" rows="3" placeholder="Describe el motivo de la solicitud..."></textarea></div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="subLeave()">Enviar solicitud</button></div>`);
+}
+
+function subLeave(){
+  const tipo=document.getElementById('lv-tipo').value;
+  const ini=document.getElementById('lv-ini').value;
+  const fin=document.getElementById('lv-fin').value;
+  const mot=document.getElementById('lv-mot').value.trim();
+  if(!ini||!fin||!mot){toast('Completa todos los campos','warn');return;}
+  const d=Math.ceil((new Date(fin)-new Date(ini))/(1000*60*60*24))+1;
+  MOCK.leaves.push({id:Date.now(),empId:SESSION.emp.id,tipo,inicio:ini,fin,dias:d,motivo:mot,estado:'Pendiente',solicitada:today()});
+  closeModal();toast('Solicitud enviada correctamente','success');navigate('leaves');
+}
+
+function approveLeave(id){
+  const l=MOCK.leaves.find(x=>x.id===id);
+  if(l){l.estado='Aprobada';toast('Ausencia aprobada','success');navigate('leaves');}
+}
+function rejectLeave(id){
+  const l=MOCK.leaves.find(x=>x.id===id);
+  if(l){l.estado='Denegada';toast('Ausencia denegada','warn');navigate('leaves');}
+}
+function cancelLeave(id){
+  const l=MOCK.leaves.find(x=>x.id===id);
+  if(l){l.estado='Cancelada';toast('Solicitud cancelada','warn');navigate('leaves');}
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   OVERTIME
+═══════════════════════════════════════════════════════════════ */
+function rOT(){
+  const emp=SESSION.emp,r=SESSION.role;
+  const isHR=['HR','Admin'].includes(r);
+  const myOT=isHR?MOCK.overtime:MOCK.overtime.filter(o=>o.empId===emp.id);
+
+  let rows='';
+  myOT.sort((a,b)=>b.id-a.id).forEach(o=>{
+    const e=getEmp(o.empId);
+    rows+=`<tr>
+      ${isHR?`<td><div style="display:flex;align-items:center;gap:8px">${avatar(e,'sm')}<span>${e.nombreCompleto}</span></div></td>`:''}
+      <td>${fmtDate(o.fecha)}</td>
+      <td><span style="font-family:var(--mono);font-weight:600">${o.horas}h</span></td>
+      <td>${o.motivo}</td>
+      <td><span class="badge ${o.compensacion==='Económica'?'badge-green':'badge-blue'}">${o.compensacion}</span></td>
+      <td>${statusBadge(o.estado)}</td>
+      <td>${isHR&&o.estado==='Pendiente'?`<button class="btn btn-success btn-xs" onclick="approveOT(${o.id})">✓</button> <button class="btn btn-danger btn-xs" onclick="rejectOT(${o.id})">✗</button>`:'—'}</td>
+    </tr>`;
+  });
+
+  const totalH=myOT.reduce((s,o)=>s+o.horas,0);
+
+  return `
+  <div style="display:flex;gap:12px;margin-bottom:20px">
+    <button class="btn btn-primary" onclick="openOTModal()">+ Registrar horas extra</button>
+    <div class="kpi blue" style="padding:12px 20px;border-radius:10px;flex-shrink:0"><div class="kpi-label">Total acumulado</div><div style="font-size:20px;font-weight:800;font-family:var(--mono)">${totalH}h</div></div>
+  </div>
+  <div class="table-wrap">
+    <table><thead><tr>${isHR?'<th>Empleado</th>':''}<th>Fecha</th><th>Horas</th><th>Motivo</th><th>Compensación</th><th>Estado</th><th>Acc.</th></tr></thead>
+    <tbody>${rows||`<tr><td colspan="7"><div class="empty"><div class="empty-icon">⏱️</div><div class="empty-text">Sin horas extra registradas</div></div></td></tr>`}</tbody></table>
+  </div>`;
+}
+
+function openOTModal(){
+  showModal(`<div class="modal-title">Registrar Horas Extra <span class="modal-close" onclick="closeModal()">✕</span></div>
+    <div class="field-row">
+      <div class="field"><label class="field-label">Fecha</label><input type="date" class="field-input" id="ot-fecha" value="${today()}"/></div>
+      <div class="field"><label class="field-label">Horas</label><input type="number" class="field-input" id="ot-horas" min="0.5" max="8" step="0.5" value="1"/></div>
+    </div>
+    <div class="field"><label class="field-label">Motivo</label><input class="field-input" id="ot-mot" placeholder="Ej: Reunión urgente con cliente"/></div>
+    <div class="field"><label class="field-label">Compensación preferida</label><select class="field-input" id="ot-comp"><option>Económica</option><option>Descanso</option></select></div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="subOT()">Registrar</button></div>`);
+}
+
+function subOT(){
+  const fecha=document.getElementById('ot-fecha').value;
+  const horas=parseFloat(document.getElementById('ot-horas').value);
+  const mot=document.getElementById('ot-mot').value.trim();
+  const comp=document.getElementById('ot-comp').value;
+  if(!fecha||!horas||!mot){toast('Completa todos los campos','warn');return;}
+  MOCK.overtime.push({id:Date.now(),empId:SESSION.emp.id,fecha,horas,motivo:mot,compensacion:comp,estado:'Pendiente'});
+  closeModal();toast('Horas extra registradas','success');navigate('overtime');
+}
+function approveOT(id){const o=MOCK.overtime.find(x=>x.id===id);if(o){o.estado='Aprobada';toast('Horas extra aprobadas','success');navigate('overtime');}}
+function rejectOT(id){const o=MOCK.overtime.find(x=>x.id===id);if(o){o.estado='Denegada';toast('Solicitud denegada','warn');navigate('overtime');}}
+
+/* ═══════════════════════════════════════════════════════════════
+   DOCS (My payslips)
+═══════════════════════════════════════════════════════════════ */
+function rDocs(){
+  const myPayroll=MOCK.payroll.filter(p=>p.empId===SESSION.emp.id).sort((a,b)=>b.id-a.id);
+  const latest=myPayroll[0];
+  let slipHtml='';
+  if(latest){
+    slipHtml=`<div class="card" style="margin-bottom:20px">
+      <div class="section-header"><div><div class="card-title">Nómina — ${latest.periodo}</div><div class="card-sub">Generada el ${fmtDate(latest.fecha)}</div></div>${statusBadge(latest.estado)}</div>
+      <div style="max-width:400px">
+        <div class="payslip-row"><span class="payslip-label">Salario bruto</span><span class="payslip-val">${fmtMoney(latest.bruto)}</span></div>
+        <div class="payslip-row"><span class="payslip-label">Seguridad Social (7.12%)</span><span class="payslip-val" style="color:var(--danger)">-${fmtMoney(latest.ss)}</span></div>
+        <div class="payslip-row"><span class="payslip-label">IRPF (20%)</span><span class="payslip-val" style="color:var(--danger)">-${fmtMoney(latest.irpf)}</span></div>
+        <div class="payslip-row" style="border-top:2px solid var(--border);padding-top:12px;margin-top:8px"><span class="payslip-label" style="font-weight:700">TOTAL NETO</span><span class="payslip-total">${fmtMoney(latest.neto)}</span></div>
+      </div>
+      <div style="margin-top:16px"><button class="btn btn-secondary btn-sm" onclick="toast('Descarga disponible en entorno productivo','warn')">📥 Descargar PDF</button></div>
+    </div>`;
+  }
+  let histRows='';
+  myPayroll.forEach(p=>{
+    histRows+=`<tr><td>${p.periodo}</td><td><span style="font-family:var(--mono)">${fmtMoney(p.bruto)}</span></td><td><span style="font-family:var(--mono);color:var(--danger)">-${fmtMoney(p.ss+p.irpf)}</span></td><td><span style="font-family:var(--mono);font-weight:700;color:var(--accent)">${fmtMoney(p.neto)}</span></td><td>${statusBadge(p.estado)}</td><td><button class="btn btn-ghost btn-xs" onclick="toast('PDF disponible en entorno productivo','warn')">📥</button></td></tr>`;
+  });
+
+  return slipHtml+`<div class="table-wrap"><table><thead><tr><th>Período</th><th>Bruto</th><th>Descuentos</th><th>Neto</th><th>Estado</th><th>Doc</th></tr></thead><tbody>${histRows}</tbody></table></div>`;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PERFORMANCE
+═══════════════════════════════════════════════════════════════ */
+function rPerf(){
+  const emp=SESSION.emp,r=SESSION.role;
+  const isHR=['HR','Admin'].includes(r);
+  const isMgr=['Coordinator','HR','Admin'].includes(r);
+  const myPerf=isHR?MOCK.performance:MOCK.performance.filter(p=>p.empId===emp.id);
+
+  const scoreClass=s=>s>=90?'score-excellent':s>=80?'score-good':'score-average';
+  const scoreLabel=s=>s>=90?'Excelente':s>=80?'Muy Bueno':s>=70?'Bueno':'A mejorar';
+
+  let cards='';
+  myPerf.sort((a,b)=>b.id-a.id).forEach(p=>{
+    const e=getEmp(p.empId);
+    const cls=scoreClass(p.puntuacion);
+    cards+=`<div class="card">
+      <div style="display:flex;align-items:flex-start;gap:16px;margin-bottom:16px">
+        <div class="score-circle ${cls}">${p.puntuacion}</div>
+        <div>
+          ${isHR?`<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">${avatar(e,'sm')}<span style="font-weight:600">${e.nombreCompleto}</span></div>`:''}
+          <div class="card-title">${p.periodo}</div>
+          <div class="card-sub">Evaluado por ${p.evaluador} · ${fmtDate(p.fecha)}</div>
+          <span class="badge ${cls==='score-excellent'?'badge-green':cls==='score-good'?'badge-blue':'badge-amber'}" style="margin-top:6px">${scoreLabel(p.puntuacion)}</span>
+        </div>
+      </div>
+      <div class="progress-bar" style="margin-bottom:16px"><div class="progress-fill ${cls==='score-excellent'?'progress-green':cls==='score-good'?'progress-blue':'progress-amber'}" style="width:${p.puntuacion}%"></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div><div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Objetivos</div><div style="font-size:12px;color:var(--text2);line-height:1.5">${p.objetivos}</div></div>
+        <div><div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Logros</div><div style="font-size:12px;color:var(--text2);line-height:1.5">${p.logros}</div></div>
+      </div>
+      <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+        <div style="font-size:11px;font-weight:700;color:var(--accent2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Áreas de mejora</div>
+        <div style="font-size:12px;color:var(--text2)">${p.areasMejora}</div>
+      </div>
+      ${isMgr?`<div style="margin-top:12px;text-align:right"><button class="btn btn-ghost btn-sm" onclick="openPerfModal(${p.empId})">✏️ Editar evaluación</button></div>`:''}
+    </div>`;
+  });
+
+  return `
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <div>
+      ${myPerf.length?`<div style="font-size:13px;color:var(--text2)">Promedio: <strong style="font-family:var(--mono);font-size:16px;color:var(--brand2)">${(myPerf.reduce((s,p)=>s+p.puntuacion,0)/myPerf.length).toFixed(1)}</strong> / 100</div>`:''}
+    </div>
+    ${isMgr?`<button class="btn btn-primary" onclick="openPerfModal(0)">+ Nueva evaluación</button>`:''}
+  </div>
+  ${cards||`<div class="empty"><div class="empty-icon">📈</div><div class="empty-text">Sin evaluaciones registradas</div></div>`}`;
+}
+
+function openPerfModal(empId){
+  const emps=MOCK.employees.filter(e=>e.rol!=='Admin');
+  showModal(`<div class="modal-title">Nueva Evaluación de Rendimiento <span class="modal-close" onclick="closeModal()">✕</span></div>
+    <div class="field"><label class="field-label">Empleado</label>
+      <select class="field-input" id="pf-emp">${emps.map(e=>`<option value="${e.id}" ${e.id===empId?'selected':''}>${e.nombreCompleto} — ${e.departamento}</option>`).join('')}</select>
+    </div>
+    <div class="field-row">
+      <div class="field"><label class="field-label">Período</label><select class="field-input" id="pf-per"><option>Q1 2025</option><option selected>Q2 2025</option><option>Q3 2025</option></select></div>
+      <div class="field"><label class="field-label">Puntuación (0-100)</label><input type="number" class="field-input" id="pf-score" min="0" max="100" value="85"/></div>
+    </div>
+    <div class="field"><label class="field-label">Objetivos planteados</label><textarea class="field-input" id="pf-obj" rows="2" placeholder="Describe los objetivos del período..."></textarea></div>
+    <div class="field"><label class="field-label">Logros alcanzados</label><textarea class="field-input" id="pf-log" rows="2" placeholder="Describe los logros del período..."></textarea></div>
+    <div class="field"><label class="field-label">Áreas de mejora</label><textarea class="field-input" id="pf-am" rows="2" placeholder="Indica las áreas de mejora..."></textarea></div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="subPerf()">Guardar evaluación</button></div>`);
+}
+
+function subPerf(){
+  const eId=parseInt(document.getElementById('pf-emp').value);
+  const per=document.getElementById('pf-per').value;
+  const score=parseInt(document.getElementById('pf-score').value);
+  const obj=document.getElementById('pf-obj').value.trim();
+  const log=document.getElementById('pf-log').value.trim();
+  const am=document.getElementById('pf-am').value.trim();
+  if(!obj||!log||!am){toast('Completa todos los campos','warn');return;}
+  const cal=score>=90?'Excelente':score>=80?'Muy Bueno':score>=70?'Bueno':'A mejorar';
+  MOCK.performance.push({id:Date.now(),empId:eId,periodo:per,puntuacion:score,calificacion:cal,objetivos:obj,logros:log,areasMejora:am,evaluador:SESSION.emp.nombreCompleto,fecha:today()});
+  closeModal();toast('Evaluación guardada','success');navigate('performance');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   EMPLOYEES (HR/Admin only)
+═══════════════════════════════════════════════════════════════ */
+function rEmps(){
+  const r=SESSION.role;
+  const isAdmin=r==='Admin';
+  let search='';
+  let rows='';
+  MOCK.employees.forEach(e=>{
+    rows+=`<tr>
+      <td><div style="display:flex;align-items:center;gap:10px">${avatar(e,'sm')}<div><div style="font-weight:600">${e.nombreCompleto}</div><div style="font-size:11px;color:var(--text3)">${e.email}</div></div></div></td>
+      <td>${e.departamento}</td><td>${e.cargo}</td><td>${roleBadge(e.rol)}</td>
+      <td><span style="font-family:var(--mono)">${fmtMoney(e.salario)}</span></td>
+      <td>${fmtDate(e.fechaIngreso)}</td>
+      <td>${statusBadge(e.estado)}</td>
+      <td>
+        <button class="btn btn-ghost btn-xs" onclick="viewEmp(${e.id})">👁️ Ver</button>
+        <button class="btn btn-secondary btn-xs" onclick="openEmpModal(${e.id})">✏️ Editar</button>
+        ${isAdmin&&e.id!==SESSION.emp.id?`<button class="btn btn-danger btn-xs" onclick="delEmp(${e.id})">🗑️</button>`:''}
+      </td>
+    </tr>`;
+  });
+
+  return `
+  <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap">
+    <button class="btn btn-primary" onclick="openEmpModal(0)">+ Nuevo empleado</button>
+    <input class="field-input" style="width:220px" placeholder="🔍 Buscar empleado..." oninput="filterEmps(this.value)"/>
+    <span class="badge badge-blue" style="padding:6px 12px">${MOCK.employees.length} empleados</span>
+  </div>
+  <div class="table-wrap" id="emp-table">
+    <table><thead><tr><th>Empleado</th><th>Departamento</th><th>Cargo</th><th>Rol</th><th>Salario</th><th>Incorporación</th><th>Estado</th><th>Acciones</th></tr></thead>
+    <tbody id="emp-tbody">${rows}</tbody></table>
+  </div>`;
+}
+
+function filterEmps(q){
+  const rows=document.querySelectorAll('#emp-tbody tr');
+  rows.forEach(r=>{r.style.display=r.textContent.toLowerCase().includes(q.toLowerCase())?'':'none';});
+}
+
+function viewEmp(id){
+  const e=MOCK.employees.find(x=>x.id===id);
+  const myPerf=MOCK.performance.filter(p=>p.empId===id);
+  const lastP=myPerf.sort((a,b)=>b.id-a.id)[0];
+  const myPayroll=MOCK.payroll.filter(p=>p.empId===id).sort((a,b)=>b.id-a.id)[0];
+  showModal(`<div class="modal-title">Perfil de Empleado <span class="modal-close" onclick="closeModal()">✕</span></div>
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;padding:16px;background:var(--surface);border-radius:10px">
+      <div class="avatar avatar-lg ${e.avc}">${e.av}</div>
+      <div><div style="font-size:17px;font-weight:700">${e.nombreCompleto}</div><div style="font-size:13px;color:var(--text2)">${e.cargo} · ${e.departamento}</div><div style="margin-top:6px">${roleBadge(e.rol)}</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px">
+      <div class="payslip-row"><span class="payslip-label">Email</span></div><div class="payslip-row"><span style="font-weight:500">${e.email}</span></div>
+      <div class="payslip-row"><span class="payslip-label">Teléfono</span></div><div class="payslip-row"><span style="font-weight:500">${e.telefono}</span></div>
+      <div class="payslip-row"><span class="payslip-label">Incorporación</span></div><div class="payslip-row"><span style="font-weight:500">${fmtDate(e.fechaIngreso)}</span></div>
+      <div class="payslip-row"><span class="payslip-label">Salario bruto</span></div><div class="payslip-row"><span style="font-weight:700;font-family:var(--mono);color:var(--accent)">${fmtMoney(e.salario)}/mes</span></div>
+      ${lastP?`<div class="payslip-row"><span class="payslip-label">Último rendimiento</span></div><div class="payslip-row"><span style="font-family:var(--mono);font-weight:700">${lastP.puntuacion}/100 — ${lastP.periodo}</span></div>`:''}
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">Cerrar</button><button class="btn btn-primary" onclick="closeModal();openEmpModal(${e.id})">✏️ Editar</button></div>`);
+}
+
+function openEmpModal(id){
+  const e=id?MOCK.employees.find(x=>x.id===id):{};
+  const depts=['Dirección','Tecnología','Marketing','Ventas','Finanzas','RRHH','Operaciones'];
+  const roles=['Employee','Coordinator','HR','Admin'];
+  showModal(`<div class="modal-title">${id?'Editar Empleado':'Nuevo Empleado'} <span class="modal-close" onclick="closeModal()">✕</span></div>
+    <div class="field-row">
+      <div class="field"><label class="field-label">Nombre</label><input class="field-input" id="em-nom" value="${e.nombre||''}"/></div>
+      <div class="field"><label class="field-label">Apellidos</label><input class="field-input" id="em-ape" value="${e.apellidos||''}"/></div>
+    </div>
+    <div class="field"><label class="field-label">Email</label><input class="field-input" id="em-email" type="email" value="${e.email||''}"/></div>
+    <div class="field-row">
+      <div class="field"><label class="field-label">Departamento</label><select class="field-input" id="em-dep">${depts.map(d=>`<option ${e.departamento===d?'selected':''}>${d}</option>`).join('')}</select></div>
+      <div class="field"><label class="field-label">Rol</label><select class="field-input" id="em-rol">${roles.map(r=>`<option ${e.rol===r?'selected':''}>${r}</option>`).join('')}</select></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label class="field-label">Cargo</label><input class="field-input" id="em-cargo" value="${e.cargo||''}"/></div>
+      <div class="field"><label class="field-label">Salario (€/mes)</label><input class="field-input" id="em-sal" type="number" value="${e.salario||3000}"/></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="subEmp(${id||0})">${id?'Guardar cambios':'Crear empleado'}</button></div>`);
+}
+
+function subEmp(id){
+  const nom=document.getElementById('em-nom').value.trim();
+  const ape=document.getElementById('em-ape').value.trim();
+  const email=document.getElementById('em-email').value.trim();
+  const dep=document.getElementById('em-dep').value;
+  const rol=document.getElementById('em-rol').value;
+  const cargo=document.getElementById('em-cargo').value.trim();
+  const sal=parseFloat(document.getElementById('em-sal').value);
+  if(!nom||!ape||!email||!cargo){toast('Completa todos los campos','warn');return;}
+  const avColors=['av-blue','av-green','av-purple','av-amber','av-red','av-indigo','av-teal'];
+  if(id){
+    const e=MOCK.employees.find(x=>x.id===id);
+    if(e){Object.assign(e,{nombre:nom,apellidos:ape,nombreCompleto:nom+' '+ape,email,departamento:dep,rol,cargo,salario:sal});}
+    toast('Empleado actualizado','success');
+  }else{
+    const av=(nom[0]+ape[0]).toUpperCase();
+    MOCK.employees.push({id:Date.now(),username:nom.toLowerCase()+'.'+ape.split(' ')[0].toLowerCase(),nombre:nom,apellidos:ape,nombreCompleto:nom+' '+ape,email,telefono:'',departamento:dep,cargo,rol,salario:sal,fechaIngreso:today(),estado:'Activo',av,avc:avColors[Math.floor(Math.random()*avColors.length)]});
+    toast('Empleado creado correctamente','success');
+  }
+  closeModal();navigate('employees');
+}
+
+function delEmp(id){
+  if(!confirm('¿Eliminar este empleado?'))return;
+  const i=MOCK.employees.findIndex(e=>e.id===id);
+  if(i>-1){MOCK.employees.splice(i,1);toast('Empleado eliminado','warn');navigate('employees');}
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PAYROLL (HR/Admin)
+═══════════════════════════════════════════════════════════════ */
+function rPayroll(){
+  const pendientes=MOCK.payroll.filter(p=>p.estado==='Pendiente');
+  const pagadas=MOCK.payroll.filter(p=>p.estado==='Pagado');
+  const totalPend=pendientes.reduce((s,p)=>s+p.neto,0);
+  const totalPag=pagadas.reduce((s,p)=>s+p.neto,0);
+
+  let rows='';
+  MOCK.payroll.sort((a,b)=>b.id-a.id).forEach(p=>{
+    const e=getEmp(p.empId);
+    rows+=`<tr>
+      <td><div style="display:flex;align-items:center;gap:8px">${avatar(e,'sm')}<div><div style="font-weight:600">${e.nombreCompleto}</div><div style="font-size:11px;color:var(--text3)">${e.departamento}</div></div></div></td>
+      <td>${p.periodo}</td>
+      <td><span style="font-family:var(--mono)">${fmtMoney(p.bruto)}</span></td>
+      <td><span style="font-family:var(--mono);color:var(--danger)">-${fmtMoney(p.ss+p.irpf)}</span></td>
+      <td><span style="font-family:var(--mono);font-weight:700;color:var(--accent)">${fmtMoney(p.neto)}</span></td>
+      <td>${statusBadge(p.estado)}</td>
+      <td>${p.estado==='Pendiente'?`<button class="btn btn-success btn-xs" onclick="markPaid(${p.id})">✓ Pagar</button>`:`<span style="font-size:11px;color:var(--text3)">${fmtDate(p.fecha)}</span>`}</td>
+    </tr>`;
+  });
+
+  return `
+  <div class="kpi-grid" style="margin-bottom:20px">
+    <div class="kpi amber"><div class="kpi-label">Pendiente de pago</div><div class="kpi-value" style="font-size:20px">${fmtMoney(totalPend)}</div><div class="kpi-desc">${pendientes.length} nóminas pendientes</div></div>
+    <div class="kpi green"><div class="kpi-label">Pagado este mes</div><div class="kpi-value" style="font-size:20px">${fmtMoney(totalPag)}</div><div class="kpi-desc">${pagadas.length} nóminas pagadas</div></div>
+    <div class="kpi blue"><div class="kpi-label">Total plantilla</div><div class="kpi-value" style="font-size:20px">${fmtMoney(totalPend+totalPag)}</div><div class="kpi-desc">Coste neto mensual</div></div>
+  </div>
+  ${pendientes.length?`<div style="display:flex;gap:10px;margin-bottom:16px"><button class="btn btn-success" onclick="payAll()">✓ Pagar todas las pendientes</button><span class="badge badge-amber" style="padding:6px 12px">${pendientes.length} pendientes</span></div>`:''}
+  <div class="table-wrap">
+    <table><thead><tr><th>Empleado</th><th>Período</th><th>Bruto</th><th>Descuentos</th><th>Neto</th><th>Estado</th><th>Acción</th></tr></thead>
+    <tbody>${rows}</tbody></table>
+  </div>`;
+}
+
+function markPaid(id){
+  const p=MOCK.payroll.find(x=>x.id===id);
+  if(p){p.estado='Pagado';toast('Nómina marcada como pagada','success');navigate('payroll');}
+}
+function payAll(){
+  MOCK.payroll.filter(p=>p.estado==='Pendiente').forEach(p=>p.estado='Pagado');
+  toast('Todas las nóminas procesadas','success');navigate('payroll');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   REPORTS
+═══════════════════════════════════════════════════════════════ */
+function rReports(){
+  const depts={};
+  MOCK.employees.forEach(e=>{depts[e.departamento]=(depts[e.departamento]||0)+1;});
+  const costeDept={};
+  MOCK.employees.forEach(e=>{costeDept[e.departamento]=(costeDept[e.departamento]||0)+e.salario;});
+  const totalSalario=MOCK.employees.reduce((s,e)=>s+e.salario,0);
+  const avgPerf=MOCK.performance.reduce((s,p)=>s+p.puntuacion,0)/MOCK.performance.length;
+
+  let deptRows='';
+  Object.entries(depts).sort((a,b)=>b[1]-a[1]).forEach(([d,n])=>{
+    deptRows+=`<tr><td>${d}</td><td><span style="font-family:var(--mono)">${n}</span></td><td><span style="font-family:var(--mono)">${fmtMoney(costeDept[d])}/mes</span></td><td><div class="progress-bar" style="width:120px"><div class="progress-fill progress-blue" style="width:${(n/MOCK.employees.length)*100}%"></div></div></td></tr>`;
+  });
+
+  return `
+  <div class="kpi-grid" style="margin-bottom:24px">
+    <div class="kpi blue"><div class="kpi-label">Total empleados</div><div class="kpi-value">${MOCK.employees.length}</div><div class="kpi-desc">Junio 2025</div></div>
+    <div class="kpi green"><div class="kpi-label">Coste salarial</div><div class="kpi-value" style="font-size:22px">${fmtMoney(totalSalario)}</div><div class="kpi-desc">Bruto mensual</div></div>
+    <div class="kpi amber"><div class="kpi-label">Rendimiento medio</div><div class="kpi-value">${avgPerf.toFixed(1)}</div><div class="kpi-desc">Sobre 100 puntos</div></div>
+    <div class="kpi blue"><div class="kpi-label">Ausencias pend.</div><div class="kpi-value">${MOCK.leaves.filter(l=>l.estado==='Pendiente').length}</div><div class="kpi-desc">Sin resolver</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+    <div class="card">
+      <div class="section-header"><div class="card-title">Distribución por Departamento</div><button class="btn btn-secondary btn-sm" onclick="toast('Exportación disponible en entorno productivo','warn')">📥 Exportar</button></div>
+      <div class="table-wrap"><table><thead><tr><th>Departamento</th><th>Empleados</th><th>Coste</th><th>%</th></tr></thead><tbody>${deptRows}</tbody></table></div>
+    </div>
+    <div class="card">
+      <div class="section-header"><div class="card-title">Informes Disponibles</div></div>
+      ${[
+        {icon:'👥',label:'Informe de plantilla',desc:'Listado completo con datos de todos los empleados'},
+        {icon:'💰',label:'Informe de nóminas',desc:'Resumen de costes salariales por período'},
+        {icon:'🏖️',label:'Informe de ausencias',desc:'Análisis de ausencias y vacaciones por departamento'},
+        {icon:'📈',label:'Informe de rendimiento',desc:'Evaluaciones y puntuaciones del equipo'},
+        {icon:'🕐',label:'Informe de asistencia',desc:'Registros de jornada y horas extra'},
+      ].map(rp=>`<div style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:8px;border:1px solid var(--border);margin-bottom:8px;cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='var(--brand2)'" onmouseout="this.style.borderColor='var(--border)'" onclick="toast('Generando informe...','success')">
+        <span style="font-size:20px">${rp.icon}</span>
+        <div><div style="font-size:13px;font-weight:600">${rp.label}</div><div style="font-size:11px;color:var(--text3)">${rp.desc}</div></div>
+        <button class="btn btn-secondary btn-xs" style="margin-left:auto">📥</button>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TEAM VIEW (Coordinator+)
+═══════════════════════════════════════════════════════════════ */
+function rTeam(){
+  const emp=SESSION.emp,r=SESSION.role;
+  const isHR=['HR','Admin'].includes(r);
+  const team=isHR?MOCK.employees:MOCK.employees.filter(e=>e.departamento===emp.departamento);
+
+  let cards='';
+  team.forEach(e=>{
+    const myPerf=MOCK.performance.filter(p=>p.empId===e.id);
+    const lastP=myPerf.sort((a,b)=>b.id-a.id)[0];
+    const todayA=MOCK.attendance.find(a=>a.empId===e.id&&a.fecha===today());
+    cards+=`<div class="card">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+        <div class="avatar avatar-md ${e.avc}">${e.av}</div>
+        <div><div style="font-weight:700;font-size:14px">${e.nombreCompleto}</div><div style="font-size:12px;color:var(--text3)">${e.cargo}</div><div style="margin-top:4px">${roleBadge(e.rol)}</div></div>
+      </div>
+      <div style="display:grid;gap:6px;font-size:12px">
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--text3)">Departamento</span><span style="font-weight:600">${e.departamento}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--text3)">Hoy</span><span>${todayA?statusBadge(todayA.estado):`<span class="badge badge-gray">Sin registro</span>`}</span></div>
+        ${lastP?`<div style="display:flex;justify-content:space-between"><span style="color:var(--text3)">Rendimiento</span><span style="font-weight:700;font-family:var(--mono);color:${lastP.puntuacion>=90?'var(--accent)':'var(--brand2)'}">${lastP.puntuacion}/100</span></div>`:''}
+      </div>
+      <div style="margin-top:12px;display:flex;gap:6px">
+        <button class="btn btn-ghost btn-xs" onclick="openEmpModal(${e.id})">✏️ Editar</button>
+        ${['HR','Admin'].includes(SESSION.role)?`<button class="btn btn-ghost btn-xs" onclick="openPerfModal(${e.id})">📈 Eval.</button>`:''}
+      </div>
+    </div>`;
+  });
+
+  return `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <div><div style="font-size:15px;font-weight:700">${isHR?'Toda la plantilla':emp.departamento}</div><div style="font-size:12px;color:var(--text3)">${team.length} personas</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px">${cards}</div>`;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   EVALUATIONS (Coord+ view)
+═══════════════════════════════════════════════════════════════ */
+function rEvals(){
+  const r=SESSION.role;
+  const isHR=['HR','Admin'].includes(r);
+  const team=isHR?MOCK.employees:MOCK.employees.filter(e=>e.departamento===SESSION.emp.departamento);
+  const teamPerf=MOCK.performance.filter(p=>team.find(t=>t.id===p.empId)).sort((a,b)=>b.puntuacion-a.puntuacion);
+
+  let rows='';
+  teamPerf.forEach(p=>{
+    const e=getEmp(p.empId);
+    const cls=p.puntuacion>=90?'score-excellent':p.puntuacion>=80?'score-good':'score-average';
+    rows+=`<tr>
+      <td><div style="display:flex;align-items:center;gap:8px">${avatar(e,'sm')}<span style="font-weight:600">${e.nombreCompleto}</span></div></td>
+      <td>${p.periodo}</td>
+      <td><div style="display:flex;align-items:center;gap:10px"><div style="font-family:var(--mono);font-weight:800;font-size:16px;color:${p.puntuacion>=90?'var(--accent)':p.puntuacion>=80?'var(--brand2)':'var(--accent2)'}">${p.puntuacion}</div><div class="progress-bar" style="width:80px"><div class="progress-fill ${p.puntuacion>=90?'progress-green':p.puntuacion>=80?'progress-blue':'progress-amber'}" style="width:${p.puntuacion}%"></div></div></div></td>
+      <td><span class="badge ${cls==='score-excellent'?'badge-green':cls==='score-good'?'badge-blue':'badge-amber'}">${p.calificacion}</span></td>
+      <td>${p.evaluador}</td>
+      <td>${fmtDate(p.fecha)}</td>
+    </tr>`;
+  });
+
+  return `
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <div style="font-size:13px;color:var(--text2)">Media del equipo: <strong style="font-family:var(--mono);font-size:16px;color:var(--brand2)">${teamPerf.length?(teamPerf.reduce((s,p)=>s+p.puntuacion,0)/teamPerf.length).toFixed(1):'—'}</strong></div>
+    <button class="btn btn-primary" onclick="openPerfModal(0)">+ Nueva evaluación</button>
+  </div>
+  <div class="table-wrap">
+    <table><thead><tr><th>Empleado</th><th>Período</th><th>Puntuación</th><th>Calificación</th><th>Evaluador</th><th>Fecha</th></tr></thead>
+    <tbody>${rows||`<tr><td colspan="6"><div class="empty"><div class="empty-icon">📈</div><div class="empty-text">Sin evaluaciones</div></div></td></tr>`}</tbody></table>
+  </div>`;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   EMAIL
+═══════════════════════════════════════════════════════════════ */
+let activeFolder='inbox', activeEmailId=null;
+
+function rEmail(){
+  const folders=[
+    {id:'inbox',icon:'📥',label:'Bandeja de entrada',count:MOCK.emails.filter(e=>e.folder==='inbox'&&!e.leido).length},
+    {id:'sent',icon:'📤',label:'Enviados',count:0},
+    {id:'starred',icon:'⭐',label:'Destacados',count:MOCK.emails.filter(e=>e.estrella).length},
+  ];
+
+  const foldersHtml=folders.map(f=>`<div class="email-folder${activeFolder===f.id?' active':''}" onclick="setFolder('${f.id}')">${f.icon} ${f.label}${f.count?` <span class="nav-badge" style="font-size:10px">${f.count}</span>`:''}</div>`).join('');
+
+  const getEmails=()=>{
+    if(activeFolder==='starred')return MOCK.emails.filter(e=>e.estrella);
+    return MOCK.emails.filter(e=>e.folder===activeFolder);
+  };
+
+  const emailList=getEmails();
+  const listHtml=emailList.length?emailList.map(e=>`
+    <div class="email-item${activeEmailId===e.id?' active':''}" onclick="selectEmail(${e.id})">
+      <div class="email-item-from" style="${!e.leido?'font-weight:800':''}">${e.de.split('<')[0].trim()}</div>
+      <div class="email-item-subject" style="${!e.leido?'font-weight:700;color:var(--text)':''}">${e.asunto}</div>
+      <div style="display:flex;justify-content:space-between;margin-top:3px">
+        <div class="email-item-preview">${e.cuerpo.substring(0,60)}...</div>
+        <span style="font-size:10px;color:var(--text3);flex-shrink:0;margin-left:8px">${fmtDate(e.fecha)}</span>
+      </div>
+      ${e.estrella?`<span style="color:var(--accent2);font-size:12px">⭐</span>`:''}
+    </div>`).join(''):'<div class="empty"><div class="empty-icon">📭</div><div class="empty-text">Bandeja vacía</div></div>';
+
+  const sel=activeEmailId?MOCK.emails.find(e=>e.id===activeEmailId):null;
+  const detailHtml=sel?`
+    <div class="email-detail">
+      <div class="email-detail-header">
+        <div class="email-detail-subject">${sel.asunto}</div>
+        <div class="email-detail-meta">
+          <span>De: ${sel.de}</span>
+          ${sel.para?`<span>Para: ${sel.para}</span>`:''}
+          <span>${fmtDate(sel.fecha)}</span>
+        </div>
+        <div style="margin-top:10px;display:flex;gap:8px">
+          <button class="btn btn-secondary btn-sm" onclick="replyEmail(${sel.id})">↩️ Responder</button>
+          <button class="btn btn-secondary btn-sm" onclick="toggleStar(${sel.id})">${sel.estrella?'⭐ Destacado':'☆ Destacar'}</button>
+        </div>
+      </div>
+      <div class="email-detail-body">${sel.cuerpo.replace(/\n/g,'<br/>')}</div>
+    </div>`:'<div class="empty" style="margin:auto"><div class="empty-icon">📧</div><div class="empty-text">Selecciona un mensaje</div></div>';
+
+  return `
+  <div style="margin-bottom:16px;display:flex;gap:10px">
+    <button class="btn btn-primary btn-sm" onclick="openComposeModal()">✏️ Redactar</button>
+  </div>
+  <div class="email-layout">
+    <div class="email-sidebar">
+      ${foldersHtml}
+    </div>
+    <div class="email-list">${listHtml}</div>
+    <div style="flex:1;display:flex;flex-direction:column;overflow:hidden">${detailHtml}</div>
+  </div>`;
+}
+
+function bindEmail(){}
+
+function setFolder(f){activeFolder=f;activeEmailId=null;navigate('email');}
+
+function selectEmail(id){
+  activeEmailId=id;
+  const e=MOCK.emails.find(x=>x.id===id);
+  if(e)e.leido=true;
+  navigate('email');
+}
+
+function toggleStar(id){
+  const e=MOCK.emails.find(x=>x.id===id);
+  if(e){e.estrella=!e.estrella;navigate('email');}
+}
+
+function replyEmail(id){
+  const e=MOCK.emails.find(x=>x.id===id);
+  if(!e)return;
+  const destino=e.de.match(/<(.+)>/)?e.de.match(/<(.+)>/)[1]:e.de;
+  openComposeModal(destino,'Re: '+e.asunto);
+}
+
+function openComposeModal(to='',subj=''){
+  showModal(`<div class="modal-title">Redactar mensaje <span class="modal-close" onclick="closeModal()">✕</span></div>
+    <div class="field"><label class="field-label">Para</label><input class="field-input" id="em-to" value="${to}" placeholder="correo@escmedia.es"/></div>
+    <div class="field"><label class="field-label">Asunto</label><input class="field-input" id="em-subj" value="${subj}" placeholder="Asunto del mensaje"/></div>
+    <div class="field"><label class="field-label">Mensaje</label><textarea class="field-input" id="em-body" rows="6" placeholder="Escribe tu mensaje..."></textarea></div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="sendEmail()">📤 Enviar</button></div>`);
+}
+
+function sendEmail(){
+  const to=document.getElementById('em-to').value.trim();
+  const subj=document.getElementById('em-subj').value.trim();
+  const body=document.getElementById('em-body').value.trim();
+  if(!to||!subj||!body){toast('Completa todos los campos','warn');return;}
+  MOCK.emails.push({id:Date.now(),de:'Yo',para:to,asunto:subj,cuerpo:body,fecha:today(),leido:true,estrella:false,folder:'sent'});
+  closeModal();toast('Mensaje enviado correctamente','success');activeFolder='sent';navigate('email');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CHAT
+═══════════════════════════════════════════════════════════════ */
+let activeChatContactId=null;
+
+function rChat(){
+  const emp=SESSION.emp;
+  // Contacts = all employees except me
+  const contacts=MOCK.employees.filter(e=>e.id!==emp.id);
+
+  const contactList=contacts.map(c=>{
+    const thread=MOCK.chat.find(t=>t.contactId===c.id);
+    const last=thread?thread.msgs[thread.msgs.length-1]:null;
+    return `<div class="chat-item${activeChatContactId===c.id?' active':''}" onclick="openChat(${c.id})">
+      <div class="avatar avatar-sm ${c.avc}">${c.av}</div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;justify-content:space-between">
+          <div class="chat-item-name">${c.nombreCompleto}</div>
+          ${last?`<div class="chat-item-time">${last.hora}</div>`:''}
+        </div>
+        <div class="chat-item-preview">${last?last.texto:'Inicia una conversación'}</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:1px">${c.cargo}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  let msgArea='<div class="empty" style="margin:auto"><div class="empty-icon">💬</div><div class="empty-text">Selecciona un contacto</div></div>';
+
+  if(activeChatContactId){
+    const contact=MOCK.employees.find(e=>e.id===activeChatContactId);
+    const thread=MOCK.chat.find(t=>t.contactId===activeChatContactId);
+    const msgs=thread?thread.msgs:[];
+    const msgsHtml=msgs.map(m=>`
+      <div class="msg ${m.de==='me'?'mine':'other'}">
+        <div class="msg-bubble">${m.texto}</div>
+        <div class="msg-meta">${m.hora}</div>
+      </div>`).join('');
+
+    msgArea=`
+      <div class="chat-header">
+        <div class="avatar avatar-sm ${contact.avc}">${contact.av}</div>
+        <div>
+          <div style="font-size:13px;font-weight:700">${contact.nombreCompleto}</div>
+          <div style="font-size:11px;color:var(--text3)">${contact.cargo} · ${contact.departamento}</div>
+        </div>
+        <span class="badge badge-green" style="margin-left:auto"><span class="status-dot dot-green"></span>En línea</span>
+      </div>
+      <div class="chat-messages" id="chat-msgs">${msgsHtml}</div>
+      <div class="chat-input-area">
+        <textarea class="chat-input" id="chat-input" rows="1" placeholder="Escribe un mensaje..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatMsg();}"></textarea>
+        <button class="btn btn-primary" onclick="sendChatMsg()">Enviar</button>
+      </div>`;
+  }
+
+  return `<div class="chat-layout">
+    <div class="chat-list">
+      <div class="chat-list-header">💬 Mensajes</div>
+      ${contactList}
+    </div>
+    <div class="chat-main">${msgArea}</div>
+  </div>`;
+}
+
+function bindChat(){
+  const msgs=document.getElementById('chat-msgs');
+  if(msgs)msgs.scrollTop=msgs.scrollHeight;
+}
+
+function openChat(contactId){
+  activeChatContactId=contactId;
+  // Create thread if not exists
+  if(!MOCK.chat.find(t=>t.contactId===contactId)){
+    MOCK.chat.push({contactId,msgs:[]});
+  }
+  navigate('chat');
+}
+
+function sendChatMsg(){
+  const inp=document.getElementById('chat-input');
+  if(!inp)return;
+  const txt=inp.value.trim();
+  if(!txt)return;
+  const now=new Date();
+  const t=now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
+  const thread=MOCK.chat.find(t=>t.contactId===activeChatContactId);
+  if(thread){
+    thread.msgs.push({de:'me',texto:txt,hora:t});
+    inp.value='';
+    navigate('chat');
+    // Simulate reply after 2s
+    const contact=MOCK.employees.find(e=>e.id===activeChatContactId);
+    const replies=[
+      'Entendido, gracias por el aviso.',
+      'Perfecto, lo reviso ahora mismo.',
+      '👍 De acuerdo.',
+      'Recibido. Te confirmo en breve.',
+      'Vale, sin problema.',
+      'Gracias, lo tengo en cuenta.',
+    ];
+    setTimeout(()=>{
+      const th2=MOCK.chat.find(t=>t.contactId===activeChatContactId);
+      if(th2){
+        const now2=new Date();
+        const t2=now2.getHours().toString().padStart(2,'0')+':'+now2.getMinutes().toString().padStart(2,'0');
+        th2.msgs.push({de:'other',texto:replies[Math.floor(Math.random()*replies.length)],hora:t2});
+        if(STATE.page==='chat')navigate('chat');
+      }
+    },2000);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MODAL & TOAST
+═══════════════════════════════════════════════════════════════ */
+function showModal(html){
+  document.getElementById('modal-box').innerHTML=html;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal(){
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+function toast(msg,type='success'){
+  const wrap=document.getElementById('toast-wrap');
+  const el=document.createElement('div');
+  el.className=`toast ${type}`;
+  el.innerHTML=`<span>${type==='success'?'✅':type==='warn'?'⚠️':'❌'}</span> ${msg}`;
+  wrap.appendChild(el);
+  setTimeout(()=>{el.style.opacity='0';el.style.transform='translateY(12px)';el.style.transition='.3s';setTimeout(()=>el.remove(),300);},3000);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════════════════ */
+document.getElementById('inp-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+document.getElementById('inp-user').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('inp-pass').focus();});
+</script>
+</body>
 </html>
