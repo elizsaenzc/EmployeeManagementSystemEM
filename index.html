@@ -439,7 +439,7 @@ tr:hover td{background:var(--surface)}
 <div id="login-page">
   <div class="login-card">
     <div class="login-logo">
-      <div class="login-logo-icon">🏢</div>
+      <div class="login-logo-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#fff;flex-shrink:0;vertical-align:middle"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 22V12h6v10"/><path d="M9 7h.01"/><path d="M12 7h.01"/><path d="M15 7h.01"/><path d="M9 10h.01"/><path d="M12 10h.01"/><path d="M15 10h.01"/></svg></div>
       <div>
         <div class="login-logo-text">HR Portal</div>
         <div class="login-logo-sub">ESC MEDIA & TECH</div>
@@ -487,7 +487,7 @@ tr:hover td{background:var(--surface)}
     <!-- SIDEBAR -->
     <nav class="sidebar" id="sidebar">
       <div class="sidebar-logo">
-        <div class="sidebar-logo-icon">🏢</div>
+        <div class="sidebar-logo-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:rgba(255,255,255,.85);flex-shrink:0;vertical-align:middle"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 22V12h6v10"/><path d="M9 7h.01"/><path d="M12 7h.01"/><path d="M15 7h.01"/><path d="M9 10h.01"/><path d="M12 10h.01"/><path d="M15 10h.01"/></svg></div>
         <div>
           <div class="sidebar-logo-text">HR Portal</div>
           <div class="sidebar-logo-sub">ESC Media & Tech</div>
@@ -502,7 +502,7 @@ tr:hover td{background:var(--surface)}
       </div>
       <div class="sidebar-nav" id="sidebar-nav"></div>
       <div class="sidebar-footer">
-        <button class="btn-logout" onclick="doLogout()">🚪 Cerrar sesión</button>
+        <button class="btn-logout" onclick="doLogout()"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;flex-shrink:0;vertical-align:middle"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Cerrar sesión</button>
       </div>
     </nav>
 
@@ -696,28 +696,28 @@ function renderSidebar(){
 
   const nav=[
     {section:'Mi Jornada',items:[
-      {icon:'📊',label:'Dashboard',page:'dashboard'},
-      {icon:'🕐',label:'Mi Jornada',page:'attendance'},
-      {icon:'📅',label:'Horario',page:'schedule'},
+      {icon:`<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>`,label:'Dashboard',page:'dashboard'},
+      {icon:`<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,label:'Mi Jornada',page:'attendance'},
+      {icon:`<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`,label:'Horario',page:'schedule'},
     ]},
     {section:'Solicitudes',items:[
-      {icon:'🏖️',label:'Ausencias',page:'leaves'},
-      {icon:'⏱️',label:'Horas Extra',page:'overtime'},
-      {icon:'📄',label:'Mis Documentos',page:'docs'},
-      {icon:'📈',label:'Mi Rendimiento',page:'performance'},
+      {icon:`<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><path d="M23 12H1"/><path d="M12 2a10 10 0 0 1 10 10"/><path d="M2 12a10 10 0 0 1 10-10"/><path d="M12 22v-4"/><path d="M9 22h6"/></svg>`,label:'Ausencias',page:'leaves'},
+      {icon:`<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/><line x1="12" y1="3" x2="12" y2="1"/></svg>`,label:'Horas Extra',page:'overtime'},
+      {icon:`<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>`,label:'Mis Documentos',page:'docs'},
+      {icon:`<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>`,label:'Mi Rendimiento',page:'performance'},
     ]},
     {section:'Comunicación',items:[
-      {icon:'📧',label:'Email',page:'email'},
-      {icon:'💬',label:'Chat',page:'chat'},
+      {icon:`<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg>`,label:'Email',page:'email'},
+      {icon:`<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,label:'Chat',page:'chat'},
     ]},
   ];
   if(isMgr){
     nav.push({section:'Gestión',items:[
-      {icon:'👥',label:'Mi Equipo',page:'team'},
-      ...(isHR?[{icon:'👤',label:'Empleados',page:'employees',badge:0}]:[]),
-      ...(isHR?[{icon:'💰',label:'Nóminas',page:'payroll',badge:pendL}]:[]),
-      ...(isHR?[{icon:'📋',label:'Informes',page:'reports'}]:[]),
-      {icon:'⭐',label:'Evaluaciones',page:'evals'},
+      {icon:`<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,label:'Mi Equipo',page:'team'},
+      ...(isHR?[{icon:`<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,label:'Empleados',page:'employees',badge:0}]:[]),
+      ...(isHR?[{icon:`<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>`,label:'Nóminas',page:'payroll',badge:pendL}]:[]),
+      ...(isHR?[{icon:`<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>`,label:'Informes',page:'reports'}]:[]),
+      {icon:`<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,label:'Evaluaciones',page:'evals'},
     ]});
   }
 
@@ -763,7 +763,7 @@ function navigate(page){
   };
   const fn=fns[page];
   if(fn)c.innerHTML=fn();
-  else c.innerHTML=`<div class="empty"><div class="empty-icon">🚧</div><div class="empty-text">Página en desarrollo</div></div>`;
+  else c.innerHTML=`<div class="empty"><div class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 22V12h6v10"/><path d="M9 7h.01"/><path d="M12 7h.01"/><path d="M15 7h.01"/><path d="M9 10h.01"/><path d="M12 10h.01"/><path d="M15 10h.01"/></svg></div><div class="empty-text">Página en desarrollo</div></div>`;
   // bind events post-render
   if(page==='chat')bindChat();
   if(page==='email')bindEmail();
@@ -805,26 +805,26 @@ function rDash(){
   let kpis='';
   if(isHR){
     kpis=`
-    <div class="kpi blue"><div class="kpi-label">Plantilla total</div><div class="kpi-value">${total}</div><div class="kpi-desc">${activos} activos</div><div class="kpi-icon">👥</div></div>
-    <div class="kpi green"><div class="kpi-label">Presentes hoy</div><div class="kpi-value">${presentes}</div><div class="kpi-desc">Registros de entrada</div><div class="kpi-icon">✅</div></div>
-    <div class="kpi amber"><div class="kpi-label">Ausencias pend.</div><div class="kpi-value">${pendLeaves}</div><div class="kpi-desc">Pendientes de aprobar</div><div class="kpi-icon">⏳</div></div>
-    <div class="kpi blue"><div class="kpi-label">Nóminas pend.</div><div class="kpi-value">${MOCK.payroll.filter(p=>p.estado==='Pendiente').length}</div><div class="kpi-desc">Mes de Junio 2025</div><div class="kpi-icon">💰</div></div>`;
+    <div class="kpi blue"><div class="kpi-label">Plantilla total</div><div class="kpi-value">${total}</div><div class="kpi-desc">${activos} activos</div><div class="kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div></div>
+    <div class="kpi green"><div class="kpi-label">Presentes hoy</div><div class="kpi-value">${presentes}</div><div class="kpi-desc">Registros de entrada</div><div class="kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div></div>
+    <div class="kpi amber"><div class="kpi-label">Ausencias pend.</div><div class="kpi-value">${pendLeaves}</div><div class="kpi-desc">Pendientes de aprobar</div><div class="kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div></div>
+    <div class="kpi blue"><div class="kpi-label">Nóminas pend.</div><div class="kpi-value">${MOCK.payroll.filter(p=>p.estado==='Pendiente').length}</div><div class="kpi-desc">Mes de Junio 2025</div><div class="kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg></div></div>`;
   } else if(isMgr){
     const myTeam=MOCK.employees.filter(e=>e.departamento===emp.departamento);
     const teamPresent=hoy.filter(a=>myTeam.find(t=>t.id===a.empId)).length;
     kpis=`
-    <div class="kpi blue"><div class="kpi-label">Mi equipo</div><div class="kpi-value">${myTeam.length}</div><div class="kpi-desc">Dept. ${emp.departamento}</div><div class="kpi-icon">👥</div></div>
-    <div class="kpi green"><div class="kpi-label">Presentes hoy</div><div class="kpi-value">${teamPresent}</div><div class="kpi-desc">Con registro de entrada</div><div class="kpi-icon">✅</div></div>
-    <div class="kpi amber"><div class="kpi-label">Ausencias equipo</div><div class="kpi-value">${MOCK.leaves.filter(l=>myTeam.find(t=>t.id===l.empId)&&l.estado==='Pendiente').length}</div><div class="kpi-desc">Pendientes de gestionar</div><div class="kpi-icon">📋</div></div>
-    <div class="kpi blue"><div class="kpi-label">Evaluaciones</div><div class="kpi-value">${MOCK.performance.filter(p=>myTeam.find(t=>t.id===p.empId)).length}</div><div class="kpi-desc">Registradas este año</div><div class="kpi-icon">⭐</div></div>`;
+    <div class="kpi blue"><div class="kpi-label">Mi equipo</div><div class="kpi-value">${myTeam.length}</div><div class="kpi-desc">Dept. ${emp.departamento}</div><div class="kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div></div>
+    <div class="kpi green"><div class="kpi-label">Presentes hoy</div><div class="kpi-value">${teamPresent}</div><div class="kpi-desc">Con registro de entrada</div><div class="kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div></div>
+    <div class="kpi amber"><div class="kpi-label">Ausencias equipo</div><div class="kpi-value">${MOCK.leaves.filter(l=>myTeam.find(t=>t.id===l.empId)&&l.estado==='Pendiente').length}</div><div class="kpi-desc">Pendientes de gestionar</div><div class="kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></div></div>
+    <div class="kpi blue"><div class="kpi-label">Evaluaciones</div><div class="kpi-value">${MOCK.performance.filter(p=>myTeam.find(t=>t.id===p.empId)).length}</div><div class="kpi-desc">Registradas este año</div><div class="kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div></div>`;
   } else {
     const myPerf=MOCK.performance.filter(p=>p.empId===emp.id);
     const lastPerf=myPerf.sort((a,b)=>b.id-a.id)[0];
     kpis=`
-    <div class="kpi blue"><div class="kpi-label">Jornada hoy</div><div class="kpi-value">${todayRec?todayRec.entrada:'—'}</div><div class="kpi-desc">${todayRec?'Entrada registrada':'Sin registro hoy'}</div><div class="kpi-icon">🕐</div></div>
-    <div class="kpi green"><div class="kpi-label">Vacaciones aprob.</div><div class="kpi-value">${myLeaves.reduce((s,l)=>s+l.dias,0)}</div><div class="kpi-desc">Días aprobados</div><div class="kpi-icon">🏖️</div></div>
-    <div class="kpi ${lastPerf&&lastPerf.puntuacion>=90?'green':lastPerf&&lastPerf.puntuacion>=75?'blue':'amber'}"><div class="kpi-label">Rendimiento</div><div class="kpi-value">${lastPerf?lastPerf.puntuacion:'—'}</div><div class="kpi-desc">${lastPerf?lastPerf.periodo:'Sin evaluación'}</div><div class="kpi-icon">📈</div></div>
-    <div class="kpi amber"><div class="kpi-label">Horas extra</div><div class="kpi-value">${MOCK.overtime.filter(o=>o.empId===emp.id).reduce((s,o)=>s+o.horas,0)}h</div><div class="kpi-desc">Acumuladas</div><div class="kpi-icon">⏱️</div></div>`;
+    <div class="kpi blue"><div class="kpi-label">Jornada hoy</div><div class="kpi-value">${todayRec?todayRec.entrada:'—'}</div><div class="kpi-desc">${todayRec?'Entrada registrada':'Sin registro hoy'}</div><div class="kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div></div>
+    <div class="kpi green"><div class="kpi-label">Vacaciones aprob.</div><div class="kpi-value">${myLeaves.reduce((s,l)=>s+l.dias,0)}</div><div class="kpi-desc">Días aprobados</div><div class="kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><path d="M23 12H1"/><path d="M12 2a10 10 0 0 1 10 10"/><path d="M2 12a10 10 0 0 1 10-10"/><path d="M12 22v-4"/><path d="M9 22h6"/></svg></div></div>
+    <div class="kpi ${lastPerf&&lastPerf.puntuacion>=90?'green':lastPerf&&lastPerf.puntuacion>=75?'blue':'amber'}"><div class="kpi-label">Rendimiento</div><div class="kpi-value">${lastPerf?lastPerf.puntuacion:'—'}</div><div class="kpi-desc">${lastPerf?lastPerf.periodo:'Sin evaluación'}</div><div class="kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div></div>
+    <div class="kpi amber"><div class="kpi-label">Horas extra</div><div class="kpi-value">${MOCK.overtime.filter(o=>o.empId===emp.id).reduce((s,o)=>s+o.horas,0)}h</div><div class="kpi-desc">Acumuladas</div><div class="kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/><line x1="12" y1="3" x2="12" y2="1"/></svg></div></div>`;
   }
 
   let deptChart=`<div class="card"><div class="section-header"><div><div class="card-title">Distribución por Departamento</div><div class="card-sub">${total} empleados en ${deptEntries.length} departamentos</div></div></div>`;
@@ -842,14 +842,14 @@ function rDash(){
       lvTable+=`<tr>${isHR?`<td><div style="display:flex;align-items:center;gap:8px">${avatar(e,'sm')}<span>${e.nombreCompleto}</span></div></td>`:''}<td>${l.tipo}</td><td>${fmtDate(l.inicio)}</td><td>${statusBadge(l.estado)}</td></tr>`;
     });
     lvTable+='</tbody></table>';
-  }else lvTable+='<div class="empty"><div class="empty-icon">✅</div><div class="empty-text">Sin ausencias</div></div>';
+  }else lvTable+='<div class="empty"><div class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div class="empty-text">Sin ausencias</div></div>';
   lvTable+='</div></div>';
 
   const quickLinks=[
-    {icon:'🕐',label:'Registrar entrada',action:"navigate('attendance')"},
-    {icon:'🏖️',label:'Solicitar ausencia',action:"navigate('leaves')"},
-    {icon:'📄',label:'Ver mi nómina',action:"navigate('docs')"},
-    {icon:'💬',label:'Mensajes',action:"navigate('chat')"},
+    {icon:`<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--brand2);flex-shrink:0;vertical-align:middle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`,label:'Registrar entrada',action:"navigate('attendance')"},
+    {icon:`<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--brand2);flex-shrink:0;vertical-align:middle"><path d="M23 12H1"/><path d="M12 2a10 10 0 0 1 10 10"/><path d="M2 12a10 10 0 0 1 10-10"/><path d="M12 22v-4"/><path d="M9 22h6"/></svg>`,label:'Solicitar ausencia',action:"navigate('leaves')"},
+    {icon:`<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--brand2);flex-shrink:0;vertical-align:middle"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>`,label:'Ver mi nómina',action:"navigate('docs')"},
+    {icon:`<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--brand2);flex-shrink:0;vertical-align:middle"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,label:'Mensajes',action:"navigate('chat')"},
   ];
   const ql=`<div class="card"><div class="card-title" style="margin-bottom:14px">Acceso Rápido</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">${quickLinks.map(q=>`<button onclick="${q.action}" style="border:1.5px solid var(--border);border-radius:10px;padding:14px;background:var(--surface);text-align:left;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--brand2)';this.style.background='var(--brand-light)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface)'"><div style="font-size:22px;margin-bottom:6px">${q.icon}</div><div style="font-size:12px;font-weight:600;color:var(--text)">${q.label}</div></button>`).join('')}</div></div>`;
 
@@ -862,7 +862,7 @@ function rDash(){
           <div style="font-size:32px;font-weight:800;font-family:var(--mono);color:var(--brand2)">${todayRec.entrada}</div>
           <div style="font-size:12px;color:var(--text3);margin-top:4px">Entrada registrada</div>
           ${todayRec.salida?`<div style="font-size:20px;font-weight:700;font-family:var(--mono);color:var(--accent);margin-top:12px">${todayRec.salida}</div><div style="font-size:12px;color:var(--text3);margin-top:4px">Salida registrada</div>`:`<div style="margin-top:16px">${statusBadge('En curso')}</div>`}
-        </div>`:`<div class="empty"><div class="empty-icon">🕐</div><div class="empty-text">Sin entrada registrada</div></div>`}
+        </div>`:`<div class="empty"><div class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="empty-text">Sin entrada registrada</div></div>`}
       </div>
     </div>
   </div>`;
@@ -896,9 +896,9 @@ function rAtt(){
         <div style="font-size:28px;font-weight:800;font-family:var(--mono);color:var(--text)">${todayRec&&todayRec.horas?todayRec.horas+'h':'—'}</div>
       </div>
       <div style="margin-left:auto;display:flex;gap:10px;flex-wrap:wrap">
-        ${!todayCheckedIn?`<button class="btn btn-success" onclick="chkIn()">✅ Registrar Entrada</button>`:''}
-        ${todayCheckedIn&&!todayCheckedOut?`<button class="btn btn-warn" onclick="chkOut()">🚪 Registrar Salida</button>`:''}
-        ${todayCheckedOut?`<span class="badge badge-green" style="padding:8px 16px;font-size:13px">Jornada completa ✓</span>`:''}
+        ${!todayCheckedIn?`<button class="btn btn-success" onclick="chkIn()"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;flex-shrink:0;vertical-align:middle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Registrar Entrada</button>`:''}
+        ${todayCheckedIn&&!todayCheckedOut?`<button class="btn btn-warn" onclick="chkOut()"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;flex-shrink:0;vertical-align:middle"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Registrar Salida</button>`:''}
+        ${todayCheckedOut?`<span class="badge badge-green" style="padding:8px 16px;font-size:13px"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;flex-shrink:0;vertical-align:middle"><polyline points="20 6 9 17 4 12"/></svg> Jornada completa</span>`:''}
       </div>
     </div>
   </div>`;
@@ -1002,7 +1002,7 @@ function rLeaves(){
       <td><span style="font-family:var(--mono);font-weight:600">${l.dias}</span></td>
       <td>${statusBadge(l.estado)}</td>
       <td>
-        ${isHR&&l.estado==='Pendiente'?`<button class="btn btn-success btn-xs" onclick="approveLeave(${l.id})">✓ Aprobar</button> <button class="btn btn-danger btn-xs" onclick="rejectLeave(${l.id})">✗ Denegar</button>`:''}
+        ${isHR&&l.estado==='Pendiente'?`<button class="btn btn-success btn-xs" onclick="approveLeave(${l.id})"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:3px;flex-shrink:0;vertical-align:middle"><polyline points="20 6 9 17 4 12"/></svg> Aprobar</button> <button class="btn btn-danger btn-xs" onclick="rejectLeave(${l.id})"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:3px;flex-shrink:0;vertical-align:middle"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Denegar</button>`:''}
         ${!isHR&&l.estado==='Pendiente'?`<button class="btn btn-danger btn-xs" onclick="cancelLeave(${l.id})">Cancelar</button>`:''}
         ${l.estado!=='Pendiente'?`<span style="font-size:12px;color:var(--text3)">${l.estado}</span>`:''}
       </td>
@@ -1012,19 +1012,19 @@ function rLeaves(){
   return `
   <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap">
     <button class="btn btn-primary" onclick="openLeaveModal()">+ Nueva solicitud de ausencia</button>
-    ${pendLeaves.length?`<span class="badge badge-amber" style="padding:6px 12px;font-size:12px">⏳ ${pendLeaves.length} pendiente${pendLeaves.length>1?'s':''} de resolución</span>`:''}
+    ${pendLeaves.length?`<span class="badge badge-amber" style="padding:6px 12px;font-size:12px"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:3px;vertical-align:middle;flex-shrink:0;vertical-align:middle"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${pendLeaves.length} pendiente${pendLeaves.length>1?'s':''} de resolución</span>`:''}
   </div>
   <div class="table-wrap">
     <table><thead><tr>
       ${isHR?'<th>Empleado</th>':''}
       <th>Tipo</th><th>Inicio</th><th>Fin</th><th>Días</th><th>Estado</th><th>Acciones</th>
-    </tr></thead><tbody>${rows||`<tr><td colspan="7"><div class="empty"><div class="empty-icon">🏖️</div><div class="empty-text">Sin solicitudes</div></div></td></tr>`}</tbody></table>
+    </tr></thead><tbody>${rows||`<tr><td colspan="7"><div class="empty"><div class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><path d="M23 12H1"/><path d="M12 2a10 10 0 0 1 10 10"/><path d="M2 12a10 10 0 0 1 10-10"/><path d="M12 22v-4"/><path d="M9 22h6"/></svg></div><div class="empty-text">Sin solicitudes</div></div></td></tr>`}</tbody></table>
   </div>`;
 }
 
 function openLeaveModal(){
   const tipos=['Vacaciones','Asuntos propios','Baja médica','Maternidad/Paternidad','Permiso familiar'];
-  showModal(`<div class="modal-title">Nueva Solicitud de Ausencia <span class="modal-close" onclick="closeModal()">✕</span></div>
+  showModal(`<div class="modal-title">Nueva Solicitud de Ausencia <span class="modal-close" onclick="closeModal()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span></div>
     <div class="field"><label class="field-label">Tipo de ausencia</label><select class="field-input" id="lv-tipo">${tipos.map(t=>`<option>${t}</option>`).join('')}</select></div>
     <div class="field-row">
       <div class="field"><label class="field-label">Fecha inicio</label><input type="date" class="field-input" id="lv-ini" value="${today()}"/></div>
@@ -1076,7 +1076,7 @@ function rOT(){
       <td>${o.motivo}</td>
       <td><span class="badge ${o.compensacion==='Económica'?'badge-green':'badge-blue'}">${o.compensacion}</span></td>
       <td>${statusBadge(o.estado)}</td>
-      <td>${isHR&&o.estado==='Pendiente'?`<button class="btn btn-success btn-xs" onclick="approveOT(${o.id})">✓</button> <button class="btn btn-danger btn-xs" onclick="rejectOT(${o.id})">✗</button>`:'—'}</td>
+      <td>${isHR&&o.estado==='Pendiente'?`<button class="btn btn-success btn-xs" onclick="approveOT(${o.id})"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><polyline points="20 6 9 17 4 12"/></svg></button> <button class="btn btn-danger btn-xs" onclick="rejectOT(${o.id})"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>`:'—'}</td>
     </tr>`;
   });
 
@@ -1089,12 +1089,12 @@ function rOT(){
   </div>
   <div class="table-wrap">
     <table><thead><tr>${isHR?'<th>Empleado</th>':''}<th>Fecha</th><th>Horas</th><th>Motivo</th><th>Compensación</th><th>Estado</th><th>Acc.</th></tr></thead>
-    <tbody>${rows||`<tr><td colspan="7"><div class="empty"><div class="empty-icon">⏱️</div><div class="empty-text">Sin horas extra registradas</div></div></td></tr>`}</tbody></table>
+    <tbody>${rows||`<tr><td colspan="7"><div class="empty"><div class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/><line x1="12" y1="3" x2="12" y2="1"/></svg></div><div class="empty-text">Sin horas extra registradas</div></div></td></tr>`}</tbody></table>
   </div>`;
 }
 
 function openOTModal(){
-  showModal(`<div class="modal-title">Registrar Horas Extra <span class="modal-close" onclick="closeModal()">✕</span></div>
+  showModal(`<div class="modal-title">Registrar Horas Extra <span class="modal-close" onclick="closeModal()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span></div>
     <div class="field-row">
       <div class="field"><label class="field-label">Fecha</label><input type="date" class="field-input" id="ot-fecha" value="${today()}"/></div>
       <div class="field"><label class="field-label">Horas</label><input type="number" class="field-input" id="ot-horas" min="0.5" max="8" step="0.5" value="1"/></div>
@@ -1132,12 +1132,12 @@ function rDocs(){
         <div class="payslip-row"><span class="payslip-label">IRPF (20%)</span><span class="payslip-val" style="color:var(--danger)">-${fmtMoney(latest.irpf)}</span></div>
         <div class="payslip-row" style="border-top:2px solid var(--border);padding-top:12px;margin-top:8px"><span class="payslip-label" style="font-weight:700">TOTAL NETO</span><span class="payslip-total">${fmtMoney(latest.neto)}</span></div>
       </div>
-      <div style="margin-top:16px"><button class="btn btn-secondary btn-sm" onclick="toast('Descarga disponible en entorno productivo','warn')">📥 Descargar PDF</button></div>
+      <div style="margin-top:16px"><button class="btn btn-secondary btn-sm" onclick="toast('Descarga disponible en entorno productivo','warn')"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;flex-shrink:0;vertical-align:middle"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Descargar PDF</button></div>
     </div>`;
   }
   let histRows='';
   myPayroll.forEach(p=>{
-    histRows+=`<tr><td>${p.periodo}</td><td><span style="font-family:var(--mono)">${fmtMoney(p.bruto)}</span></td><td><span style="font-family:var(--mono);color:var(--danger)">-${fmtMoney(p.ss+p.irpf)}</span></td><td><span style="font-family:var(--mono);font-weight:700;color:var(--accent)">${fmtMoney(p.neto)}</span></td><td>${statusBadge(p.estado)}</td><td><button class="btn btn-ghost btn-xs" onclick="toast('PDF disponible en entorno productivo','warn')">📥</button></td></tr>`;
+    histRows+=`<tr><td>${p.periodo}</td><td><span style="font-family:var(--mono)">${fmtMoney(p.bruto)}</span></td><td><span style="font-family:var(--mono);color:var(--danger)">-${fmtMoney(p.ss+p.irpf)}</span></td><td><span style="font-family:var(--mono);font-weight:700;color:var(--accent)">${fmtMoney(p.neto)}</span></td><td>${statusBadge(p.estado)}</td><td><button class="btn btn-ghost btn-xs" onclick="toast('PDF disponible en entorno productivo','warn')"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button></td></tr>`;
   });
 
   return slipHtml+`<div class="table-wrap"><table><thead><tr><th>Período</th><th>Bruto</th><th>Descuentos</th><th>Neto</th><th>Estado</th><th>Doc</th></tr></thead><tbody>${histRows}</tbody></table></div>`;
@@ -1178,7 +1178,7 @@ function rPerf(){
         <div style="font-size:11px;font-weight:700;color:var(--accent2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Áreas de mejora</div>
         <div style="font-size:12px;color:var(--text2)">${p.areasMejora}</div>
       </div>
-      ${isMgr?`<div style="margin-top:12px;text-align:right"><button class="btn btn-ghost btn-sm" onclick="openPerfModal(${p.empId})">✏️ Editar evaluación</button></div>`:''}
+      ${isMgr?`<div style="margin-top:12px;text-align:right"><button class="btn btn-ghost btn-sm" onclick="openPerfModal(${p.empId})"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;flex-shrink:0;vertical-align:middle"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Editar evaluación</button></div>`:''}
     </div>`;
   });
 
@@ -1189,12 +1189,12 @@ function rPerf(){
     </div>
     ${isMgr?`<button class="btn btn-primary" onclick="openPerfModal(0)">+ Nueva evaluación</button>`:''}
   </div>
-  ${cards||`<div class="empty"><div class="empty-icon">📈</div><div class="empty-text">Sin evaluaciones registradas</div></div>`}`;
+  ${cards||`<div class="empty"><div class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div><div class="empty-text">Sin evaluaciones registradas</div></div>`}`;
 }
 
 function openPerfModal(empId){
   const emps=MOCK.employees.filter(e=>e.rol!=='Admin');
-  showModal(`<div class="modal-title">Nueva Evaluación de Rendimiento <span class="modal-close" onclick="closeModal()">✕</span></div>
+  showModal(`<div class="modal-title">Nueva Evaluación de Rendimiento <span class="modal-close" onclick="closeModal()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span></div>
     <div class="field"><label class="field-label">Empleado</label>
       <select class="field-input" id="pf-emp">${emps.map(e=>`<option value="${e.id}" ${e.id===empId?'selected':''}>${e.nombreCompleto} — ${e.departamento}</option>`).join('')}</select>
     </div>
@@ -1237,9 +1237,9 @@ function rEmps(){
       <td>${fmtDate(e.fechaIngreso)}</td>
       <td>${statusBadge(e.estado)}</td>
       <td>
-        <button class="btn btn-ghost btn-xs" onclick="viewEmp(${e.id})">👁️ Ver</button>
-        <button class="btn btn-secondary btn-xs" onclick="openEmpModal(${e.id})">✏️ Editar</button>
-        ${isAdmin&&e.id!==SESSION.emp.id?`<button class="btn btn-danger btn-xs" onclick="delEmp(${e.id})">🗑️</button>`:''}
+        <button class="btn btn-ghost btn-xs" onclick="viewEmp(${e.id})"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:3px;flex-shrink:0;vertical-align:middle"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Ver</button>
+        <button class="btn btn-secondary btn-xs" onclick="openEmpModal(${e.id})"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:3px;flex-shrink:0;vertical-align:middle"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Editar</button>
+        ${isAdmin&&e.id!==SESSION.emp.id?`<button class="btn btn-danger btn-xs" onclick="delEmp(${e.id})"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>`:''}
       </td>
     </tr>`;
   });
@@ -1247,7 +1247,7 @@ function rEmps(){
   return `
   <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap">
     <button class="btn btn-primary" onclick="openEmpModal(0)">+ Nuevo empleado</button>
-    <input class="field-input" style="width:220px" placeholder="🔍 Buscar empleado..." oninput="filterEmps(this.value)"/>
+    <input class="field-input" style="width:220px" placeholder="Buscar empleado..." oninput="filterEmps(this.value)"/>
     <span class="badge badge-blue" style="padding:6px 12px">${MOCK.employees.length} empleados</span>
   </div>
   <div class="table-wrap" id="emp-table">
@@ -1266,7 +1266,7 @@ function viewEmp(id){
   const myPerf=MOCK.performance.filter(p=>p.empId===id);
   const lastP=myPerf.sort((a,b)=>b.id-a.id)[0];
   const myPayroll=MOCK.payroll.filter(p=>p.empId===id).sort((a,b)=>b.id-a.id)[0];
-  showModal(`<div class="modal-title">Perfil de Empleado <span class="modal-close" onclick="closeModal()">✕</span></div>
+  showModal(`<div class="modal-title">Perfil de Empleado <span class="modal-close" onclick="closeModal()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span></div>
     <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;padding:16px;background:var(--surface);border-radius:10px">
       <div class="avatar avatar-lg ${e.avc}">${e.av}</div>
       <div><div style="font-size:17px;font-weight:700">${e.nombreCompleto}</div><div style="font-size:13px;color:var(--text2)">${e.cargo} · ${e.departamento}</div><div style="margin-top:6px">${roleBadge(e.rol)}</div></div>
@@ -1278,14 +1278,14 @@ function viewEmp(id){
       <div class="payslip-row"><span class="payslip-label">Salario bruto</span></div><div class="payslip-row"><span style="font-weight:700;font-family:var(--mono);color:var(--accent)">${fmtMoney(e.salario)}/mes</span></div>
       ${lastP?`<div class="payslip-row"><span class="payslip-label">Último rendimiento</span></div><div class="payslip-row"><span style="font-family:var(--mono);font-weight:700">${lastP.puntuacion}/100 — ${lastP.periodo}</span></div>`:''}
     </div>
-    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">Cerrar</button><button class="btn btn-primary" onclick="closeModal();openEmpModal(${e.id})">✏️ Editar</button></div>`);
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">Cerrar</button><button class="btn btn-primary" onclick="closeModal();openEmpModal(${e.id})"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;flex-shrink:0;vertical-align:middle"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Editar</button></div>`);
 }
 
 function openEmpModal(id){
   const e=id?MOCK.employees.find(x=>x.id===id):{};
   const depts=['Dirección','Tecnología','Marketing','Ventas','Finanzas','RRHH','Operaciones'];
   const roles=['Employee','Coordinator','HR','Admin'];
-  showModal(`<div class="modal-title">${id?'Editar Empleado':'Nuevo Empleado'} <span class="modal-close" onclick="closeModal()">✕</span></div>
+  showModal(`<div class="modal-title">${id?'Editar Empleado':'Nuevo Empleado'} <span class="modal-close" onclick="closeModal()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span></div>
     <div class="field-row">
       <div class="field"><label class="field-label">Nombre</label><input class="field-input" id="em-nom" value="${e.nombre||''}"/></div>
       <div class="field"><label class="field-label">Apellidos</label><input class="field-input" id="em-ape" value="${e.apellidos||''}"/></div>
@@ -1349,7 +1349,7 @@ function rPayroll(){
       <td><span style="font-family:var(--mono);color:var(--danger)">-${fmtMoney(p.ss+p.irpf)}</span></td>
       <td><span style="font-family:var(--mono);font-weight:700;color:var(--accent)">${fmtMoney(p.neto)}</span></td>
       <td>${statusBadge(p.estado)}</td>
-      <td>${p.estado==='Pendiente'?`<button class="btn btn-success btn-xs" onclick="markPaid(${p.id})">✓ Pagar</button>`:`<span style="font-size:11px;color:var(--text3)">${fmtDate(p.fecha)}</span>`}</td>
+      <td>${p.estado==='Pendiente'?`<button class="btn btn-success btn-xs" onclick="markPaid(${p.id})"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:3px;flex-shrink:0;vertical-align:middle"><polyline points="20 6 9 17 4 12"/></svg> Pagar</button>`:`<span style="font-size:11px;color:var(--text3)">${fmtDate(p.fecha)}</span>`}</td>
     </tr>`;
   });
 
@@ -1359,7 +1359,7 @@ function rPayroll(){
     <div class="kpi green"><div class="kpi-label">Pagado este mes</div><div class="kpi-value" style="font-size:20px">${fmtMoney(totalPag)}</div><div class="kpi-desc">${pagadas.length} nóminas pagadas</div></div>
     <div class="kpi blue"><div class="kpi-label">Total plantilla</div><div class="kpi-value" style="font-size:20px">${fmtMoney(totalPend+totalPag)}</div><div class="kpi-desc">Coste neto mensual</div></div>
   </div>
-  ${pendientes.length?`<div style="display:flex;gap:10px;margin-bottom:16px"><button class="btn btn-success" onclick="payAll()">✓ Pagar todas las pendientes</button><span class="badge badge-amber" style="padding:6px 12px">${pendientes.length} pendientes</span></div>`:''}
+  ${pendientes.length?`<div style="display:flex;gap:10px;margin-bottom:16px"><button class="btn btn-success" onclick="payAll()"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;flex-shrink:0;vertical-align:middle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Pagar todas las pendientes</button><span class="badge badge-amber" style="padding:6px 12px">${pendientes.length} pendientes</span></div>`:''}
   <div class="table-wrap">
     <table><thead><tr><th>Empleado</th><th>Período</th><th>Bruto</th><th>Descuentos</th><th>Neto</th><th>Estado</th><th>Acción</th></tr></thead>
     <tbody>${rows}</tbody></table>
@@ -1400,21 +1400,21 @@ function rReports(){
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
     <div class="card">
-      <div class="section-header"><div class="card-title">Distribución por Departamento</div><button class="btn btn-secondary btn-sm" onclick="toast('Exportación disponible en entorno productivo','warn')">📥 Exportar</button></div>
+      <div class="section-header"><div class="card-title">Distribución por Departamento</div><button class="btn btn-secondary btn-sm" onclick="toast('Exportación disponible en entorno productivo','warn')"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;flex-shrink:0;vertical-align:middle"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Exportar</button></div>
       <div class="table-wrap"><table><thead><tr><th>Departamento</th><th>Empleados</th><th>Coste</th><th>%</th></tr></thead><tbody>${deptRows}</tbody></table></div>
     </div>
     <div class="card">
       <div class="section-header"><div class="card-title">Informes Disponibles</div></div>
       ${[
-        {icon:'👥',label:'Informe de plantilla',desc:'Listado completo con datos de todos los empleados'},
-        {icon:'💰',label:'Informe de nóminas',desc:'Resumen de costes salariales por período'},
-        {icon:'🏖️',label:'Informe de ausencias',desc:'Análisis de ausencias y vacaciones por departamento'},
-        {icon:'📈',label:'Informe de rendimiento',desc:'Evaluaciones y puntuaciones del equipo'},
-        {icon:'🕐',label:'Informe de asistencia',desc:'Registros de jornada y horas extra'},
+        {icon:`<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,label:'Informe de plantilla',desc:'Listado completo con datos de todos los empleados'},
+        {icon:`<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>`,label:'Informe de nóminas',desc:'Resumen de costes salariales por período'},
+        {icon:`<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><path d="M23 12H1"/><path d="M12 2a10 10 0 0 1 10 10"/><path d="M2 12a10 10 0 0 1 10-10"/><path d="M12 22v-4"/><path d="M9 22h6"/></svg>`,label:'Informe de ausencias',desc:'Análisis de ausencias y vacaciones por departamento'},
+        {icon:`<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>`,label:'Informe de rendimiento',desc:'Evaluaciones y puntuaciones del equipo'},
+        {icon:`<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,label:'Informe de asistencia',desc:'Registros de jornada y horas extra'},
       ].map(rp=>`<div style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:8px;border:1px solid var(--border);margin-bottom:8px;cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='var(--brand2)'" onmouseout="this.style.borderColor='var(--border)'" onclick="toast('Generando informe...','success')">
         <span style="font-size:20px">${rp.icon}</span>
         <div><div style="font-size:13px;font-weight:600">${rp.label}</div><div style="font-size:11px;color:var(--text3)">${rp.desc}</div></div>
-        <button class="btn btn-secondary btn-xs" style="margin-left:auto">📥</button>
+        <button class="btn btn-secondary btn-xs" style="margin-left:auto"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
       </div>`).join('')}
     </div>
   </div>`;
@@ -1444,8 +1444,8 @@ function rTeam(){
         ${lastP?`<div style="display:flex;justify-content:space-between"><span style="color:var(--text3)">Rendimiento</span><span style="font-weight:700;font-family:var(--mono);color:${lastP.puntuacion>=90?'var(--accent)':'var(--brand2)'}">${lastP.puntuacion}/100</span></div>`:''}
       </div>
       <div style="margin-top:12px;display:flex;gap:6px">
-        <button class="btn btn-ghost btn-xs" onclick="openEmpModal(${e.id})">✏️ Editar</button>
-        ${['HR','Admin'].includes(SESSION.role)?`<button class="btn btn-ghost btn-xs" onclick="openPerfModal(${e.id})">📈 Eval.</button>`:''}
+        <button class="btn btn-ghost btn-xs" onclick="openEmpModal(${e.id})"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:3px;flex-shrink:0;vertical-align:middle"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Editar</button>
+        ${['HR','Admin'].includes(SESSION.role)?`<button class="btn btn-ghost btn-xs" onclick="openPerfModal(${e.id})"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:3px;flex-shrink:0;vertical-align:middle"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> Eval.</button>`:''}
       </div>
     </div>`;
   });
@@ -1486,7 +1486,7 @@ function rEvals(){
   </div>
   <div class="table-wrap">
     <table><thead><tr><th>Empleado</th><th>Período</th><th>Puntuación</th><th>Calificación</th><th>Evaluador</th><th>Fecha</th></tr></thead>
-    <tbody>${rows||`<tr><td colspan="6"><div class="empty"><div class="empty-icon">📈</div><div class="empty-text">Sin evaluaciones</div></div></td></tr>`}</tbody></table>
+    <tbody>${rows||`<tr><td colspan="6"><div class="empty"><div class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div><div class="empty-text">Sin evaluaciones</div></div></td></tr>`}</tbody></table>
   </div>`;
 }
 
@@ -1497,9 +1497,9 @@ let activeFolder='inbox', activeEmailId=null;
 
 function rEmail(){
   const folders=[
-    {id:'inbox',icon:'📥',label:'Bandeja de entrada',count:MOCK.emails.filter(e=>e.folder==='inbox'&&!e.leido).length},
-    {id:'sent',icon:'📤',label:'Enviados',count:0},
-    {id:'starred',icon:'⭐',label:'Destacados',count:MOCK.emails.filter(e=>e.estrella).length},
+    {id:'inbox',icon:`<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>`,label:'Bandeja de entrada',count:MOCK.emails.filter(e=>e.folder==='inbox'&&!e.leido).length},
+    {id:'sent',icon:`<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>`,label:'Enviados',count:0},
+    {id:'starred',icon:`<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,label:'Destacados',count:MOCK.emails.filter(e=>e.estrella).length},
   ];
 
   const foldersHtml=folders.map(f=>`<div class="email-folder${activeFolder===f.id?' active':''}" onclick="setFolder('${f.id}')">${f.icon} ${f.label}${f.count?` <span class="nav-badge" style="font-size:10px">${f.count}</span>`:''}</div>`).join('');
@@ -1518,8 +1518,8 @@ function rEmail(){
         <div class="email-item-preview">${e.cuerpo.substring(0,60)}...</div>
         <span style="font-size:10px;color:var(--text3);flex-shrink:0;margin-left:8px">${fmtDate(e.fecha)}</span>
       </div>
-      ${e.estrella?`<span style="color:var(--accent2);font-size:12px">⭐</span>`:''}
-    </div>`).join(''):'<div class="empty"><div class="empty-icon">📭</div><div class="empty-text">Bandeja vacía</div></div>';
+      ${e.estrella?`<span style="color:var(--accent2)"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent2);flex-shrink:0;vertical-align:middle"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="none"/></svg></span>`:''}
+    </div>`).join(''):'<div class="empty"><div class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg></div><div class="empty-text">Bandeja vacía</div></div>';
 
   const sel=activeEmailId?MOCK.emails.find(e=>e.id===activeEmailId):null;
   const detailHtml=sel?`
@@ -1532,16 +1532,16 @@ function rEmail(){
           <span>${fmtDate(sel.fecha)}</span>
         </div>
         <div style="margin-top:10px;display:flex;gap:8px">
-          <button class="btn btn-secondary btn-sm" onclick="replyEmail(${sel.id})">↩️ Responder</button>
-          <button class="btn btn-secondary btn-sm" onclick="toggleStar(${sel.id})">${sel.estrella?'⭐ Destacado':'☆ Destacar'}</button>
+          <button class="btn btn-secondary btn-sm" onclick="replyEmail(${sel.id})"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;flex-shrink:0;vertical-align:middle"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg> Responder</button>
+          <button class="btn btn-secondary btn-sm" onclick="toggleStar(${sel.id})">${sel.estrella?'<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;color:var(--accent2);flex-shrink:0;vertical-align:middle"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="none"/></svg> Destacado':'<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;flex-shrink:0;vertical-align:middle"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Destacar'}</button>
         </div>
       </div>
       <div class="email-detail-body">${sel.cuerpo.replace(/\n/g,'<br/>')}</div>
-    </div>`:'<div class="empty" style="margin:auto"><div class="empty-icon">📧</div><div class="empty-text">Selecciona un mensaje</div></div>';
+    </div>`:'<div class="empty" style="margin:auto"><div class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg></div><div class="empty-text">Selecciona un mensaje</div></div>';
 
   return `
   <div style="margin-bottom:16px;display:flex;gap:10px">
-    <button class="btn btn-primary btn-sm" onclick="openComposeModal()">✏️ Redactar</button>
+    <button class="btn btn-primary btn-sm" onclick="openComposeModal()"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;flex-shrink:0;vertical-align:middle"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Redactar</button>
   </div>
   <div class="email-layout">
     <div class="email-sidebar">
@@ -1576,11 +1576,11 @@ function replyEmail(id){
 }
 
 function openComposeModal(to='',subj=''){
-  showModal(`<div class="modal-title">Redactar mensaje <span class="modal-close" onclick="closeModal()">✕</span></div>
+  showModal(`<div class="modal-title">Redactar mensaje <span class="modal-close" onclick="closeModal()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span></div>
     <div class="field"><label class="field-label">Para</label><input class="field-input" id="em-to" value="${to}" placeholder="correo@escmedia.es"/></div>
     <div class="field"><label class="field-label">Asunto</label><input class="field-input" id="em-subj" value="${subj}" placeholder="Asunto del mensaje"/></div>
     <div class="field"><label class="field-label">Mensaje</label><textarea class="field-input" id="em-body" rows="6" placeholder="Escribe tu mensaje..."></textarea></div>
-    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="sendEmail()">📤 Enviar</button></div>`);
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="sendEmail()"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;flex-shrink:0;vertical-align:middle"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Enviar</button></div>`);
 }
 
 function sendEmail(){
@@ -1618,7 +1618,7 @@ function rChat(){
     </div>`;
   }).join('');
 
-  let msgArea='<div class="empty" style="margin:auto"><div class="empty-icon">💬</div><div class="empty-text">Selecciona un contacto</div></div>';
+  let msgArea='<div class="empty" style="margin:auto"><div class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div class="empty-text">Selecciona un contacto</div></div>';
 
   if(activeChatContactId){
     const contact=MOCK.employees.find(e=>e.id===activeChatContactId);
@@ -1648,7 +1648,7 @@ function rChat(){
 
   return `<div class="chat-layout">
     <div class="chat-list">
-      <div class="chat-list-header">💬 Mensajes</div>
+      <div class="chat-list-header"><div style="display:flex;align-items:center;gap:7px"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Mensajes</div></div>
       ${contactList}
     </div>
     <div class="chat-main">${msgArea}</div>
@@ -1686,7 +1686,7 @@ function sendChatMsg(){
     const replies=[
       'Entendido, gracias por el aviso.',
       'Perfecto, lo reviso ahora mismo.',
-      '👍 De acuerdo.',
+      'De acuerdo.',
       'Recibido. Te confirmo en breve.',
       'Vale, sin problema.',
       'Gracias, lo tengo en cuenta.',
@@ -1719,7 +1719,7 @@ function toast(msg,type='success'){
   const wrap=document.getElementById('toast-wrap');
   const el=document.createElement('div');
   el.className=`toast ${type}`;
-  el.innerHTML=`<span>${type==='success'?'✅':type==='warn'?'⚠️':'❌'}</span> ${msg}`;
+  el.innerHTML=`<span>${type==='success'?`<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`:type==='warn'?`<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`:`<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;vertical-align:middle"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`}</span> ${msg}`;
   wrap.appendChild(el);
   setTimeout(()=>{el.style.opacity='0';el.style.transform='translateY(12px)';el.style.transition='.3s';setTimeout(()=>el.remove(),300);},3000);
 }
