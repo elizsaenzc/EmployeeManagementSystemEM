@@ -15,7 +15,7 @@ public record EmployeeDetailDto(
     int Id, string FirstName, string LastName, string FullName, string Email,
     string? Phone, string? NationalId, DateTime? BirthDate, string? Address,
     string Position, string Department, string Role, string ContractType,
-    decimal GrossSalary, decimal MonthlySalary, DateTime HireDate,
+    decimal? GrossSalary, decimal? MonthlySalary, DateTime HireDate,
     DateTime? ContractEndDate, int? ManagerId, string? ManagerName,
     string Initials, string? WorkSchedule, bool IsActive);
 

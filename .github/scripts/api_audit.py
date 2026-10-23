@@ -93,6 +93,13 @@ check(status == 403, f"Empleado: descarga de nómina ajena bloqueada ({status})"
 status, _ = call("POST", "/api/attendance/checkin", emp, {"employeeId": 1, "time": "09:00"})
 check(status == 403, f"Empleado: fichar por otro bloqueado ({status})")
 
+# Coordinador: ficha de su equipo sin datos sensibles
+_, mate = call("GET", "/api/employees/6", tokens["Coordinator"])
+check(mate.get("nationalId") is None and mate.get("grossSalary") is None,
+      "Coordinador: la ficha de su equipo no incluye DNI ni salario")
+status, _ = call("GET", "/api/employees/12", tokens["Coordinator"])
+check(status == 403, f"Coordinador: ficha de otro departamento bloqueada ({status})")
+
 # Coordinador: su equipo sí, otros departamentos no
 coord = tokens["Coordinator"]
 _, rows = call("GET", "/api/attendance", coord)

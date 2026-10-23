@@ -1,4 +1,6 @@
-# ESC Media & Tech S.L. — Portal de RRHH -- Proyecto React Master Desarrollo Fullstack y Arquitecturas Cloud - Tajamar por Elizabeth Sáenz Camacho
+# Portal de RRHH · ESC Media & Tech
+
+Proyecto del Máster en Desarrollo Full Stack y Arquitecturas Cloud (Tajamar), desarrollado por Elizabeth Sáenz Camacho.
 
 Sistema de gestión de recursos humanos construido con **React 18 + ASP.NET Core 8 Web API + SQLite**.
 
@@ -38,12 +40,29 @@ El pipeline de CI compila la API y el frontend, construye la imagen y la prueba 
 
 | Capa        | Tecnología                                                  |
 |-------------|-------------------------------------------------------------|
-| Frontend    | React 18 + Vite + React Router v6 + Recharts               |
-| Backend     | ASP.NET Core 8 Web API                                      |
+| Frontend    | React 18 + Vite + React Router v6 + Recharts + lucide-react |
+| Backend     | ASP.NET Core 8 Web API + Swagger (OpenAPI)                  |
 | Base datos  | SQLite via Entity Framework Core 8                          |
 | Auth        | JWT Bearer + BCrypt                                         |
 | Exportes    | ClosedXML (Excel), texto plano (nóminas)                   |
-| Estilos     | CSS puro con design system corporativo (variables CSS)      |
+| Estilos     | CSS con tokens de diseño (variables CSS), adaptable a móvil |
+| Calidad     | GitHub Actions: build, imagen Docker y auditoría de la API por rol |
+
+---
+
+## Seguridad y permisos por rol
+
+Las reglas de visibilidad se aplican en la API (`Services/AccessScope.cs`), no solo en la interfaz:
+
+| Dato | Empleado | Coordinador | RRHH / Admin |
+|---|---|---|---|
+| Asistencia, permisos, horas extra, evaluaciones | Los suyos | Los suyos y los de su equipo | Toda la plantilla |
+| Nóminas | Las suyas | Las suyas | Todas |
+| Directorio de empleados | Nombre, cargo y contacto | Igual | Igual, con salario |
+| Ficha de empleado | Solo la suya, completa | La suya y las de su equipo, sin DNI ni salario | Todas, completas |
+| Correo y notificaciones | Solo los propios | Solo los propios | Solo los propios |
+
+Además: nadie aprueba sus propias solicitudes ni se evalúa a sí mismo, los usuarios nuevos reciben una contraseña temporal aleatoria y los errores de validación devuelven `400` con un mensaje claro.
 
 ---
 
@@ -123,25 +142,28 @@ npm run dev
 HRPortal/
 ├── backend/
 │   ├── Controllers/
+│   │   ├── AuthController.cs              Login y sesión (JWT)
 │   │   ├── AttendanceLeaveController.cs   Asistencia, permisos, horas extra
-│   │   ├── CommsController.cs             Notificaciones, correo, chat, dashboard
+│   │   ├── CommsController.cs             Notificaciones, correo, chat
+│   │   ├── DashboardController.cs         Indicadores por rol
 │   │   ├── EmployeesController.cs         CRUD de empleados
 │   │   └── PayrollPerformanceController.cs Nóminas (gen + export) + evaluaciones
 │   ├── Data/
-│   │   └── AppDbContext.cs                EF Core + seed completo 20 empleados
+│   │   └── AppDbContext.cs                EF Core + datos de demo (20 empleados, actividad relativa a hoy)
 │   ├── DTOs/
 │   │   └── Dtos.cs                        Request/Response records
 │   ├── Models/
 │   │   └── Models.cs                      Entidades del dominio + enums
 │   ├── Services/
-│   │   └── JwtService.cs                  Generación JWT + AuthController
+│   │   ├── AccessScope.cs                 Reglas de visibilidad por rol
+│   │   └── JwtService.cs                  Generación de tokens JWT
 │   ├── Program.cs
 │   └── appsettings.json
 │
 └── frontend/
     └── src/
         ├── components/
-        │   ├── layout/Sidebar.jsx          Navegación lateral por rol
+        │   ├── layout/Sidebar.jsx          Navegación lateral por rol (menú desplegable en móvil)
         │   └── ui/index.jsx                Spinner, Modal, Badge, Avatar, Tabs…
         ├── context/AuthContext.jsx          Estado global de sesión
         ├── hooks/useApi.js                  Hook genérico + helpers (fmt, downloadBlob…)
@@ -208,5 +230,3 @@ POST               /api/chat
 ```
 
 ---
-
-# ESC Media & Tech S.L. — Portal de RRHH -- Proyecto React Master Desarrollo Fullstack y Arquitecturas Cloud - Tajamar por Elizabeth Sáenz Camacho

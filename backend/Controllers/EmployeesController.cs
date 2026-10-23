@@ -44,11 +44,13 @@ public class EmployeesController : ControllerBase
         if (e == null) return NotFound();
         if (!await User.CanAccessEmployeeAsync(_db, id)) return Forbid();
 
+        // Datos personales y salariales: solo RRHH/Admin o el propio empleado
+        var full = User.IsHrOrAdmin() || User.EmployeeId() == id;
         return Ok(new EmployeeDetailDto(
             e.Id, e.FirstName, e.LastName, e.FullName, e.Email,
-            e.Phone, e.NationalId, e.BirthDate, e.Address,
+            e.Phone, full ? e.NationalId : null, full ? e.BirthDate : null, full ? e.Address : null,
             e.Position, e.Department.ToString(), e.RoleInCompany.ToString(),
-            e.ContractType.ToString(), e.GrossSalary, e.MonthlySalary,
+            e.ContractType.ToString(), full ? e.GrossSalary : null, full ? e.MonthlySalary : null,
             e.HireDate, e.ContractEndDate, e.ManagerId,
             e.Manager != null ? $"{e.Manager.FirstName} {e.Manager.LastName}" : null,
             e.Initials, e.WorkSchedule, e.User?.IsActive ?? false));
