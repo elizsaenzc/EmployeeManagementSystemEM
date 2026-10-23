@@ -1,201 +1,163 @@
-import { useState, useEffect, useRef } from 'react'
-import { useAuth }   from '../../context/AuthContext'
-import { useApi, avatarColor } from '../../hooks/useApi'
-import { chatApi }   from '../../services/api'
-import { Spinner }   from '../../components/ui'
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { Search, Send, MessageSquare, ArrowLeft } from 'lucide-react'
+import { useAuth } from '../../context/AuthContext'
+import { useApi, label } from '../../hooks/useApi'
+import { chatApi } from '../../services/api'
+import { Spinner, Topbar, Avatar } from '../../components/ui'
 
-const DEPT_LABELS = {
-  Direccion: 'Dirección', Tecnologia: 'Tecnología', Marketing: 'Marketing',
-  Ventas: 'Ventas', Finanzas: 'Finanzas', RRHH: 'RRHH',
-  Operaciones: 'Operaciones', Legal: 'Legal', Atencion_al_Cliente: 'Atención al cliente'
+const time = iso => new Date(iso).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })
+const dayLabel = iso => {
+  const d = new Date(iso)
+  const today = new Date()
+  const yesterday = new Date(); yesterday.setDate(today.getDate() - 1)
+  if (d.toDateString() === today.toDateString()) return 'Hoy'
+  if (d.toDateString() === yesterday.toDateString()) return 'Ayer'
+  return d.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' })
 }
 
 export default function Chat() {
   const { user } = useAuth()
-  const empId    = user?.employeeId
+  const empId = user?.employeeId
 
   const [contact, setContact]   = useState(null)
   const [messages, setMessages] = useState([])
   const [loadMsgs, setLoadMsgs] = useState(false)
   const [text, setText]         = useState('')
   const [sending, setSending]   = useState(false)
+  const [error, setError]       = useState('')
   const [search, setSearch]     = useState('')
-  const bottomRef               = useRef(null)
+  const bottomRef = useRef(null)
 
   const { data: contacts, loading: loadContacts } = useApi(chatApi.getContacts, [])
 
+  const term = search.trim().toLowerCase()
   const filtered = (contacts ?? []).filter(c =>
-    search === '' ||
-    `${c.firstName} ${c.lastName}`.toLowerCase().includes(search.toLowerCase()) ||
-    c.position.toLowerCase().includes(search.toLowerCase())
-  )
+    !term || `${c.firstName} ${c.lastName}`.toLowerCase().includes(term) || c.position.toLowerCase().includes(term))
 
-  const loadConversation = async c => {
+  const fetchConversation = useCallback(async id => {
+    const res = await chatApi.getConversation(id)
+    setMessages(res.data)
+  }, [])
+
+  const openConversation = async c => {
     setContact(c)
+    setError('')
     setLoadMsgs(true)
-    try {
-      const res = await chatApi.getConversation(c.id)
-      setMessages(res.data)
-    } finally {
-      setLoadMsgs(false)
-    }
+    try { await fetchConversation(c.id) }
+    catch { setError('No se pudo cargar la conversación') }
+    finally { setLoadMsgs(false) }
   }
 
-  const handleSend = async () => {
-    if (!text.trim() || !contact) return
+  // Refresco periódico de la conversación abierta
+  useEffect(() => {
+    if (!contact) return
+    const t = setInterval(() => fetchConversation(contact.id).catch(() => {}), 10000)
+    return () => clearInterval(t)
+  }, [contact, fetchConversation])
+
+  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }) }, [messages])
+
+  const send = async () => {
+    const body = text.trim()
+    if (!body || !contact) return
     setSending(true)
+    setError('')
     try {
-      const res = await chatApi.send({ recipientId: contact.id, body: text.trim() })
+      const res = await chatApi.send({ recipientId: contact.id, body })
       setMessages(prev => [...prev, res.data])
       setText('')
+    } catch (e) {
+      setError(e.response?.data?.message ?? 'No se pudo enviar el mensaje')
     } finally {
       setSending(false)
     }
   }
 
-  const handleKey = e => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleSend()
-    }
+  const onKey = e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send() }
   }
 
-  // Auto scroll to bottom
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages])
-
-  const initials = name => name.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase()
+  const contactName = contact ? `${contact.firstName} ${contact.lastName}` : ''
 
   return (
-    <div className="chat-shell">
-      {/* Contacts sidebar */}
-      <div className="chat-sidebar">
-        <div style={{ padding: '12px 14px', borderBottom: '1px solid var(--border)' }}>
-          <input
-            className="form-input"
-            placeholder="Buscar persona…"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            style={{ fontSize: 13 }}
-          />
-        </div>
-
-        {loadContacts ? <Spinner /> : (
-          <div>
-            {filtered.map(c => {
-              const name     = `${c.firstName} ${c.lastName}`
-              const avClass  = avatarColor(name)
-              const isActive = contact?.id === c.id
-              return (
-                <div
-                  key={c.id}
-                  onClick={() => loadConversation(c)}
-                  style={{
-                    display: 'flex', alignItems: 'center', gap: 10,
-                    padding: '10px 14px', cursor: 'pointer',
-                    background: isActive ? 'var(--brand-dim)' : 'transparent',
-                    borderBottom: '1px solid var(--border)',
-                    transition: 'background .12s'
-                  }}
-                  onMouseEnter={e => { if (!isActive) e.currentTarget.style.background = 'var(--surface2)' }}
-                  onMouseLeave={e => { if (!isActive) e.currentTarget.style.background = 'transparent' }}
-                >
-                  <div className={`avatar av-sm ${avClass}`}>{initials(name)}</div>
-                  <div style={{ overflow: 'hidden' }}>
-                    <div style={{ fontWeight: 600, fontSize: 13, color: isActive ? 'var(--brand-light)' : 'var(--text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                      {name}
-                    </div>
-                    <div style={{ fontSize: 11, color: 'var(--text3)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                      {c.position}
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        )}
-      </div>
-
-      {/* Main chat area */}
-      <div className="chat-main">
-        {!contact ? (
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text3)' }}>
-            <div style={{ fontSize: 42, marginBottom: 12 }}>💬</div>
-            <div style={{ fontSize: 15, fontWeight: 500, marginBottom: 6 }}>Chat corporativo</div>
-            <div style={{ fontSize: 13 }}>Selecciona un contacto para iniciar una conversación</div>
-          </div>
-        ) : (
-          <>
-            {/* Chat header */}
-            <div style={{
-              display: 'flex', alignItems: 'center', gap: 12,
-              padding: '12px 18px', borderBottom: '1px solid var(--border)',
-              background: 'var(--surface)'
-            }}>
-              <div className={`avatar av-md ${avatarColor(`${contact.firstName} ${contact.lastName}`)}`}>
-                {initials(`${contact.firstName} ${contact.lastName}`)}
-              </div>
-              <div>
-                <div style={{ fontWeight: 600 }}>{contact.firstName} {contact.lastName}</div>
-                <div style={{ fontSize: 12, color: 'var(--text3)' }}>
-                  {contact.position} · {DEPT_LABELS[contact.department] ?? contact.department}
-                </div>
-              </div>
+    <>
+      <Topbar title="Chat" />
+      <div className={`chat-shell ${contact ? 'has-contact' : ''}`}>
+        <aside className="chat-sidebar" aria-label="Contactos">
+          <div className="chat-search">
+            <div className="search-wrap">
+              <Search className="search-ico" size={15} />
+              <input className="form-input" placeholder="Buscar persona" value={search}
+                     onChange={e => setSearch(e.target.value)} aria-label="Buscar contacto" />
             </div>
+          </div>
+          {loadContacts ? <Spinner /> : filtered.map(c => {
+            const name = `${c.firstName} ${c.lastName}`
+            return (
+              <button key={c.id} className={`contact-row ${contact?.id === c.id ? 'active' : ''}`}
+                      onClick={() => openConversation(c)}>
+                <Avatar name={name} size="av-sm" />
+                <span className="min-w-0">
+                  <span className="contact-name">{name}</span>
+                  <span className="contact-meta">{c.position}</span>
+                </span>
+              </button>
+            )
+          })}
+        </aside>
 
-            {/* Messages */}
-            <div className="chat-messages">
-              {loadMsgs ? <Spinner /> : !messages.length ? (
-                <div style={{ textAlign: 'center', color: 'var(--text3)', fontSize: 13, marginTop: 30 }}>
-                  No hay mensajes aún. ¡Empieza la conversación!
+        <section className="chat-main">
+          {!contact ? (
+            <div className="chat-placeholder">
+              <MessageSquare size={36} strokeWidth={1.25} />
+              <div className="fw-600">Chat interno</div>
+              <div className="text-sm">Elige una persona de la lista para empezar a escribir.</div>
+            </div>
+          ) : (
+            <>
+              <header className="chat-header">
+                <button className="btn btn-ghost btn-icon chat-back" onClick={() => setContact(null)} aria-label="Volver a contactos">
+                  <ArrowLeft size={18} />
+                </button>
+                <Avatar name={contactName} size="av-md" />
+                <div className="min-w-0">
+                  <div className="fw-600">{contactName}</div>
+                  <div className="text-sm text-muted">{contact.position} · {label(contact.department)}</div>
                 </div>
-              ) : (
-                messages.map(msg => {
+              </header>
+
+              <div className="chat-messages">
+                {loadMsgs ? <Spinner /> : !messages.length ? (
+                  <div className="chat-empty">Todavía no hay mensajes con {contact.firstName}.</div>
+                ) : messages.map((msg, i) => {
                   const isMe = msg.senderId === empId
+                  const showDay = i === 0 || dayLabel(messages[i - 1].sentAt) !== dayLabel(msg.sentAt)
                   return (
-                    <div key={msg.id} style={{ display: 'flex', flexDirection: 'column', alignItems: isMe ? 'flex-end' : 'flex-start' }}>
-                      {!isMe && (
-                        <span style={{ fontSize: 11, color: 'var(--text3)', marginBottom: 3, marginLeft: 4 }}>
-                          {msg.senderName}
-                        </span>
-                      )}
-                      <div className={`chat-bubble ${isMe ? 'bubble-me' : 'bubble-other'}`}>
-                        {msg.body}
+                    <div key={msg.id} className="chat-row-wrap">
+                      {showDay && <div className="chat-day">{dayLabel(msg.sentAt)}</div>}
+                      <div className={`chat-row ${isMe ? 'me' : 'other'}`}>
+                        <div className={`chat-bubble ${isMe ? 'bubble-me' : 'bubble-other'}`}>{msg.body}</div>
+                        <span className="chat-time">{time(msg.sentAt)}</span>
                       </div>
-                      <span style={{ fontSize: 10, color: 'var(--text3)', marginTop: 3, marginLeft: 4, marginRight: 4 }}>
-                        {new Date(msg.sentAt).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
-                      </span>
                     </div>
                   )
-                })
-              )}
-              <div ref={bottomRef} />
-            </div>
+                })}
+                <div ref={bottomRef} />
+              </div>
 
-            {/* Input */}
-            <div className="chat-input-row">
-              <textarea
-                className="form-input"
-                style={{ flex: 1, resize: 'none', height: 40, padding: '8px 12px', fontSize: 13 }}
-                placeholder={`Mensaje a ${contact.firstName}…`}
-                value={text}
-                onChange={e => setText(e.target.value)}
-                onKeyDown={handleKey}
-                rows={1}
-              />
-              <button
-                className="btn btn-primary"
-                onClick={handleSend}
-                disabled={sending || !text.trim()}
-                style={{ height: 40, padding: '0 16px' }}
-              >
-                {sending ? '…' : '↑ Enviar'}
-              </button>
-            </div>
-          </>
-        )}
+              {error && <div className="chat-error">{error}</div>}
+              <div className="chat-input-row">
+                <textarea className="form-input chat-input" rows={1} value={text}
+                          placeholder={`Escribe a ${contact.firstName}…`} aria-label="Mensaje"
+                          onChange={e => setText(e.target.value)} onKeyDown={onKey} />
+                <button className="btn btn-primary" onClick={send} disabled={sending || !text.trim()}>
+                  <Send size={15} /> Enviar
+                </button>
+              </div>
+            </>
+          )}
+        </section>
       </div>
-    </div>
+    </>
   )
 }

@@ -48,8 +48,8 @@ const STATUS = {
 export const statusCls = s => STATUS[s] ?? 'badge-muted'
 
 // Month names ES
-const MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
-                'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
+export const MONTHS = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio',
+                       'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
 export const monthName = m => MONTHS[(m || 1) - 1] ?? ''
 
 // Download blob helper
@@ -61,3 +61,29 @@ export function downloadBlob(blob, filename) {
   a.click()
   URL.revokeObjectURL(url)
 }
+
+// Etiquetas legibles para los valores de enumeración que devuelve la API
+const LABELS = {
+  Direccion: 'Dirección', Tecnologia: 'Tecnología', Marketing: 'Marketing', Ventas: 'Ventas',
+  Finanzas: 'Finanzas', RRHH: 'RRHH', Operaciones: 'Operaciones', Legal: 'Legal',
+  Atencion_al_Cliente: 'Atención al cliente',
+  Indefinido: 'Indefinido', Temporal: 'Temporal', Practicas: 'Prácticas', Obra_y_Servicio: 'Obra y servicio',
+  Vacaciones: 'Vacaciones', Permiso_Medico: 'Permiso médico', Asunto_Personal: 'Asunto personal',
+  Asunto_Familiar: 'Asunto familiar', Calamidad_Domestica: 'Calamidad doméstica',
+  Permiso_Remunerado: 'Permiso remunerado', Baja_por_Enfermedad: 'Baja por enfermedad',
+  Media_Jornada: 'Media jornada',
+  Employee: 'Empleado', Coordinator: 'Coordinador', HR: 'RRHH', Admin: 'Administrador',
+}
+export const label = v => LABELS[v] ?? (v ? String(v).replace(/_/g, ' ') : '')
+
+// Años seleccionables en filtros: dos atrás, el actual y el siguiente
+export const yearOptions = () => {
+  const y = new Date().getFullYear()
+  return [y - 2, y - 1, y, y + 1]
+}
+
+// Fecha local en formato YYYY-MM-DD (toISOString usaría UTC y cambiaría de día por la noche)
+export const localISODate = (d = new Date()) => d.toLocaleDateString('sv-SE')
+export const daysAgoISO = n => { const d = new Date(); d.setDate(d.getDate() - n); return localISODate(d) }
+export const fmtDay = iso =>
+  iso ? new Date(iso.length === 10 ? iso + 'T00:00:00' : iso).toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' }) : '—'

@@ -62,12 +62,17 @@ public class EmployeesController : ControllerBase
         var role = Enum.Parse<UserRole>(req.Role);
         var ct   = Enum.Parse<ContractType>(req.ContractType);
 
-        // Create user account
-        var username = $"{req.FirstName.ToLower().Split(' ')[0]}.{req.LastName.ToLower().Split(' ')[0]}";
+        // Usuario único sin tildes (nombre.apellido, con sufijo si ya existe) y contraseña temporal aleatoria
+        var baseName = $"{Slug(req.FirstName)}.{Slug(req.LastName)}";
+        var username = baseName;
+        for (var n = 2; await _db.Users.AnyAsync(u => u.Username == username); n++)
+            username = $"{baseName}{n}";
+        var tempPassword = Convert.ToBase64String(System.Security.Cryptography.RandomNumberGenerator.GetBytes(9))
+            .Replace('+', 'x').Replace('/', 'y');
         var user = new AppUser
         {
             Username     = username,
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword("Temp2025!"),
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(tempPassword),
             Role         = role
         };
         _db.Users.Add(user);
@@ -95,7 +100,16 @@ public class EmployeesController : ControllerBase
         _db.Employees.Add(employee);
         await _db.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetOne), new { id = employee.Id }, ToListDto(employee));
+        // La contraseña temporal solo se devuelve en esta respuesta, para entregarla al empleado
+        return CreatedAtAction(nameof(GetOne), new { id = employee.Id },
+            new { employee = ToListDto(employee), username, temporaryPassword = tempPassword });
+    }
+
+    private static string Slug(string value)
+    {
+        var first = value.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? "usuario";
+        var normalized = first.ToLowerInvariant().Normalize(System.Text.NormalizationForm.FormD);
+        return new string(normalized.Where(c => char.IsAsciiLetterOrDigit(c)).ToArray());
     }
 
     [HttpPut("{id}")]

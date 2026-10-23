@@ -1,13 +1,16 @@
-import { avatarColor, statusCls } from '../../hooks/useApi'
+import { useEffect } from 'react'
+import { Inbox, X, Menu } from 'lucide-react'
+import { avatarColor, statusCls, label as enumLabel } from '../../hooks/useApi'
+import { useShell } from '../layout/ShellContext'
 
 export function Spinner() {
   return <div className="spinner-box"><div className="spinner" /></div>
 }
 
-export function Empty({ icon = '📋', text = 'Sin datos' }) {
+export function Empty({ icon: Icon = Inbox, text = 'Sin datos' }) {
   return (
     <div className="empty-box">
-      <div className="empty-icon">{icon}</div>
+      <div className="empty-icon"><Icon size={28} strokeWidth={1.5} /></div>
       <div>{text}</div>
     </div>
   )
@@ -20,16 +23,23 @@ export function Avatar({ name = '', size = 'av-md' }) {
 
 export function Badge({ label, status }) {
   const cls = status ? statusCls(status) : 'badge-muted'
-  return <span className={`badge ${cls}`}>{label ?? status}</span>
+  return <span className={`badge ${cls}`}>{label ?? enumLabel(status)}</span>
 }
 
 export function Modal({ title, onClose, children, footer, wide }) {
+  // Cerrar con Escape
+  useEffect(() => {
+    const onKey = e => e.key === 'Escape' && onClose()
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [onClose])
+
   return (
     <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
-      <div className="modal" style={wide ? { maxWidth: 720 } : {}}>
+      <div className="modal" role="dialog" aria-modal="true" aria-label={title} style={wide ? { maxWidth: 720 } : {}}>
         <div className="modal-header">
           <span className="modal-title">{title}</span>
-          <button className="btn btn-icon btn-secondary" onClick={onClose}>✕</button>
+          <button className="btn btn-icon btn-ghost" onClick={onClose} aria-label="Cerrar"><X size={16} /></button>
         </div>
         <div className="modal-body">{children}</div>
         {footer && <div className="modal-footer">{footer}</div>}
@@ -39,9 +49,13 @@ export function Modal({ title, onClose, children, footer, wide }) {
 }
 
 export function Topbar({ title, children }) {
+  const { setNavOpen } = useShell()
   return (
     <div className="topbar">
-      <span className="topbar-title">{title}</span>
+      <button className="topbar-menu" onClick={() => setNavOpen(true)} aria-label="Abrir menú">
+        <Menu size={20} />
+      </button>
+      <h1 className="topbar-title">{title}</h1>
       <div className="topbar-right">{children}</div>
     </div>
   )
@@ -55,9 +69,7 @@ export function Tabs({ tabs, active, onChange }) {
                 onClick={() => onChange(t.id)}>
           {t.label}
           {t.count != null && (
-            <span style={{ marginLeft: 5, background: 'var(--border)', borderRadius: 10, padding: '1px 6px', fontSize: 11 }}>
-              {t.count}
-            </span>
+            <span className="tab-count">{t.count}</span>
           )}
         </button>
       ))}

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using HRPortal.Models;
 
 namespace HRPortal.Data;
@@ -57,6 +58,20 @@ public class AppDbContext : DbContext
             .HasForeignKey(e => e.RecipientId).OnDelete(DeleteBehavior.Restrict);
 
         SeedData(m);
+
+        // SQLite no guarda la zona horaria: las marcas de tiempo se leen como UTC para que
+        // la API las serialice con "Z" y el navegador las muestre en hora local.
+        // Las fechas de calendario (nacimiento, alta, fin de contrato) se dejan como están.
+        var calendarDates = new HashSet<string> { "BirthDate", "HireDate", "ContractEndDate" };
+        var utc  = new ValueConverter<DateTime, DateTime>(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
+        var utcN = new ValueConverter<DateTime?, DateTime?>(v => v, v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : v);
+        foreach (var entity in m.Model.GetEntityTypes())
+            foreach (var prop in entity.GetProperties())
+            {
+                if (calendarDates.Contains(prop.Name)) continue;
+                if (prop.ClrType == typeof(DateTime))  prop.SetValueConverter(utc);
+                if (prop.ClrType == typeof(DateTime?)) prop.SetValueConverter(utcN);
+            }
     }
 
     private static void SeedData(ModelBuilder m)

@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth }                  from './context/AuthContext'
 import Sidebar    from './components/layout/Sidebar'
+import { ShellContext } from './components/layout/ShellContext'
 import Login      from './pages/auth/Login'
 import Dashboard  from './pages/dashboard/Dashboard'
 import Attendance from './pages/employee/Attendance'
@@ -13,23 +15,15 @@ import Employees  from './pages/employees/Employees'
 import Email      from './pages/email/Email'
 import Chat       from './pages/chat/Chat'
 
-function RequireAuth({ children }) {
-  const { user } = useAuth()
-  return user ? children : <Navigate to="/login" replace />
-}
-
-function RequireRole({ roles, children }) {
-  const { user } = useAuth()
-  if (!roles.includes(user?.role)) return <Navigate to="/" replace />
-  return children
-}
-
 function Shell({ children }) {
+  const [navOpen, setNavOpen] = useState(false)
   return (
-    <div className="app-shell">
-      <Sidebar />
-      <div className="main-area">{children}</div>
-    </div>
+    <ShellContext.Provider value={{ navOpen, setNavOpen }}>
+      <div className="app-shell">
+        <Sidebar />
+        <main className="main-area">{children}</main>
+      </div>
+    </ShellContext.Provider>
   )
 }
 
@@ -78,7 +72,7 @@ function AppRoutes() {
         {isHR && <Route path="/reports"    element={<ReportsPage />} />}
 
         {/* Coordinator, HR & Admin: team view */}
-        {isManager && <Route path="/team"  element={<Employees />} />}
+        {isManager && <Route path="/team"  element={<Employees teamOnly />} />}
 
         {/* HR & Admin: full employee management */}
         {isHR && <Route path="/employees"  element={<Employees />} />}

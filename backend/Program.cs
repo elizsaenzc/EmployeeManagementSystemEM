@@ -74,6 +74,15 @@ using (var scope = app.Services.CreateScope())
     db.Database.EnsureCreated();
 }
 
+// Errores no controlados: 400 si los datos de entrada no son válidos, 500 genérico en el resto
+app.UseExceptionHandler(handler => handler.Run(async ctx =>
+{
+    var ex  = ctx.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>()?.Error;
+    var bad = ex is ArgumentException or FormatException or System.Text.Json.JsonException;
+    ctx.Response.StatusCode = bad ? StatusCodes.Status400BadRequest : StatusCodes.Status500InternalServerError;
+    await ctx.Response.WriteAsJsonAsync(new { message = bad ? "Datos no válidos" : "Error interno del servidor" });
+}));
+
 app.UseSwagger();
 app.UseSwaggerUI(c => c.DocumentTitle = "HR Portal API");
 

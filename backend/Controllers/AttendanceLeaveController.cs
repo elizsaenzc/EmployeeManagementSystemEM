@@ -49,7 +49,7 @@ public class AttendanceController : ControllerBase
             };
             _db.Attendances.Add(att);
         }
-        att.CheckIn = TimeOnly.Parse(req.Time);
+        att.CheckIn = ParseTime(req.Time) ?? TimeOnly.FromDateTime(DateTime.Now);
         await _db.SaveChangesAsync();
         await _db.Entry(att).Reference(a => a.Employee).LoadAsync();
         return Ok(ToDto(att));
@@ -65,7 +65,7 @@ public class AttendanceController : ControllerBase
 
         if (att == null) return NotFound(new { message = "No hay registro de entrada hoy" });
 
-        att.CheckOut   = TimeOnly.Parse(req.Time);
+        att.CheckOut   = ParseTime(req.Time) ?? TimeOnly.FromDateTime(DateTime.Now);
         if (!string.IsNullOrEmpty(req.LunchStart)) att.LunchStart = TimeOnly.Parse(req.LunchStart);
         if (!string.IsNullOrEmpty(req.LunchEnd))   att.LunchEnd   = TimeOnly.Parse(req.LunchEnd);
 
@@ -79,7 +79,8 @@ public class AttendanceController : ControllerBase
     public async Task<IActionResult> Upsert(UpsertAttendanceRequest req)
     {
         if (!await User.CanAccessEmployeeAsync(_db, req.EmployeeId)) return Forbid();
-        var date = DateOnly.Parse(req.Date);
+        if (!DateOnly.TryParse(req.Date, out var date) || !Enum.TryParse<AttendanceStatus>(req.Status, out var status))
+            return BadRequest(new { message = "Fecha o estado no válidos" });
         var att  = await _db.Attendances
             .FirstOrDefaultAsync(a => a.EmployeeId == req.EmployeeId && a.Date == date);
 
@@ -89,17 +90,21 @@ public class AttendanceController : ControllerBase
             _db.Attendances.Add(att);
         }
 
-        att.Status    = Enum.Parse<AttendanceStatus>(req.Status);
+        att.Status    = status;
         att.Notes     = req.Notes;
-        att.CheckIn   = req.CheckIn   != null ? TimeOnly.Parse(req.CheckIn)   : null;
-        att.CheckOut  = req.CheckOut  != null ? TimeOnly.Parse(req.CheckOut)  : null;
-        att.LunchStart = req.LunchStart != null ? TimeOnly.Parse(req.LunchStart) : null;
-        att.LunchEnd   = req.LunchEnd   != null ? TimeOnly.Parse(req.LunchEnd)   : null;
+        att.CheckIn    = ParseTime(req.CheckIn);
+        att.CheckOut   = ParseTime(req.CheckOut);
+        att.LunchStart = ParseTime(req.LunchStart);
+        att.LunchEnd   = ParseTime(req.LunchEnd);
 
         await _db.SaveChangesAsync();
         await _db.Entry(att).Reference(a => a.Employee).LoadAsync();
         return Ok(ToDto(att));
     }
+
+    // Las horas vacías llegan como "" desde los formularios
+    private static TimeOnly? ParseTime(string? value) =>
+        TimeOnly.TryParse(value, out var t) ? t : null;
 
     private static AttendanceDto ToDto(Attendance a) => new(
         a.Id, a.EmployeeId,
@@ -144,12 +149,19 @@ public class LeaveController : ControllerBase
     public async Task<IActionResult> Create(CreateLeaveRequest req)
     {
         if (!await User.CanAccessEmployeeAsync(_db, req.EmployeeId)) return Forbid();
+        if (!Enum.TryParse<LeaveType>(req.Type, out var type)
+            || !DateOnly.TryParse(req.StartDate, out var start)
+            || !DateOnly.TryParse(req.EndDate, out var end))
+            return BadRequest(new { message = "Tipo o fechas no válidos" });
+        if (end < start || req.TotalDays < 1)
+            return BadRequest(new { message = "La fecha de fin debe ser posterior a la de inicio" });
+
         var leave = new LeaveRequest
         {
             EmployeeId = req.EmployeeId,
-            Type       = Enum.Parse<LeaveType>(req.Type),
-            StartDate  = DateOnly.Parse(req.StartDate),
-            EndDate    = DateOnly.Parse(req.EndDate),
+            Type       = type,
+            StartDate  = start,
+            EndDate    = end,
             TotalDays  = req.TotalDays,
             Reason     = req.Reason,
             Status     = RequestStatus.Pendiente
@@ -170,7 +182,9 @@ public class LeaveController : ControllerBase
         var reviewerId = User.EmployeeId();
         if (leave.EmployeeId == reviewerId && !User.IsHrOrAdmin())
             return BadRequest(new { message = "No puedes revisar tus propias solicitudes" });
-        leave.Status      = Enum.Parse<RequestStatus>(req.Status);
+        if (!Enum.TryParse<RequestStatus>(req.Status, out var newStatus))
+            return BadRequest(new { message = "Estado no válido" });
+        leave.Status      = newStatus;
         leave.ReviewedById = reviewerId;
         leave.ReviewNotes = req.ReviewNotes;
         leave.ReviewedAt  = DateTime.UtcNow;
@@ -225,10 +239,13 @@ public class OvertimeController : ControllerBase
     public async Task<IActionResult> Create(CreateOvertimeRequest req)
     {
         if (!await User.CanAccessEmployeeAsync(_db, req.EmployeeId)) return Forbid();
+        if (!DateOnly.TryParse(req.Date, out var date) || req.Hours <= 0 || req.Hours > 12)
+            return BadRequest(new { message = "Fecha u horas no válidas" });
+
         var entry = new OvertimeEntry
         {
             EmployeeId = req.EmployeeId,
-            Date       = DateOnly.Parse(req.Date),
+            Date       = date,
             Hours      = req.Hours,
             Reason     = req.Reason,
             Approved   = false

@@ -1,14 +1,15 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import { Plus, ClipboardCheck, AlertCircle } from 'lucide-react'
 import { useAuth }   from '../../context/AuthContext'
-import { useApi }    from '../../hooks/useApi'
+import { useApi, label, yearOptions } from '../../hooks/useApi'
 import { performanceApi, employeesApi } from '../../services/api'
 import { Topbar, Spinner, Empty, Modal } from '../../components/ui'
 
-const SCORE_COLOR = s => {
-  if (s >= 8.5) return 'var(--green)'
-  if (s >= 7)   return 'var(--brand-light)'
-  if (s >= 5)   return 'var(--amber)'
-  return 'var(--red)'
+const SCORE_TONE = s => (s >= 8.5 ? 'green' : s >= 7 ? 'blue' : s >= 5 ? 'amber' : 'red')
+const SCORE_COLOR = s => `var(--${{ green: 'green', blue: 'brand-light', amber: 'amber', red: 'red' }[SCORE_TONE(s)]})`
+const prevQuarter = () => {
+  const q = Math.floor(new Date().getMonth() / 3) + 1
+  return q === 1 ? { quarter: 4, year: new Date().getFullYear() - 1 } : { quarter: q - 1, year: new Date().getFullYear() }
 }
 
 function ScoreBar({ label, value }) {
@@ -33,23 +34,32 @@ export default function Performance() {
   const empId     = user?.employeeId
 
   const [modal, setModal]   = useState(false)
+  const [error, setError]   = useState('')
   const [yearFilter, setYear] = useState(new Date().getFullYear())
   const [form, setForm]     = useState({
-    employeeId: '', quarter: 1, year: new Date().getFullYear(),
+    employeeId: '', ...prevQuarter(),
     qualityScore: 7, efficiencyScore: 7, teamworkScore: 7, initiativeScore: 7,
     strengths: '', areasToImprove: '', goals: ''
   })
 
-  const params = isManager ? { year: yearFilter } : { employeeId: empId, year: yearFilter }
   const { data: reviews, loading, refetch } = useApi(
-    () => performanceApi.getAll(params), [empId, yearFilter]
+    () => performanceApi.getAll({ year: yearFilter }), [yearFilter]
   )
   const { data: employees } = useApi(employeesApi.getAll, [])
+  // Coordinador: solo su equipo. RRHH/Admin: cualquiera. Nunca uno mismo.
+  const assignable = useMemo(() => (employees ?? []).filter(e =>
+    e.isActive && e.id !== empId && (user?.role !== 'Coordinator' || e.managerId === empId)), [employees, empId, user?.role])
 
   const handleCreate = async () => {
-    await performanceApi.create(form)
-    setModal(false)
-    refetch()
+    if (!form.employeeId) { setError('Selecciona a quién evalúas.'); return }
+    setError('')
+    try {
+      await performanceApi.create(form)
+      setModal(false)
+      refetch()
+    } catch (e) {
+      setError(e.response?.data?.message ?? 'No se pudo guardar la evaluación')
+    }
   }
 
   const f = (key, numeric = false) => e => setForm(p => ({
@@ -70,8 +80,8 @@ export default function Performance() {
     <>
       <Topbar title="Evaluación de desempeño">
         {isManager && (
-          <button className="btn btn-primary" onClick={() => setModal(true)}>
-            + Nueva evaluación
+          <button className="btn btn-primary" onClick={() => { setError(''); setModal(true) }}>
+            <Plus size={16} /> Nueva evaluación
           </button>
         )}
       </Topbar>
@@ -79,15 +89,15 @@ export default function Performance() {
       <div className="page section-gap">
         <div className="toolbar">
           <label className="form-label">Año</label>
-          <select className="form-input" style={{ width: 'auto' }} value={yearFilter}
+          <select className="form-input w-auto" value={yearFilter} aria-label="Año"
                   onChange={e => setYear(+e.target.value)}>
-            {[2023,2024,2025].map(y => <option key={y}>{y}</option>)}
+            {yearOptions().map(y => <option key={y}>{y}</option>)}
           </select>
           <span className="text-sm text-muted">{reviews?.length ?? 0} evaluaciones</span>
         </div>
 
         {loading ? <Spinner /> : !reviews?.length
-          ? <Empty icon="📊" text="Sin evaluaciones para el periodo seleccionado" />
+          ? <Empty icon={ClipboardCheck} text={`No hay evaluaciones de ${yearFilter}`} />
           : (
             <>
               {/* Cumulative summary cards */}
@@ -105,17 +115,11 @@ export default function Performance() {
                     <div className="card-header">
                       <div>
                         <span className="card-title">{emp.name}</span>
-                        <span className="text-muted text-sm" style={{ marginLeft: 8 }}>{emp.dept}</span>
+                        <span className="text-muted text-sm ml-8">{label(emp.dept)}</span>
                       </div>
                       <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                        <span className="text-sm text-muted">{all.length} trimestre(s)</span>
-                        <div style={{
-                          background: SCORE_COLOR(cumulative.overall) + '20',
-                          color: SCORE_COLOR(cumulative.overall),
-                          padding: '4px 14px', borderRadius: 20, fontWeight: 700, fontSize: 16
-                        }}>
-                          {cumulative.overall} / 10
-                        </div>
+                        <span className="text-sm text-muted">{all.length} {all.length === 1 ? 'trimestre' : 'trimestres'}</span>
+                        <span className={`score-pill tone-${SCORE_TONE(cumulative.overall)}`}>{cumulative.overall} / 10</span>
                       </div>
                     </div>
                     <div className="card-body">
@@ -137,7 +141,7 @@ export default function Performance() {
                               background: 'var(--surface2)', border: '1px solid var(--border)',
                               borderRadius: 8, padding: '10px 16px', minWidth: 120
                             }}>
-                              <div className="text-sm text-muted">Q{r.quarter} {r.year}</div>
+                              <div className="text-sm text-muted">T{r.quarter} {r.year}</div>
                               <div style={{ fontWeight: 700, fontSize: 18, color: SCORE_COLOR(r.overallScore) }}>
                                 {r.overallScore}
                               </div>
@@ -172,27 +176,28 @@ export default function Performance() {
                    <button className="btn btn-primary" onClick={handleCreate}>Guardar evaluación</button>
                  </>
                }>
-          <div className="form-grid" style={{ marginBottom: 16 }}>
+          {error && <div className="alert alert-error mb-16"><AlertCircle size={16} /> {error}</div>}
+          <div className="form-grid mb-16">
             <div className="form-group">
               <label className="form-label">Empleado</label>
               <select className="form-input" value={form.employeeId}
                       onChange={e => setForm(p => ({ ...p, employeeId: parseInt(e.target.value) }))}>
-                <option value="">— Selecciona —</option>
-                {employees?.map(e => <option key={e.id} value={e.id}>{e.fullName}</option>)}
+                <option value="">Selecciona</option>
+                {assignable.map(e => <option key={e.id} value={e.id}>{e.fullName} · {e.position}</option>)}
               </select>
             </div>
             <div className="form-group">
               <label className="form-label">Trimestre</label>
               <select className="form-input" value={form.quarter}
                       onChange={e => setForm(p => ({ ...p, quarter: +e.target.value }))}>
-                {[1,2,3,4].map(q => <option key={q} value={q}>Q{q}</option>)}
+                {[1, 2, 3, 4].map(q => <option key={q} value={q}>T{q}</option>)}
               </select>
             </div>
             <div className="form-group">
               <label className="form-label">Año</label>
               <select className="form-input" value={form.year}
                       onChange={e => setForm(p => ({ ...p, year: +e.target.value }))}>
-                {[2024,2025].map(y => <option key={y}>{y}</option>)}
+                {yearOptions().map(y => <option key={y}>{y}</option>)}
               </select>
             </div>
           </div>
