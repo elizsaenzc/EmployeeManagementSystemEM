@@ -7,6 +7,9 @@ Sistema de gestión de recursos humanos construido con **React 18 + ASP.NET Core
 [![CI](https://github.com/elizsaenzc/EmployeeManagementSystemEM/actions/workflows/ci.yml/badge.svg)](https://github.com/elizsaenzc/EmployeeManagementSystemEM/actions/workflows/ci.yml)
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/elizsaenzc/EmployeeManagementSystemEM)
 
+**Demo completa en vivo (React + API .NET):** https://hr-portal-kzq2.onrender.com · API: https://hr-portal-kzq2.onrender.com/swagger  
+_Plan gratuito: la primera carga tras un rato sin uso puede tardar ~1 minuto._
+
 ## Despliegue completo (React + API .NET + SQLite)
 
 La aplicación se despliega como **un único contenedor**: la API ASP.NET Core 8 sirve el frontend React compilado, la API REST en `/api` y la documentación Swagger en `/swagger`.
