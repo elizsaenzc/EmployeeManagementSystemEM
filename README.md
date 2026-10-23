@@ -4,6 +4,31 @@ Sistema de gestión de recursos humanos construido con **React 18 + ASP.NET Core
 
 **Demo navegable (frontend estático):** https://elizsaenzc.github.io/EmployeeManagementSystemEM/ (el `index.html` de la raíz del repositorio).
 
+[![CI](https://github.com/elizsaenzc/EmployeeManagementSystemEM/actions/workflows/ci.yml/badge.svg)](https://github.com/elizsaenzc/EmployeeManagementSystemEM/actions/workflows/ci.yml)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/elizsaenzc/EmployeeManagementSystemEM)
+
+## Despliegue completo (React + API .NET + SQLite)
+
+La aplicación se despliega como **un único contenedor**: la API ASP.NET Core 8 sirve el frontend React compilado, la API REST en `/api` y la documentación Swagger en `/swagger`.
+
+```bash
+docker build -t hr-portal .
+docker run -p 8080:8080 -e Jwt__Key="una-clave-larga-de-al-menos-32-caracteres" hr-portal
+# http://localhost:8080          → portal
+# http://localhost:8080/swagger  → API documentada
+```
+
+En Render basta con **New → Blueprint** sobre este repositorio (usa `render.yaml`; la clave JWT se genera automáticamente). La base SQLite se crea y se rellena con datos de ejemplo al arrancar.
+
+| Variable | Uso | Por defecto |
+|---|---|---|
+| `Jwt__Key` | Clave de firma de los tokens JWT | valor de `appsettings.json` |
+| `Database__Path` | Ruta del fichero SQLite | `/app/data/hrportal.db` en Docker |
+| `Cors__Origins` | Orígenes permitidos (separados por comas) si el frontend se aloja aparte | `localhost:5173,3000` |
+| `PORT` | Puerto HTTP | `8080` |
+
+El pipeline de CI compila la API y el frontend, construye la imagen y la prueba de extremo a extremo (salud, SPA, Swagger y login).
+
 ---
 
 ## Stack técnico

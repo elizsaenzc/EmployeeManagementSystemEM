@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: hr-portal
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: Jwt__Key
+        generateValue: true

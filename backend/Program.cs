@@ -11,8 +11,12 @@ builder.Services.AddControllers().AddJsonOptions(o =>
     o.JsonSerializerOptions.Converters.Add(
         new System.Text.Json.Serialization.JsonStringEnumConverter()));
 
+// Ruta de la base SQLite configurable (Database__Path en contenedor)
+var dbPath = builder.Configuration["Database:Path"] ?? "hrportal.db";
+var dbDir = Path.GetDirectoryName(Path.GetFullPath(dbPath));
+if (!string.IsNullOrEmpty(dbDir)) Directory.CreateDirectory(dbDir);
 builder.Services.AddDbContext<AppDbContext>(opt =>
-    opt.UseSqlite("Data Source=hrportal.db"));
+    opt.UseSqlite($"Data Source={dbPath}"));
 
 builder.Services.AddScoped<JwtService>();
 
@@ -32,9 +36,32 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new() { Title = "HR Portal API", Version = "v1" });
+    c.AddSecurityDefinition("Bearer", new()
+    {
+        Name = "Authorization",
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header
+    });
+    c.AddSecurityRequirement(new()
+    {
+        [new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+        {
+            Reference = new() { Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme, Id = "Bearer" }
+        }] = Array.Empty<string>()
+    });
+});
+
+var corsOrigins = (builder.Configuration["Cors:Origins"] ?? "http://localhost:5173,http://localhost:3000")
+    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 builder.Services.AddCors(o =>
     o.AddDefaultPolicy(p =>
-        p.WithOrigins("http://localhost:5173", "http://localhost:3000")
+        p.WithOrigins(corsOrigins)
          .AllowAnyHeader()
          .AllowAnyMethod()));
 
@@ -47,9 +74,20 @@ using (var scope = app.Services.CreateScope())
     db.Database.EnsureCreated();
 }
 
+app.UseSwagger();
+app.UseSwaggerUI(c => c.DocumentTitle = "HR Portal API");
+
+// El frontend React compilado se sirve desde wwwroot (misma URL que la API)
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapGet("/api/health", () => Results.Ok(new { status = "ok" })).AllowAnonymous();
+
+// Rutas del SPA (React Router) que no son API ni ficheros
+app.MapFallbackToFile("index.html");
 
 app.Run();
