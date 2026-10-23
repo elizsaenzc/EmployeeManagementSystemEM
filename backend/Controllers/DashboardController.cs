@@ -1,12 +1,17 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using HRPortal.Api.Data;
-using HRPortal.Api.DTOs;
-using HRPortal.Api.Models;
+using HRPortal.Data;
+using HRPortal.DTOs;
+using HRPortal.Models;
+using HRPortal.Services;
 
-namespace HRPortal.Api.Controllers;
+namespace HRPortal.Controllers;
 
+/// <summary>
+/// Indicadores del panel según el rol: empresa (RRHH/Admin), equipo (coordinador) o personales (empleado).
+/// Las sumas de importes se hacen en memoria porque SQLite no agrega columnas decimal.
+/// </summary>
 [ApiController]
 [Route("api/dashboard")]
 [Authorize]
@@ -18,55 +23,80 @@ public class DashboardController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        var employees = await _db.Employees.ToListAsync();
+        var me      = User.EmployeeId();
+        var visible = await User.VisibleEmployeeIdsAsync(_db);
+        var scope   = visible == null ? "company" : User.IsInRole("Coordinator") ? "team" : "self";
 
-        var today = DateOnly.FromDateTime(DateTime.Today);
-        var todayAtt = await _db.Attendances
-            .Where(a => a.Date == today)
-            .ToListAsync();
+        var empQuery = _db.Employees.Include(e => e.User).AsNoTracking();
+        if (visible != null) empQuery = empQuery.Where(e => visible.Contains(e.Id));
+        var employees = await empQuery.ToListAsync();
+        var activeIds = employees.Where(e => e.User?.IsActive != false).Select(e => e.Id).ToList();
 
-        var totalActive  = employees.Count(e => e.Status == EmploymentStatus.Active);
-        var todayPresent = todayAtt.Count(a => a.Status != AttendanceStatus.Absent);
-        var attRate      = totalActive > 0
-            ? Math.Round((double)todayPresent / totalActive * 100, 1) : 0;
+        // Asistencia del último día con registros (hoy, o el último día laborable)
+        var today   = DateOnly.FromDateTime(DateTime.Now);
+        var attDate = await _db.Attendances
+            .Where(a => a.Date <= today && activeIds.Contains(a.EmployeeId))
+            .OrderByDescending(a => a.Date)
+            .Select(a => (DateOnly?)a.Date)
+            .FirstOrDefaultAsync();
 
-        var thisMonth = await _db.Payrolls
-            .Where(p => p.Month == today.Month && p.Year == today.Year)
-            .ToListAsync();
-        var monthlyPayroll = thisMonth.Sum(p => p.BaseSalary + p.Bonus - p.Deductions);
+        double attRate = 0;
+        if (attDate.HasValue && activeIds.Count > 0)
+        {
+            var present = await _db.Attendances.CountAsync(a =>
+                a.Date == attDate.Value && activeIds.Contains(a.EmployeeId) && a.Status != AttendanceStatus.Ausente);
+            attRate = Math.Round((double)present / activeIds.Count * 100, 1);
+        }
 
-        var byDept = employees
-            .GroupBy(e => e.Department.ToString())
-            .Select(g => new DeptCount(g.Key, g.Count()))
+        // Nóminas: masa salarial de la empresa (RRHH/Admin) o la nómina propia (resto)
+        var payQuery = _db.Payrolls.AsNoTracking();
+        if (visible != null) payQuery = payQuery.Where(p => p.EmployeeId == me);
+        var latest = await payQuery
+            .OrderByDescending(p => p.Year).ThenByDescending(p => p.Month)
+            .Select(p => new { p.Year, p.Month })
+            .FirstOrDefaultAsync();
+        decimal? payroll = null;
+        if (latest != null)
+        {
+            var amounts = await payQuery
+                .Where(p => p.Year == latest.Year && p.Month == latest.Month)
+                .Select(p => p.NetSalary)
+                .ToListAsync();
+            payroll = amounts.Sum();
+        }
+
+        // Solicitudes pendientes: las que el usuario debe revisar, o las suyas si es empleado
+        var leaveQuery = _db.LeaveRequests.Where(r => r.Status == RequestStatus.Pendiente);
+        if (scope == "team") leaveQuery = leaveQuery.Where(r => visible!.Contains(r.EmployeeId) && r.EmployeeId != me);
+        if (scope == "self") leaveQuery = leaveQuery.Where(r => r.EmployeeId == me);
+        var pending = await leaveQuery.CountAsync();
+
+        var unread = await _db.Notifications.CountAsync(n => n.EmployeeId == me && !n.IsRead);
+
+        var byDept = scope == "self"
+            ? new List<DeptStat>()
+            : employees.Where(e => activeIds.Contains(e.Id))
+                .GroupBy(e => e.Department.ToString())
+                .Select(g => new DeptStat(g.Key, g.Count()))
+                .OrderByDescending(d => d.Count)
+                .ToList();
+
+        var recent = (await _db.Attendances.AsNoTracking()
+                .Where(a => a.EmployeeId == me && a.Date <= today)
+                .OrderByDescending(a => a.Date)
+                .Take(5)
+                .ToListAsync())
+            .Select(a => new AttendanceDayDto(
+                a.Date.ToString("yyyy-MM-dd"), a.Status.ToString(),
+                a.CheckIn?.ToString("HH:mm"), a.CheckOut?.ToString("HH:mm"),
+                a.WorkedHours.HasValue ? Math.Round(a.WorkedHours.Value, 1) : null))
             .ToList();
 
-        // Weekly trend: last 7 working days
-        var weekly = new List<WeeklyAttendance>();
-        var checkDate = today;
-        int days = 0;
-        while (days < 7)
-        {
-            if (checkDate.DayOfWeek != DayOfWeek.Saturday &&
-                checkDate.DayOfWeek != DayOfWeek.Sunday)
-            {
-                var dayAtt = await _db.Attendances.Where(a => a.Date == checkDate).ToListAsync();
-                weekly.Add(new WeeklyAttendance(
-                    checkDate.ToString("ddd dd/MM"),
-                    dayAtt.Count(a => a.Status != AttendanceStatus.Absent),
-                    totalActive));
-                days++;
-            }
-            checkDate = checkDate.AddDays(-1);
-        }
-        weekly.Reverse();
-
         return Ok(new DashboardStats(
-            employees.Count,
-            totalActive,
-            employees.Count(e => e.Status == EmploymentStatus.OnLeave),
-            attRate,
-            monthlyPayroll,
-            byDept,
-            weekly));
+            scope,
+            employees.Count, activeIds.Count, employees.Count - activeIds.Count,
+            attRate, attDate?.ToString("yyyy-MM-dd"),
+            payroll, latest?.Month, latest?.Year,
+            pending, unread, byDept, recent));
     }
 }

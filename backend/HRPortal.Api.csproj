@@ -15,10 +15,4 @@
     <PackageReference Include="ClosedXML" Version="0.105.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Controllers\AuthController.cs" />
-    <Compile Remove="Controllers\AttendanceController.cs" />
-    <Compile Remove="Controllers\DashboardController.cs" />
-    <Compile Remove="Controllers\PayrollController.cs" />
-  </ItemGroup>
 </Project>

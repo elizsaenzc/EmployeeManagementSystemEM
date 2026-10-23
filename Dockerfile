@@ -22,6 +22,7 @@ COPY --from=frontend /src/frontend/dist ./wwwroot
 RUN mkdir -p /app/data && chown -R app:app /app/data
 USER app
 ENV ASPNETCORE_ENVIRONMENT=Production \
+    TZ=Europe/Madrid \
     Database__Path=/app/data/hrportal.db \
     PORT=8080
 EXPOSE 8080

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using HRPortal.Data;
 using HRPortal.DTOs;
 using HRPortal.Models;
+using HRPortal.Services;
 
 namespace HRPortal.Controllers;
 
@@ -18,8 +19,10 @@ public class NotificationsController : ControllerBase
     public NotificationsController(AppDbContext db) => _db = db;
 
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] int employeeId)
+    public async Task<IActionResult> GetAll()
     {
+        // Cada usuario solo ve sus propias notificaciones (se ignora cualquier employeeId recibido)
+        var employeeId = User.EmployeeId();
         var list = await _db.Notifications
             .Where(n => n.EmployeeId == employeeId)
             .OrderByDescending(n => n.CreatedAt)
@@ -33,7 +36,7 @@ public class NotificationsController : ControllerBase
     public async Task<IActionResult> MarkRead(int id)
     {
         var n = await _db.Notifications.FindAsync(id);
-        if (n == null) return NotFound();
+        if (n == null || n.EmployeeId != User.EmployeeId()) return NotFound();
         n.IsRead = true;
         await _db.SaveChangesAsync();
         return NoContent();
@@ -73,16 +76,21 @@ public class EmailController : ControllerBase
     public EmailController(AppDbContext db) => _db = db;
 
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] int employeeId, [FromQuery] string folder = "inbox")
+    public async Task<IActionResult> GetAll([FromQuery] string folder = "inbox")
     {
-        var list = await _db.Emails
-            .Include(e => e.Sender)
-            .Include(e => e.Recipient)
-            .Where(e => (folder == "sent"
-                         ? e.SenderId == employeeId
-                         : e.RecipientId == employeeId) && e.Folder == folder)
-            .OrderByDescending(e => e.SentAt)
-            .ToListAsync();
+        var me = User.EmployeeId();
+        var q  = _db.Emails.Include(e => e.Sender).Include(e => e.Recipient).AsQueryable();
+
+        // Un mensaje se guarda una sola vez: "Enviados" se deduce del remitente
+        q = folder switch
+        {
+            "sent"    => q.Where(e => e.SenderId == me && e.Folder != "trash"),
+            "starred" => q.Where(e => (e.RecipientId == me || e.SenderId == me) && e.IsStarred && e.Folder != "trash"),
+            "trash"   => q.Where(e => (e.RecipientId == me || e.SenderId == me) && e.Folder == "trash"),
+            _         => q.Where(e => e.RecipientId == me && e.Folder == "inbox"),
+        };
+
+        var list = await q.OrderByDescending(e => e.SentAt).ToListAsync();
 
         return Ok(list.Select(ToDto));
     }
@@ -90,7 +98,9 @@ public class EmailController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Send(SendEmailRequest req)
     {
-        var senderId = int.Parse(User.FindFirst("employee_id")!.Value);
+        var senderId = User.EmployeeId();
+        if (string.IsNullOrWhiteSpace(req.Subject) || !await _db.Employees.AnyAsync(e => e.Id == req.RecipientId))
+            return BadRequest(new { message = "Destinatario o asunto no válidos" });
         var msg = new EmailMessage
         {
             SenderId        = senderId,
@@ -114,7 +124,7 @@ public class EmailController : ControllerBase
     public async Task<IActionResult> MarkRead(int id)
     {
         var msg = await _db.Emails.FindAsync(id);
-        if (msg == null) return NotFound();
+        if (msg == null || !IsMine(msg)) return NotFound();
         msg.IsRead = true;
         await _db.SaveChangesAsync();
         return NoContent();
@@ -124,7 +134,7 @@ public class EmailController : ControllerBase
     public async Task<IActionResult> ToggleStar(int id)
     {
         var msg = await _db.Emails.FindAsync(id);
-        if (msg == null) return NotFound();
+        if (msg == null || !IsMine(msg)) return NotFound();
         msg.IsStarred = !msg.IsStarred;
         await _db.SaveChangesAsync();
         return Ok(new { isStarred = msg.IsStarred });
@@ -134,10 +144,16 @@ public class EmailController : ControllerBase
     public async Task<IActionResult> Delete(int id)
     {
         var msg = await _db.Emails.FindAsync(id);
-        if (msg == null) return NotFound();
+        if (msg == null || !IsMine(msg)) return NotFound();
         msg.Folder = "trash";
         await _db.SaveChangesAsync();
         return NoContent();
+    }
+
+    private bool IsMine(EmailMessage e)
+    {
+        var me = User.EmployeeId();
+        return e.SenderId == me || e.RecipientId == me;
     }
 
     private static EmailDto ToDto(EmailMessage e) => new(
@@ -187,7 +203,10 @@ public class ChatController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Send(SendChatRequest req)
     {
-        var meId = int.Parse(User.FindFirst("employee_id")!.Value);
+        var meId = User.EmployeeId();
+        if (string.IsNullOrWhiteSpace(req.Body) || req.RecipientId == meId
+            || !await _db.Employees.AnyAsync(e => e.Id == req.RecipientId))
+            return BadRequest(new { message = "Mensaje o destinatario no válidos" });
         var msg  = new ChatMessage
         {
             SenderId    = meId,
@@ -217,50 +236,5 @@ public class ChatController : ControllerBase
             .OrderBy(e => e.FirstName)
             .ToListAsync();
         return Ok(contacts);
-    }
-}
-
-// ── Dashboard ──────────────────────────────────────────────────────────────────
-
-[ApiController]
-[Route("api/dashboard")]
-[Authorize]
-public class DashboardController : ControllerBase
-{
-    private readonly AppDbContext _db;
-    public DashboardController(AppDbContext db) => _db = db;
-
-    [HttpGet]
-    public async Task<IActionResult> Get()
-    {
-        var employees = await _db.Employees.Include(e => e.User).ToListAsync();
-        var active    = employees.Where(e => e.User?.IsActive == true).ToList();
-
-        var today     = DateOnly.FromDateTime(DateTime.Today);
-        var todayAtt  = await _db.Attendances.Where(a => a.Date == today).ToListAsync();
-        var present   = todayAtt.Count(a => a.Status != AttendanceStatus.Ausente);
-        var attRate   = active.Count > 0 ? Math.Round((double)present / active.Count * 100, 1) : 0;
-
-        var pending   = await _db.LeaveRequests.CountAsync(r => r.Status == RequestStatus.Pendiente);
-
-        var now       = DateTime.UtcNow;
-        var payroll   = await _db.Payrolls
-            .Where(p => p.Month == now.Month && p.Year == now.Year)
-            .SumAsync(p => p.NetSalary);
-
-        var byDept = employees.GroupBy(e => e.Department.ToString())
-            .Select(g => new DeptStat(g.Key, g.Count()))
-            .OrderByDescending(d => d.Count)
-            .ToList();
-
-        return Ok(new DashboardStats(
-            employees.Count,
-            active.Count,
-            employees.Count(e => e.User?.IsActive == false),
-            attRate,
-            payroll,
-            pending,
-            0,
-            byDept));
     }
 }

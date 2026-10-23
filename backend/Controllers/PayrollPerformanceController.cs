@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using HRPortal.Data;
 using HRPortal.DTOs;
 using HRPortal.Models;
+using HRPortal.Services;
 using ClosedXML.Excel;
 
 namespace HRPortal.Controllers;
@@ -20,6 +21,9 @@ public class PayrollController : ControllerBase
     public async Task<IActionResult> GetAll([FromQuery] int? employeeId, [FromQuery] int? month, [FromQuery] int? year)
     {
         var q = _db.Payrolls.Include(p => p.Employee).AsQueryable();
+        var visible = await User.VisibleEmployeeIdsAsync(_db);
+        // Las nóminas son personales: un coordinador solo ve la suya, no la de su equipo
+        if (visible != null) { var me = User.EmployeeId(); q = q.Where(p => p.EmployeeId == me); }
         if (employeeId.HasValue) q = q.Where(p => p.EmployeeId == employeeId.Value);
         if (month.HasValue)      q = q.Where(p => p.Month == month.Value);
         if (year.HasValue)       q = q.Where(p => p.Year  == year.Value);
@@ -32,7 +36,9 @@ public class PayrollController : ControllerBase
     [Authorize(Roles = "HR,Admin")]
     public async Task<IActionResult> GetSummaries()
     {
-        var summary = await _db.Payrolls
+        // SQLite no agrega columnas decimal: se cargan y se agrupan en memoria
+        var payrolls = await _db.Payrolls.AsNoTracking().ToListAsync();
+        var summary = payrolls
             .GroupBy(p => new { p.Year, p.Month })
             .Select(g => new PayrollSummaryDto(
                 g.Key.Month, g.Key.Year,
@@ -41,7 +47,7 @@ public class PayrollController : ControllerBase
                 g.Count(),
                 g.Count(p => p.Status == PayrollStatus.Pagada)))
             .OrderByDescending(s => s.Year).ThenByDescending(s => s.Month)
-            .ToListAsync();
+            .ToList();
         return Ok(summary);
     }
 
@@ -130,6 +136,7 @@ public class PayrollController : ControllerBase
     {
         var p = await _db.Payrolls.Include(x => x.Employee).FirstOrDefaultAsync(x => x.Id == id);
         if (p == null) return NotFound();
+        if (!User.IsHrOrAdmin() && p.EmployeeId != User.EmployeeId()) return Forbid();
 
         var culture = new System.Globalization.CultureInfo("es-ES");
         var sb      = new System.Text.StringBuilder();
@@ -246,6 +253,8 @@ public class PerformanceController : ControllerBase
     public async Task<IActionResult> GetAll([FromQuery] int? employeeId, [FromQuery] int? year)
     {
         var q = _db.PerformanceReviews.Include(r => r.Employee).AsQueryable();
+        var visible = await User.VisibleEmployeeIdsAsync(_db);
+        if (visible != null) q = q.Where(r => visible.Contains(r.EmployeeId));
         if (employeeId.HasValue) q = q.Where(r => r.EmployeeId == employeeId.Value);
         if (year.HasValue)       q = q.Where(r => r.Year == year.Value);
         var list = await q.OrderByDescending(r => r.Year).ThenByDescending(r => r.Quarter).ToListAsync();
@@ -256,7 +265,10 @@ public class PerformanceController : ControllerBase
     [Authorize(Roles = "Coordinator,HR,Admin")]
     public async Task<IActionResult> Create(CreatePerformanceRequest req)
     {
-        var reviewerId = int.Parse(User.FindFirst("employee_id")!.Value);
+        var reviewerId = User.EmployeeId();
+        if (!await User.CanAccessEmployeeAsync(_db, req.EmployeeId)) return Forbid();
+        if (req.EmployeeId == reviewerId)
+            return BadRequest(new { message = "No puedes evaluarte a ti mismo" });
         var overall    = Math.Round((req.QualityScore + req.EfficiencyScore + req.TeamworkScore + req.InitiativeScore) / 4, 2);
 
         var review = new PerformanceReview

@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, "fix/**"]
   pull_request:
 
 jobs:
@@ -45,4 +45,8 @@ jobs:
           curl -fs localhost:8080/swagger/v1/swagger.json | grep -q '"/api/auth/login"'
           curl -fs -X POST localhost:8080/api/auth/login -H 'Content-Type: application/json' \
             -d '{"username":"ceo","password":"Admin2025!"}' | grep -q '"token"'
-          docker logs app | tail -20
+      - name: Auditoría de la API (roles, permisos y datos)
+        run: python3 .github/scripts/api_audit.py
+      - name: Logs del contenedor
+        if: always()
+        run: docker logs app 2>&1 | grep -E "fail:|Exception|error" | head -40 || true

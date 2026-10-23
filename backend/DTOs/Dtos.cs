@@ -8,7 +8,7 @@ public record LoginResponse(string Token, string Username, string Role, int Empl
 public record EmployeeListDto(
     int Id, string FullName, string Email, string Position,
     string Department, string Role, string ContractType,
-    decimal GrossSalary, decimal MonthlySalary, string Initials,
+    decimal? GrossSalary, decimal? MonthlySalary, string Initials,
     DateTime HireDate, bool IsActive, int? ManagerId, string? WorkSchedule);
 
 public record EmployeeDetailDto(
@@ -112,9 +112,14 @@ public record SendChatRequest(int RecipientId, string Body);
 
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 public record DashboardStats(
-    int TotalEmployees, int Active, int OnLeave,
-    double TodayAttendanceRate, decimal MonthlyPayroll,
+    string Scope,                       // company | team | self
+    int TotalEmployees, int Active, int Inactive,
+    double AttendanceRate, string? AttendanceDate,
+    decimal? Payroll, int? PayrollMonth, int? PayrollYear,
     int PendingRequests, int UnreadNotifications,
-    List<DeptStat> ByDepartment);
+    List<DeptStat> ByDepartment,
+    List<AttendanceDayDto> RecentAttendance);
+
+public record AttendanceDayDto(string Date, string Status, string? CheckIn, string? CheckOut, double? Hours);
 
 public record DeptStat(string Department, int Count);

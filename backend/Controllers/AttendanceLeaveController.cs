@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using HRPortal.Data;
 using HRPortal.DTOs;
 using HRPortal.Models;
+using HRPortal.Services;
 
 namespace HRPortal.Controllers;
 
@@ -20,6 +21,8 @@ public class AttendanceController : ControllerBase
     {
         var q = _db.Attendances.Include(a => a.Employee).AsQueryable();
 
+        var visible = await User.VisibleEmployeeIdsAsync(_db);
+        if (visible != null) q = q.Where(a => visible.Contains(a.EmployeeId));
         if (employeeId.HasValue) q = q.Where(a => a.EmployeeId == employeeId.Value);
         if (DateOnly.TryParse(from, out var f)) q = q.Where(a => a.Date >= f);
         if (DateOnly.TryParse(to,   out var t)) q = q.Where(a => a.Date <= t);
@@ -31,6 +34,7 @@ public class AttendanceController : ControllerBase
     [HttpPost("checkin")]
     public async Task<IActionResult> CheckIn(CheckInRequest req)
     {
+        if (!await User.CanAccessEmployeeAsync(_db, req.EmployeeId)) return Forbid();
         var today = DateOnly.FromDateTime(DateTime.Today);
         var att   = await _db.Attendances.FirstOrDefaultAsync(
             a => a.EmployeeId == req.EmployeeId && a.Date == today);
@@ -54,6 +58,7 @@ public class AttendanceController : ControllerBase
     [HttpPost("checkout")]
     public async Task<IActionResult> CheckOut(CheckOutRequest req)
     {
+        if (!await User.CanAccessEmployeeAsync(_db, req.EmployeeId)) return Forbid();
         var today = DateOnly.FromDateTime(DateTime.Today);
         var att   = await _db.Attendances.FirstOrDefaultAsync(
             a => a.EmployeeId == req.EmployeeId && a.Date == today);
@@ -73,6 +78,7 @@ public class AttendanceController : ControllerBase
     [Authorize(Roles = "Coordinator,HR,Admin")]
     public async Task<IActionResult> Upsert(UpsertAttendanceRequest req)
     {
+        if (!await User.CanAccessEmployeeAsync(_db, req.EmployeeId)) return Forbid();
         var date = DateOnly.Parse(req.Date);
         var att  = await _db.Attendances
             .FirstOrDefaultAsync(a => a.EmployeeId == req.EmployeeId && a.Date == date);
@@ -124,6 +130,8 @@ public class LeaveController : ControllerBase
     {
         var q = _db.LeaveRequests.Include(r => r.Employee).AsQueryable();
 
+        var visible = await User.VisibleEmployeeIdsAsync(_db);
+        if (visible != null) q = q.Where(r => visible.Contains(r.EmployeeId));
         if (employeeId.HasValue) q = q.Where(r => r.EmployeeId == employeeId.Value);
         if (!string.IsNullOrEmpty(status) && Enum.TryParse<RequestStatus>(status, out var s))
             q = q.Where(r => r.Status == s);
@@ -135,6 +143,7 @@ public class LeaveController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(CreateLeaveRequest req)
     {
+        if (!await User.CanAccessEmployeeAsync(_db, req.EmployeeId)) return Forbid();
         var leave = new LeaveRequest
         {
             EmployeeId = req.EmployeeId,
@@ -156,8 +165,11 @@ public class LeaveController : ControllerBase
     {
         var leave = await _db.LeaveRequests.FindAsync(id);
         if (leave == null) return NotFound();
+        if (!await User.CanAccessEmployeeAsync(_db, leave.EmployeeId)) return Forbid();
 
-        var reviewerId = int.Parse(User.FindFirst("employee_id")!.Value);
+        var reviewerId = User.EmployeeId();
+        if (leave.EmployeeId == reviewerId && !User.IsHrOrAdmin())
+            return BadRequest(new { message = "No puedes revisar tus propias solicitudes" });
         leave.Status      = Enum.Parse<RequestStatus>(req.Status);
         leave.ReviewedById = reviewerId;
         leave.ReviewNotes = req.ReviewNotes;
@@ -202,6 +214,8 @@ public class OvertimeController : ControllerBase
     public async Task<IActionResult> GetAll([FromQuery] int? employeeId)
     {
         var q = _db.OvertimeEntries.Include(o => o.Employee).AsQueryable();
+        var visible = await User.VisibleEmployeeIdsAsync(_db);
+        if (visible != null) q = q.Where(o => visible.Contains(o.EmployeeId));
         if (employeeId.HasValue) q = q.Where(o => o.EmployeeId == employeeId.Value);
         var list = await q.OrderByDescending(o => o.Date).ToListAsync();
         return Ok(list.Select(ToDto));
@@ -210,6 +224,7 @@ public class OvertimeController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(CreateOvertimeRequest req)
     {
+        if (!await User.CanAccessEmployeeAsync(_db, req.EmployeeId)) return Forbid();
         var entry = new OvertimeEntry
         {
             EmployeeId = req.EmployeeId,
@@ -230,7 +245,10 @@ public class OvertimeController : ControllerBase
     {
         var entry = await _db.OvertimeEntries.FindAsync(id);
         if (entry == null) return NotFound();
-        var approverId = int.Parse(User.FindFirst("employee_id")!.Value);
+        if (!await User.CanAccessEmployeeAsync(_db, entry.EmployeeId)) return Forbid();
+        var approverId = User.EmployeeId();
+        if (entry.EmployeeId == approverId && !User.IsHrOrAdmin())
+            return BadRequest(new { message = "No puedes aprobar tus propias horas extra" });
         entry.Approved     = true;
         entry.ApprovedById = approverId;
         await _db.SaveChangesAsync();

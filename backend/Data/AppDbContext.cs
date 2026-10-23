@@ -63,6 +63,27 @@ public class AppDbContext : DbContext
     {
         var baseDate = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
+        // Los datos de actividad se generan relativos a la fecha de arranque para que la demo
+        // siempre muestre asistencia, nóminas y solicitudes recientes (la base se crea al iniciar).
+        var es    = new System.Globalization.CultureInfo("es-ES");
+        var today = DateOnly.FromDateTime(DateTime.Now);
+        var workDays = new List<DateOnly>();
+        for (var day = today; workDays.Count < 10; day = day.AddDays(-1))
+            if (day.DayOfWeek != DayOfWeek.Saturday && day.DayOfWeek != DayOfWeek.Sunday)
+                workDays.Insert(0, day);
+        DateOnly Wd(int i) => workDays[i];                         // 0 = más antiguo, 9 = el más reciente
+        DateTime At(DateOnly day, int h, int min = 0) => day.ToDateTime(new TimeOnly(h, min), DateTimeKind.Utc);
+        DateOnly NextMonday(DateOnly from) { var x = from; while (x.DayOfWeek != DayOfWeek.Monday) x = x.AddDays(1); return x; }
+        string Long(DateOnly x) => x.ToString("d 'de' MMMM", es);
+        var vacStart  = NextMonday(today.AddDays(28));
+        var vac2Start = NextMonday(today.AddDays(56));
+        var personal  = NextMonday(today.AddDays(7)).AddDays(2);
+        var monthName = es.DateTimeFormat.GetMonthName(today.Month);
+        var quarter   = (today.Month - 1) / 3 + 1;
+        var prevQ     = quarter == 1 ? 4 : quarter - 1;
+        var prevQYear = quarter == 1 ? today.Year - 1 : today.Year;
+        var lastPay   = today.AddMonths(-1);
+
         // ── Users ────────────────────────────────────────────────────────────
         var users = new[]
         {
@@ -125,15 +146,6 @@ public class AppDbContext : DbContext
         // ── Attendance (last 10 working days, all employees) ──────────────────
         var attendances = new List<Attendance>();
         int attId = 1;
-        var workDays = new List<DateOnly>();
-        var d = new DateOnly(2025, 5, 1);
-        while (workDays.Count < 10)
-        {
-            if (d.DayOfWeek != DayOfWeek.Saturday && d.DayOfWeek != DayOfWeek.Sunday)
-                workDays.Add(d);
-            d = d.AddDays(1);
-        }
-
         foreach (var day in workDays)
         {
             for (int eId = 1; eId <= 20; eId++)
@@ -158,25 +170,28 @@ public class AppDbContext : DbContext
 
         // ── Leave requests ────────────────────────────────────────────────────
         m.Entity<LeaveRequest>().HasData(
-            new LeaveRequest { Id=1,  EmployeeId=6,  Type=LeaveType.Vacaciones,          StartDate=new DateOnly(2025,7,1),  EndDate=new DateOnly(2025,7,15), TotalDays=11, Reason="Vacaciones de verano",         Status=RequestStatus.Pendiente, CreatedAt=new DateTime(2025,5,10,0,0,0,DateTimeKind.Utc) },
-            new LeaveRequest { Id=2,  EmployeeId=9,  Type=LeaveType.Permiso_Medico,      StartDate=new DateOnly(2025,5,20), EndDate=new DateOnly(2025,5,21), TotalDays=2,  Reason="Consulta especialista",       Status=RequestStatus.Aprobada,  ReviewedById=2, ReviewedAt=new DateTime(2025,5,11,0,0,0,DateTimeKind.Utc), CreatedAt=new DateTime(2025,5,9,0,0,0,DateTimeKind.Utc) },
-            new LeaveRequest { Id=3,  EmployeeId=13, Type=LeaveType.Asunto_Personal,     StartDate=new DateOnly(2025,5,22), EndDate=new DateOnly(2025,5,22), TotalDays=1,  Reason="Gestión personal",            Status=RequestStatus.Pendiente, CreatedAt=new DateTime(2025,5,12,0,0,0,DateTimeKind.Utc) },
-            new LeaveRequest { Id=4,  EmployeeId=7,  Type=LeaveType.Calamidad_Domestica, StartDate=new DateOnly(2025,4,15), EndDate=new DateOnly(2025,4,16), TotalDays=2,  Reason="Urgencia familiar",           Status=RequestStatus.Aprobada,  ReviewedById=2, ReviewedAt=new DateTime(2025,4,14,0,0,0,DateTimeKind.Utc), CreatedAt=new DateTime(2025,4,14,0,0,0,DateTimeKind.Utc) },
-            new LeaveRequest { Id=5,  EmployeeId=12, Type=LeaveType.Vacaciones,          StartDate=new DateOnly(2025,8,4),  EndDate=new DateOnly(2025,8,22), TotalDays=15, Reason="Vacaciones anuales",          Status=RequestStatus.Pendiente, CreatedAt=new DateTime(2025,5,5,0,0,0,DateTimeKind.Utc) }
+            new LeaveRequest { Id=1,  EmployeeId=6,  Type=LeaveType.Vacaciones,          StartDate=vacStart,  EndDate=vacStart.AddDays(14),  TotalDays=11, Reason="Vacaciones",                  Status=RequestStatus.Pendiente, CreatedAt=At(Wd(7), 9) },
+            new LeaveRequest { Id=2,  EmployeeId=9,  Type=LeaveType.Permiso_Medico,      StartDate=Wd(5),     EndDate=Wd(6),                TotalDays=2,  Reason="Consulta especialista",       Status=RequestStatus.Aprobada,  ReviewedById=2, ReviewedAt=At(Wd(3), 11), CreatedAt=At(Wd(2), 10) },
+            new LeaveRequest { Id=3,  EmployeeId=13, Type=LeaveType.Asunto_Personal,     StartDate=personal,  EndDate=personal,             TotalDays=1,  Reason="Gestión personal",            Status=RequestStatus.Pendiente, CreatedAt=At(Wd(8), 12) },
+            new LeaveRequest { Id=4,  EmployeeId=7,  Type=LeaveType.Calamidad_Domestica, StartDate=Wd(1),     EndDate=Wd(2),                TotalDays=2,  Reason="Urgencia familiar",           Status=RequestStatus.Aprobada,  ReviewedById=2, ReviewedAt=At(Wd(1), 8), CreatedAt=At(Wd(0), 18) },
+            new LeaveRequest { Id=5,  EmployeeId=12, Type=LeaveType.Vacaciones,          StartDate=vac2Start, EndDate=vac2Start.AddDays(18), TotalDays=15, Reason="Vacaciones anuales",          Status=RequestStatus.Pendiente, CreatedAt=At(Wd(4), 16) }
         );
 
         // ── Overtime ──────────────────────────────────────────────────────────
         m.Entity<OvertimeEntry>().HasData(
-            new OvertimeEntry { Id=1, EmployeeId=6,  Date=new DateOnly(2025,5,5), Hours=2.5m, Reason="Despliegue a producción", Approved=true,  ApprovedById=3, CreatedAt=new DateTime(2025,5,5,0,0,0,DateTimeKind.Utc) },
-            new OvertimeEntry { Id=2, EmployeeId=8,  Date=new DateOnly(2025,5,6), Hours=3.0m, Reason="Resolución incidencia crítica", Approved=true, ApprovedById=3, CreatedAt=new DateTime(2025,5,6,0,0,0,DateTimeKind.Utc) },
-            new OvertimeEntry { Id=3, EmployeeId=12, Date=new DateOnly(2025,5,7), Hours=1.5m, Reason="Cierre contrato cliente",  Approved=false, CreatedAt=new DateTime(2025,5,7,0,0,0,DateTimeKind.Utc) },
-            new OvertimeEntry { Id=4, EmployeeId=20, Date=new DateOnly(2025,5,8), Hours=2.0m, Reason="Sprint final release",     Approved=true,  ApprovedById=3, CreatedAt=new DateTime(2025,5,8,0,0,0,DateTimeKind.Utc) }
+            new OvertimeEntry { Id=1, EmployeeId=6,  Date=Wd(3), Hours=2.5m, Reason="Despliegue a producción",       Approved=true,  ApprovedById=3, CreatedAt=At(Wd(3), 20) },
+            new OvertimeEntry { Id=2, EmployeeId=8,  Date=Wd(4), Hours=3.0m, Reason="Resolución incidencia crítica", Approved=true,  ApprovedById=3, CreatedAt=At(Wd(4), 21) },
+            new OvertimeEntry { Id=3, EmployeeId=12, Date=Wd(7), Hours=1.5m, Reason="Cierre contrato cliente",       Approved=false, CreatedAt=At(Wd(7), 19) },
+            new OvertimeEntry { Id=4, EmployeeId=20, Date=Wd(8), Hours=2.0m, Reason="Sprint final release",          Approved=false, CreatedAt=At(Wd(8), 20) }
         );
 
         // ── Payrolls (last 3 months, all employees) ───────────────────────────
         var payrolls = new List<Payroll>();
         int pId = 1;
-        var months = new[] { (2025,2), (2025,3), (2025,4) };
+        var months = new[] { -3, -2, -1 }
+            .Select(o => today.AddMonths(o))
+            .Select(x => (x.Year, x.Month))
+            .ToArray();
         var empData = new Dictionary<int, decimal>
         {
             {1,95000},{2,72000},{3,62000},{4,58000},{5,60000},{6,48000},{7,42000},
@@ -206,7 +221,7 @@ public class AppDbContext : DbContext
         }
         m.Entity<Payroll>().HasData(payrolls);
 
-        // ── Performance reviews (Q1 2025) ────────────────────────────────────
+        // ── Performance reviews (trimestre anterior) ──────────────────────────────────────────────────────────────
         var reviews = new List<PerformanceReview>();
         int rId = 1;
         var scores = new[] {
@@ -220,43 +235,43 @@ public class AppDbContext : DbContext
             var overall = Math.Round((q+ef+tw+ini)/4, 2);
             reviews.Add(new PerformanceReview
             {
-                Id=rId++, EmployeeId=eId, ReviewerId=2, Quarter=1, Year=2025,
+                Id=rId++, EmployeeId=eId, ReviewerId=2, Quarter=prevQ, Year=prevQYear,
                 QualityScore=q, EfficiencyScore=ef, TeamworkScore=tw, InitiativeScore=ini,
                 OverallScore=overall,
                 Strengths="Destaca en comunicación y resolución de problemas.",
                 AreasToImprove="Mejorar gestión del tiempo en picos de trabajo.",
-                Goals="Certificación técnica Q3 2025.",
-                CreatedAt=new DateTime(2025,4,5,0,0,0,DateTimeKind.Utc)
+                Goals=$"Certificación técnica antes de cerrar {today.Year}.",
+                CreatedAt=At(Wd(0), 10)
             });
         }
         m.Entity<PerformanceReview>().HasData(reviews);
 
         // ── Notifications ─────────────────────────────────────────────────────
         m.Entity<Notification>().HasData(
-            new Notification { Id=1,  EmployeeId=6,  Title="Solicitud de vacaciones recibida",     Body="Tu solicitud de vacaciones del 1 al 15 de julio está pendiente de aprobación.", Type=NotificationType.Info,   IsRead=false, CreatedAt=new DateTime(2025,5,10,9,0,0,DateTimeKind.Utc) },
-            new Notification { Id=2,  EmployeeId=9,  Title="Permiso médico aprobado",              Body="Tu permiso médico del 20-21 de mayo ha sido aprobado por RRHH.",             Type=NotificationType.Info,   IsRead=true,  CreatedAt=new DateTime(2025,5,11,10,0,0,DateTimeKind.Utc) },
-            new Notification { Id=3,  EmployeeId=6,  Title="Nómina de abril disponible",           Body="Ya puedes consultar y descargar tu nómina de abril de 2025.",                 Type=NotificationType.Info,   IsRead=false, CreatedAt=new DateTime(2025,5,1,8,0,0,DateTimeKind.Utc) },
-            new Notification { Id=4,  EmployeeId=20, Title="Evaluación trimestral pendiente",      Body="Tu evaluación del Q1 2025 está disponible para revisión.",                    Type=NotificationType.Aviso,  IsRead=false, CreatedAt=new DateTime(2025,4,6,9,0,0,DateTimeKind.Utc) },
-            new Notification { Id=5,  EmployeeId=7,  Title="Formación obligatoria PRL",            Body="Recuerda completar el módulo de PRL antes del 31 de mayo.",                  Type=NotificationType.Urgente, IsRead=false, CreatedAt=new DateTime(2025,5,2,8,0,0,DateTimeKind.Utc) },
-            new Notification { Id=6,  EmployeeId=12, Title="Horas extra pendientes de aprobación", Body="Tienes 1,5 horas extra del 7 de mayo pendientes de aprobación.",              Type=NotificationType.Aviso,  IsRead=true,  CreatedAt=new DateTime(2025,5,8,9,0,0,DateTimeKind.Utc) }
+            new Notification { Id=1,  EmployeeId=6,  Title="Solicitud de vacaciones recibida",     Body=$"Tu solicitud de vacaciones del {Long(vacStart)} al {Long(vacStart.AddDays(14))} está pendiente de aprobación.", Type=NotificationType.Info,    IsRead=false, CreatedAt=At(Wd(7), 9) },
+            new Notification { Id=2,  EmployeeId=9,  Title="Permiso médico aprobado",              Body=$"Tu permiso médico del {Long(Wd(5))} ha sido aprobado por RRHH.",                                          Type=NotificationType.Info,    IsRead=true,  CreatedAt=At(Wd(3), 11) },
+            new Notification { Id=3,  EmployeeId=6,  Title=$"Nómina de {es.DateTimeFormat.GetMonthName(lastPay.Month)} disponible", Body=$"Ya puedes consultar y descargar tu nómina de {es.DateTimeFormat.GetMonthName(lastPay.Month)} de {lastPay.Year}.", Type=NotificationType.Info, IsRead=false, CreatedAt=At(Wd(2), 8) },
+            new Notification { Id=4,  EmployeeId=20, Title="Evaluación trimestral disponible",     Body=$"Tu evaluación del T{prevQ} {prevQYear} está disponible para revisión.",                                     Type=NotificationType.Aviso,   IsRead=false, CreatedAt=At(Wd(0), 9) },
+            new Notification { Id=5,  EmployeeId=7,  Title="Formación obligatoria PRL",            Body=$"Recuerda completar el módulo de PRL antes del {Long(today.AddDays(21))}.",                                 Type=NotificationType.Urgente, IsRead=false, CreatedAt=At(Wd(6), 8) },
+            new Notification { Id=6,  EmployeeId=12, Title="Horas extra pendientes de aprobación", Body=$"Tienes 1,5 horas extra del {Long(Wd(7))} pendientes de aprobación.",                                      Type=NotificationType.Aviso,   IsRead=true,  CreatedAt=At(Wd(8), 9) }
         );
 
         // ── Emails ────────────────────────────────────────────────────────────
         m.Entity<EmailMessage>().HasData(
             new EmailMessage { Id=1, SenderId=2,  RecipientId=6,  Subject="Bienvenida al equipo", Body="Hola Carlos, bienvenido a ESC Media & Tech. Encontrarás toda la documentación en el drive corporativo.", IsRead=true,  Folder="inbox", SentAt=new DateTime(2021,3,15,9,0,0,DateTimeKind.Utc) },
-            new EmailMessage { Id=2, SenderId=3,  RecipientId=6,  Subject="Sprint planning mayo",  Body="Recordad que el sprint planning del mes de mayo es el próximo lunes a las 10h. Por favor revisad el backlog antes.", IsRead=false, Folder="inbox", SentAt=new DateTime(2025,5,9,8,30,0,DateTimeKind.Utc) },
-            new EmailMessage { Id=3, SenderId=6,  RecipientId=3,  Subject="Re: Sprint planning mayo", Body="Confirmado, estaré ahí. Ya he revisado el backlog y tengo algunas propuestas.", IsRead=true, Folder="sent", SentAt=new DateTime(2025,5,9,9,0,0,DateTimeKind.Utc) },
-            new EmailMessage { Id=4, SenderId=2,  RecipientId=17, Subject="Actualización política vacacional 2025", Body="Adjuntamos la nueva política de vacaciones para este ejercicio. Por favor distribuid a todo el equipo.", IsRead=false, Folder="inbox", SentAt=new DateTime(2025,4,15,10,0,0,DateTimeKind.Utc) },
-            new EmailMessage { Id=5, SenderId=1,  RecipientId=2,  Subject="Revisión presupuesto RRHH Q2", Body="Patricia, necesito que me prepares un resumen del presupuesto de RRHH para el Q2 antes del viernes.", IsRead=true, Folder="inbox", SentAt=new DateTime(2025,5,6,11,0,0,DateTimeKind.Utc) }
+            new EmailMessage { Id=2, SenderId=3,  RecipientId=6,  Subject=$"Sprint planning {monthName}",  Body="Recordad que el sprint planning es el próximo lunes a las 10h. Por favor revisad el backlog antes.", IsRead=false, Folder="inbox", SentAt=At(Wd(7), 8, 30) },
+            new EmailMessage { Id=3, SenderId=6,  RecipientId=3,  Subject=$"Re: Sprint planning {monthName}", Body="Confirmado, estaré ahí. Ya he revisado el backlog y tengo algunas propuestas.", IsRead=true, Folder="inbox", SentAt=At(Wd(7), 9) },
+            new EmailMessage { Id=4, SenderId=2,  RecipientId=17, Subject=$"Actualización política vacacional {today.Year}", Body="Adjuntamos la nueva política de vacaciones para este ejercicio. Por favor distribuid a todo el equipo.", IsRead=false, Folder="inbox", SentAt=At(Wd(1), 10) },
+            new EmailMessage { Id=5, SenderId=1,  RecipientId=2,  Subject=$"Revisión presupuesto RRHH T{quarter}", Body=$"Patricia, necesito que me prepares un resumen del presupuesto de RRHH para el T{quarter} antes del viernes.", IsRead=true, Folder="inbox", SentAt=At(Wd(5), 11) }
         );
 
         // ── Chat messages ─────────────────────────────────────────────────────
         m.Entity<ChatMessage>().HasData(
-            new ChatMessage { Id=1, SenderId=3, RecipientId=6,  Body="Carlos, ¿puedes revisar el PR que abrí ayer?",           IsRead=true,  SentAt=new DateTime(2025,5,12,10,0,0,DateTimeKind.Utc) },
-            new ChatMessage { Id=2, SenderId=6, RecipientId=3,  Body="Claro, lo miro ahora mismo y te comento.",               IsRead=true,  SentAt=new DateTime(2025,5,12,10,5,0,DateTimeKind.Utc) },
-            new ChatMessage { Id=3, SenderId=3, RecipientId=20, Body="David, ¿cómo vas con el módulo de autenticación?",       IsRead=false, SentAt=new DateTime(2025,5,12,11,0,0,DateTimeKind.Utc) },
-            new ChatMessage { Id=4, SenderId=2, RecipientId=17, Body="Marta, ¿ya enviaste los contratos al despacho legal?",   IsRead=true,  SentAt=new DateTime(2025,5,12,9,30,0,DateTimeKind.Utc) },
-            new ChatMessage { Id=5, SenderId=4, RecipientId=9,  Body="Lucía, necesito el calendario editorial para junio.",    IsRead=false, SentAt=new DateTime(2025,5,12,12,0,0,DateTimeKind.Utc) }
+            new ChatMessage { Id=1, SenderId=3, RecipientId=6,  Body="Carlos, ¿puedes revisar el PR que abrí ayer?",           IsRead=true,  SentAt=At(Wd(9), 10, 0) },
+            new ChatMessage { Id=2, SenderId=6, RecipientId=3,  Body="Claro, lo miro ahora mismo y te comento.",               IsRead=true,  SentAt=At(Wd(9), 10, 5) },
+            new ChatMessage { Id=3, SenderId=3, RecipientId=20, Body="David, ¿cómo vas con el módulo de autenticación?",       IsRead=false, SentAt=At(Wd(9), 11, 0) },
+            new ChatMessage { Id=4, SenderId=2, RecipientId=17, Body="Marta, ¿ya enviaste los contratos al despacho legal?",   IsRead=true,  SentAt=At(Wd(9), 9, 30) },
+            new ChatMessage { Id=5, SenderId=4, RecipientId=9,  Body=$"Lucía, necesito el calendario editorial de {es.DateTimeFormat.GetMonthName(today.AddMonths(1).Month)}.",    IsRead=false, SentAt=At(Wd(9), 12, 0) }
         );
     }
 }

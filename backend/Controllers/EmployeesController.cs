@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using HRPortal.Data;
 using HRPortal.DTOs;
 using HRPortal.Models;
+using HRPortal.Services;
 
 namespace HRPortal.Controllers;
 
@@ -30,7 +31,9 @@ public class EmployeesController : ControllerBase
             query = query.Where(e => e.Department == dept);
 
         var list = await query.OrderBy(e => e.FirstName).ThenBy(e => e.LastName).ToListAsync();
-        return Ok(list.Select(ToListDto));
+        // El directorio es visible para todos (correo, chat); el salario solo para RRHH y Administración
+        var showSalary = User.IsHrOrAdmin();
+        return Ok(list.Select(e => ToListDto(e, showSalary)));
     }
 
     [HttpGet("{id}")]
@@ -39,6 +42,7 @@ public class EmployeesController : ControllerBase
         var e = await _db.Employees.Include(e => e.User).Include(e => e.Manager)
                          .FirstOrDefaultAsync(x => x.Id == id);
         if (e == null) return NotFound();
+        if (!await User.CanAccessEmployeeAsync(_db, id)) return Forbid();
 
         return Ok(new EmployeeDetailDto(
             e.Id, e.FirstName, e.LastName, e.FullName, e.Email,
@@ -134,15 +138,15 @@ public class EmployeesController : ControllerBase
         return NoContent();
     }
 
-    private static EmployeeListDto ToListDto(Employee e) => new(
+    private static EmployeeListDto ToListDto(Employee e, bool showSalary = true) => new(
         e.Id,
         $"{e.FirstName} {e.LastName}",
         e.Email, e.Position,
         e.Department.ToString(),
         e.RoleInCompany.ToString(),
         e.ContractType.ToString(),
-        e.GrossSalary,
-        e.MonthlySalary,
+        showSalary ? e.GrossSalary : null,
+        showSalary ? e.MonthlySalary : null,
         e.Initials,
         e.HireDate,
         e.User?.IsActive ?? true,
