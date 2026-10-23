@@ -1,0 +1,15 @@
+# Dependencies and build output
+node_modules/
+dist/
+bin/
+obj/
+
+# IDE
+.vs/
+.idea/
+*.user
+
+# Local SQLite database (created and seeded on startup)
+*.db
+*.db-shm
+*.db-wal
