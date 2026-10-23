@@ -145,7 +145,8 @@ input, select, textarea { font-family: inherit; }
 .topbar-menu:hover { background: var(--surface2); }
 .topbar-title { font-size: 17px; font-weight: 600; color: var(--text); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .topbar-right { display: flex; gap: 8px; align-items: center; }
-.topbar-meta { font-size: 13px; color: var(--text3); text-transform: capitalize; }
+.topbar-meta { font-size: 13px; color: var(--text3); }
+.topbar-meta::first-letter { text-transform: uppercase; }
 
 /* ── Cards ────────────────────────────────────────────────────────────────── */
 .card {
@@ -243,8 +244,8 @@ table.hr-tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
 .hr-tbl tbody tr:last-child { border-bottom: none; }
 .hr-tbl tbody tr:hover { background: var(--surface2); }
 .hr-tbl tbody td { padding: 12px 14px; vertical-align: middle; }
-.mono { font-family: 'Courier New', monospace; font-size: 12px; }
-.text-right { text-align: right; }
+.mono { font-variant-numeric: tabular-nums; font-feature-settings: 'tnum'; letter-spacing: -.01em; }
+.text-right, .hr-tbl th.text-right { text-align: right; }
 .fw-600 { font-weight: 600; }
 .text-green { color: var(--green); }
 .text-red   { color: var(--red); }
@@ -335,7 +336,7 @@ table.hr-tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
 .auth-page  { min-height: 100vh; display: flex; background: var(--bg); }
 .auth-left  {
   flex: 1; background: var(--brand); display: flex; flex-direction: column;
-  justify-content: center; gap: 40px; padding: 56px; min-height: 100vh;
+  justify-content: center; gap: 40px; padding: 56px max(56px, calc((100% - 420px) / 2)); min-height: 100vh;
 }
 .auth-brand { display: flex; align-items: center; gap: 14px; }
 .auth-logo-text { font-size: 24px; font-weight: 700; color: #fff; letter-spacing: -.5px; }
@@ -542,6 +543,10 @@ table.hr-tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
   .page { padding: 16px; }
   .two-col, .info-grid { grid-template-columns: 1fr; }
   .stat-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .kpi { padding: 14px; gap: 6px; }
+  .kpi-value { font-size: 22px; }
+  .kpi-sub { display: none; }
 
   /* Correo y chat: una columna cada vez */
   .email-left { width: auto; border-right: none; display: flex; overflow-x: auto; padding: 8px; gap: 4px; border-bottom: 1px solid var(--border); }

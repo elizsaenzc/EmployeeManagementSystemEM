@@ -277,7 +277,10 @@ public class AppDbContext : DbContext
             new EmailMessage { Id=2, SenderId=3,  RecipientId=6,  Subject=$"Sprint planning {monthName}",  Body="Recordad que el sprint planning es el próximo lunes a las 10h. Por favor revisad el backlog antes.", IsRead=false, Folder="inbox", SentAt=At(Wd(7), 8, 30) },
             new EmailMessage { Id=3, SenderId=6,  RecipientId=3,  Subject=$"Re: Sprint planning {monthName}", Body="Confirmado, estaré ahí. Ya he revisado el backlog y tengo algunas propuestas.", IsRead=true, Folder="inbox", SentAt=At(Wd(7), 9) },
             new EmailMessage { Id=4, SenderId=2,  RecipientId=17, Subject=$"Actualización política vacacional {today.Year}", Body="Adjuntamos la nueva política de vacaciones para este ejercicio. Por favor distribuid a todo el equipo.", IsRead=false, Folder="inbox", SentAt=At(Wd(1), 10) },
-            new EmailMessage { Id=5, SenderId=1,  RecipientId=2,  Subject=$"Revisión presupuesto RRHH T{quarter}", Body=$"Patricia, necesito que me prepares un resumen del presupuesto de RRHH para el T{quarter} antes del viernes.", IsRead=true, Folder="inbox", SentAt=At(Wd(5), 11) }
+            new EmailMessage { Id=5, SenderId=1,  RecipientId=2,  Subject=$"Revisión presupuesto RRHH T{quarter}", Body=$"Patricia, necesito que me prepares un resumen del presupuesto de RRHH para el T{quarter} antes del viernes.", IsRead=true, Folder="inbox", SentAt=At(Wd(5), 11) },
+            new EmailMessage { Id=6, SenderId=2,  RecipientId=1,  Subject=$"Re: Revisión presupuesto RRHH T{quarter}", Body="Roberto, te adjunto el resumen. El mayor incremento viene de formación y de las dos incorporaciones previstas en Tecnología.", AttachmentName=$"presupuesto_rrhh_T{quarter}.xlsx", IsRead=false, Folder="inbox", SentAt=At(Wd(8), 9, 15) },
+            new EmailMessage { Id=7, SenderId=5,  RecipientId=1,  Subject="Cierre comercial del mes", Body="Hola Roberto, cerramos el mes por encima del objetivo. Te paso el detalle por cliente en la reunión del lunes.", IsRead=true, Folder="inbox", SentAt=At(Wd(6), 17, 40) },
+            new EmailMessage { Id=8, SenderId=3,  RecipientId=1,  Subject="Propuesta de contratación", Body="Te comparto la propuesta para cubrir la vacante de backend. Si te encaja, RRHH puede publicar la oferta esta semana.", IsRead=false, Folder="inbox", SentAt=At(Wd(9), 8, 50) }
         );
 
         // ── Chat messages ─────────────────────────────────────────────────────
@@ -286,7 +289,9 @@ public class AppDbContext : DbContext
             new ChatMessage { Id=2, SenderId=6, RecipientId=3,  Body="Claro, lo miro ahora mismo y te comento.",               IsRead=true,  SentAt=At(Wd(9), 10, 5) },
             new ChatMessage { Id=3, SenderId=3, RecipientId=20, Body="David, ¿cómo vas con el módulo de autenticación?",       IsRead=false, SentAt=At(Wd(9), 11, 0) },
             new ChatMessage { Id=4, SenderId=2, RecipientId=17, Body="Marta, ¿ya enviaste los contratos al despacho legal?",   IsRead=true,  SentAt=At(Wd(9), 9, 30) },
-            new ChatMessage { Id=5, SenderId=4, RecipientId=9,  Body=$"Lucía, necesito el calendario editorial de {es.DateTimeFormat.GetMonthName(today.AddMonths(1).Month)}.",    IsRead=false, SentAt=At(Wd(9), 12, 0) }
+            new ChatMessage { Id=5, SenderId=4, RecipientId=9,  Body=$"Lucía, necesito el calendario editorial de {es.DateTimeFormat.GetMonthName(today.AddMonths(1).Month)}.",    IsRead=false, SentAt=At(Wd(9), 12, 0) },
+            new ChatMessage { Id=6, SenderId=2, RecipientId=1,  Body="Roberto, ¿te viene bien revisar las evaluaciones del trimestre el jueves?", IsRead=false, SentAt=At(Wd(9), 9, 10) },
+            new ChatMessage { Id=7, SenderId=1, RecipientId=2,  Body="Sí, el jueves a las 12 me va bien.",                                     IsRead=true,  SentAt=At(Wd(9), 9, 25) }
         );
     }
 }
