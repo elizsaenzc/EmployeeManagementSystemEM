@@ -547,6 +547,7 @@ table.hr-tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
   .kpi { padding: 14px; gap: 6px; }
   .kpi-value { font-size: 22px; }
   .kpi-sub { display: none; }
+  .hr-tbl th, .hr-tbl td { white-space: nowrap; }
 
   /* Correo y chat: una columna cada vez */
   .email-left { width: auto; border-right: none; display: flex; overflow-x: auto; padding: 8px; gap: 4px; border-bottom: 1px solid var(--border); }
